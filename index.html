@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>cukka.org — Çok Yakında</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0a0a12;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ---- animated gradient background ---- */
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: radial-gradient(ellipse at 20% 50%, #6d28d9 0%, transparent 55%),
+                  radial-gradient(ellipse at 80% 20%, #0ea5e9 0%, transparent 50%),
+                  radial-gradient(ellipse at 60% 80%, #ec4899 0%, transparent 45%),
+                  #0a0a12;
+      animation: bgShift 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgShift {
+      0%   { filter: hue-rotate(0deg) brightness(1); }
+      50%  { filter: hue-rotate(20deg) brightness(1.1); }
+      100% { filter: hue-rotate(-15deg) brightness(0.95); }
+    }
+
+    /* ---- floating particles ---- */
+    .particles {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      animation: floatUp var(--dur) ease-in infinite;
+      animation-delay: var(--delay);
+    }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.3; }
+      100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+    }
+
+    /* ---- coin bounce ---- */
+    .coin {
+      display: inline-block;
+      font-size: 3.5rem;
+      animation: coinBounce 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px #fbbf24aa);
+    }
+
+    @keyframes coinBounce {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50%       { transform: translateY(-14px) rotate(5deg); }
+    }
+
+    /* ---- logo text ---- */
+    .logo-text {
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, #fff 20%, #a78bfa 50%, #38bdf8 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    /* ---- slogan ---- */
+    .slogan {
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+    }
+
+    /* ---- progress bar ---- */
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #6d28d9, #ec4899, #0ea5e9);
+      background-size: 200% 100%;
+      animation: progressAnim 3s ease forwards, shimmer 2s linear infinite;
+    }
+
+    @keyframes progressAnim {
+      0%   { width: 0%; }
+      100% { width: 72%; }
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ---- feature pills ---- */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(8px);
+      color: rgba(255,255,255,0.85);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .pill:hover {
+      transform: translateY(-2px);
+      border-color: rgba(167, 139, 250, 0.5);
+    }
+
+    /* ---- email form ---- */
+    .input-wrap {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .email-input {
+      padding: 0.75rem 1.25rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      min-width: 260px;
+      transition: border-color 0.2s;
+    }
+
+    .email-input::placeholder { color: rgba(255,255,255,0.35); }
+    .email-input:focus { border-color: #a78bfa; }
+
+    .cta-btn {
+      padding: 0.75rem 1.75rem;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(124,58,237,0.45);
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 32px rgba(124,58,237,0.6);
+    }
+
+    .cta-btn:active { transform: scale(0.98); }
+
+    /* ---- success message ---- */
+    .success-msg {
+      display: none;
+      color: #4ade80;
+      font-size: 0.9rem;
+      font-weight: 600;
+      animation: fadeInUp 0.4s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---- card container ---- */
+    .card {
+      position: relative;
+      z-index: 2;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 2rem;
+      padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 5vw, 5rem);
+      max-width: 700px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    /* ---- countdown ---- */
+    .countdown {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .countdown-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .countdown-num {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #a78bfa, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      min-width: 3ch;
+      text-align: center;
+    }
+
+    .countdown-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      font-weight: 600;
+    }
+
+    /* ---- separator line ---- */
+    .sep {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      margin: 1.5rem 0;
+    }
+
+    /* ---- social links ---- */
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.6);
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .social-link:hover {
+      border-color: #a78bfa;
+      color: #fff;
+      background: rgba(167,139,250,0.15);
+      transform: translateY(-2px);
+    }
+
+    /* ---- footer text ---- */
+    .footer-text {
+      position: relative;
+      z-index: 2;
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- background -->
+  <div class="bg-gradient"></div>
+
+  <!-- particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- main card -->
+  <div class="card">
+
+    <!-- coin icon -->
+    <div class="coin" style="margin-bottom:1.5rem;">🪙</div>
+
+    <!-- logo -->
+    <div class="logo-text">cukka</div>
+    <p style="margin-top:0.5rem; color:rgba(255,255,255,0.3); font-size:0.85rem; letter-spacing:0.2em; text-transform:uppercase;">
+      .org
+    </p>
+
+    <!-- slogan -->
+    <p class="slogan" style="margin-top:1.2rem;">
+      Birikimin en eğlenceli hali
+    </p>
+
+    <div class="sep"></div>
+
+    <!-- countdown -->
+    <div class="countdown" id="countdown">
+      <div class="countdown-block">
+        <span class="countdown-num" id="cd-days">00</span>
+        <span class="countdown-label">Gün</span>
+      </div>
+      <div class="countdown-block">
+        <span class="countdown-num" id="cd-hours">00</span>
+        <span class="countdown-label">Saat</span>
+      </div>
+      <div class="countdown-block">
+        <span class="countdown-num" id="cd-minutes">00</span>
+        <span class="countdown-label">Dakika</span>
+      </div>
+      <div class="countdown-block">
+        <span class="countdown-num" id="cd-seconds">00</span>
+        <span class="countdown-label">Saniye</span>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- progress -->
+    <div style="text-align:left; margin-bottom:0.6rem;">
+      <span style="font-size:0.8rem; color:rgba(255,255,255,0.45); letter-spacing:0.08em; text-transform:uppercase;">
+        İnşaat devam ediyor
+      </span>
+      <span style="float:right; font-size:0.8rem; color:#a78bfa; font-weight:700;" id="progress-label">72%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill"></div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- feature pills -->
+    <div style="display:flex; flex-wrap:wrap; gap:0.6rem; justify-content:center; margin-bottom:1.5rem;">
+      <span class="pill">🎮 Oyunlaştırılmış birikim</span>
+      <span class="pill">📈 Akıllı hedefler</span>
+      <span class="pill">🎁 Ödüller & rozetler</span>
+      <span class="pill">🤝 Topluluk tasarrufu</span>
+    </div>
+
+    <!-- email signup -->
+    <div class="input-wrap" id="form-area">
+      <input class="email-input" type="email" id="email-input" placeholder="e-posta adresin..." />
+      <button class="cta-btn" onclick="handleSignup()">Beni Haberdar Et ✨</button>
+    </div>
+    <p class="success-msg" id="success-msg">🎉 Harika! Seni ilk öğrenenler arasında göreceğiz.</p>
+    <p style="font-size:0.75rem; color:rgba(255,255,255,0.25); margin-top:0.75rem;">
+      Spam yok. Sadece iyi haberler. 🚀
+    </p>
+
+  </div>
+
+  <!-- footer -->
+  <p class="footer-text">© 2026 cukka.org — Tüm hakları saklıdır.</p>
+
+  <script>
+    // ---- Particles ----
+    const container = document.getElementById('particles');
+    const colors = ['#a78bfa', '#38bdf8', '#ec4899', '#fbbf24', '#4ade80'];
+    for (let i = 0; i < 40; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 10 + 4;
+      p.style.cssText = `
+        width: ${size}px;
+        height: ${size}px;
+        left: ${Math.random() * 100}%;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        --dur: ${Math.random() * 12 + 8}s;
+        --delay: ${Math.random() * 12}s;
+        filter: blur(${Math.random() * 2}px);
+      `;
+      container.appendChild(p);
+    }
+
+    // ---- Countdown (launch date: 2027-01-01) ----
+    const launchDate = new Date('2027-01-01T00:00:00');
+    function updateCountdown() {
+      const now = new Date();
+      const diff = launchDate - now;
+      if (diff <= 0) {
+        document.getElementById('cd-days').textContent = '00';
+        document.getElementById('cd-hours').textContent = '00';
+        document.getElementById('cd-minutes').textContent = '00';
+        document.getElementById('cd-seconds').textContent = '00';
+        return;
+      }
+      const days    = Math.floor(diff / 86400000);
+      const hours   = Math.floor((diff % 86400000) / 3600000);
+      const minutes = Math.floor((diff % 3600000) / 60000);
+      const seconds = Math.floor((diff % 60000) / 1000);
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('cd-days').textContent    = pad(days);
+      document.getElementById('cd-hours').textContent   = pad(hours);
+      document.getElementById('cd-minutes').textContent = pad(minutes);
+      document.getElementById('cd-seconds').textContent = pad(seconds);
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // ---- Email Signup ----
+    function handleSignup() {
+      const val = document.getElementById('email-input').value.trim();
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRe.test(val)) {
+        document.getElementById('email-input').style.borderColor = '#f87171';
+        setTimeout(() => document.getElementById('email-input').style.borderColor = '', 1500);
+        return;
+      }
+      document.getElementById('form-area').style.display = 'none';
+      const msg = document.getElementById('success-msg');
+      msg.style.display = 'block';
+    }
+
+    // ---- Coin sparkle on click ----
+    document.querySelector('.coin').addEventListener('click', function(e) {
+      for (let i = 0; i < 8; i++) {
+        const spark = document.createElement('div');
+        spark.style.cssText = `
+          position: fixed;
+          left: ${e.clientX}px;
+          top: ${e.clientY}px;
+          font-size: ${Math.random() * 18 + 14}px;
+          pointer-events: none;
+          z-index: 9999;
+          animation: sparkFly 0.9s ease forwards;
+          --tx: ${(Math.random() - 0.5) * 120}px;
+          --ty: ${(Math.random() - 1) * 100}px;
+        `;
+        spark.textContent = ['🪙','✨','💫','⭐','💰'][Math.floor(Math.random() * 5)];
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 950);
+      }
+    });
+  </script>
+
+  <style>
+    @keyframes sparkFly {
+      0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(0.3); opacity: 0; }
+    }
+  </style>
+
+</body>
+</html>
