@@ -254,9 +254,9 @@ contract CukkaVaultTest is Test {
     // =========================================================================
 
     function test_InflationAttackMitigated() public {
-        // Attacker tries to deposit 1 wei -> reverts due to minInitialDeposit (10 USDC)
+        // Attacker tries to deposit 1 wei -> reverts due to minInitialDeposit (0.10 USDC = 100_000)
         vm.prank(attacker);
-        vm.expectRevert(abi.encodeWithSelector(CukkaVault.InitialDepositBelowMinimum.selector, 1, 10e6));
+        vm.expectRevert(abi.encodeWithSelector(CukkaVault.InitialDepositBelowMinimum.selector, 1, 100_000));
         vault.deposit(1);
 
         // Attacker deposits minimum 10 USDC

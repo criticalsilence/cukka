@@ -101,7 +101,7 @@ contract CukkaVault is ERC20, AccessControl, Pausable, ReentrancyGuard {
     uint16 public maxNavDeltaBps = 2_000;          // Default 20%
     uint16 public maxDailySwapVolumeBps = 5_000;   // Default 50% of NAV per 24h
     uint64 public whitelistTimelock = 24 hours;    // Default 24h timelock
-    uint256 public minInitialDeposit = 10e6;       // Default 10 USDC minimum first deposit
+    uint256 public minInitialDeposit = 100_000;    // Default 0.10 USDC (1e5 = 1e17 share wei >> 1000 dead shares)
 
     // Pending Performance Fee Increase (Timelocked)
     uint16 public pendingPerformanceFeeBps;
