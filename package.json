@@ -1,0 +1,13 @@
+{
+  "name": "cukka-v1",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CUKKA V1 — Non-Custodial Pooled Crypto Portfolio Vault on Base",
+  "scripts": {
+    "contracts:build": "forge build --root contracts",
+    "contracts:test": "forge test --root contracts -vv",
+    "contracts:coverage": "forge coverage --root contracts --no-match-coverage \"(script|test)\" --ir-minimum",
+    "contracts:deploy:sepolia": "forge script script/DeployCukkaVault.s.sol:DeployCukkaVault --root contracts --rpc-url https://sepolia.base.org --broadcast --verify",
+    "test": "npm run contracts:test"
+  }
+}
