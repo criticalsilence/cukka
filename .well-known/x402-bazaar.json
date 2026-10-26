@@ -1,0 +1,97 @@
+{
+  "x402Version": 2,
+  "provider": {
+    "name": "Cukka — Shopify Global Catalog Agent Data Layer",
+    "url": "https://cukka.org/app.html",
+    "payTo": "0x573AaAfce41839cEF3E6D5b9Ad727db44BcE8BA9",
+    "networks": ["eip155:84532", "eip155:8453"]
+  },
+  "resources": [
+    {
+      "path": "/v1/catalog/cheapest-variant",
+      "method": "POST",
+      "scheme": "exact",
+      "amount": "2000",
+      "priceUsd": "0.002",
+      "asset": "USDC",
+      "extensions": {
+        "bazaar": {
+          "info": {
+            "name": "Cross-Store Cheapest In-Stock Variant Finder",
+            "description": "Clusters identical products across Shopify Global Catalog & storefronts by UPID/SKU, filters out-of-stock variants, normalizes pricing, and returns the cheapest in-stock variant with direct cart link.",
+            "category": "commerce"
+          },
+          "schema": {
+            "type": "object",
+            "required": ["query"],
+            "properties": {
+              "query": { "type": "string" },
+              "stores": { "type": "array", "items": { "type": "string" } },
+              "inStockOnly": { "type": "boolean", "default": true },
+              "preferredSize": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": "/v1/catalog/enrich-product",
+      "method": "POST",
+      "scheme": "upto",
+      "amount": "25000",
+      "priceUsd": "0.025",
+      "asset": "USDC",
+      "extensions": {
+        "bazaar": {
+          "info": {
+            "name": "Product Normalization, Size Chart & Compatibility Enricher",
+            "description": "Normalizes raw Shopify catalog items into standard taxonomy categories, EU/US/TR size conversion matrices, and compatibility tags. Metered via x402 'upto' based on LLM token usage.",
+            "category": "commerce"
+          },
+          "schema": {
+            "type": "object",
+            "required": ["productUrlOrHandle"],
+            "properties": {
+              "productUrlOrHandle": { "type": "string" },
+              "targetRegion": { "type": "string", "enum": ["TR", "EU", "US", "UK"] }
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": "/v1/catalog/price-stock-watch",
+      "method": "POST",
+      "scheme": "exact",
+      "amount": "1000",
+      "priceUsd": "0.001",
+      "asset": "USDC",
+      "extensions": {
+        "bazaar": {
+          "info": {
+            "name": "Real-Time Restock Alert & 30d Price Delta Signal",
+            "description": "Monitors Shopify variant stock state and price drops across merchants.",
+            "category": "commerce"
+          }
+        }
+      }
+    },
+    {
+      "path": "/v1/catalog/niche-match",
+      "method": "POST",
+      "scheme": "upto",
+      "amount": "50000",
+      "priceUsd": "0.050",
+      "asset": "USDC",
+      "extensions": {
+        "bazaar": {
+          "info": {
+            "name": "Vertical Niche Matcher (Cosmetic INCI / Spare Parts / Gift Matrix)",
+            "description": "Deep technical filtering over Shopify Global Catalog for ingredient safety, part compatibility, or persona-based gift discovery.",
+            "category": "commerce"
+          }
+        }
+      }
+    }
+  ]
+}
