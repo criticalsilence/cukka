@@ -1,6 +1,7 @@
 name = "cukka-x402-shopify-catalog"
 main = "src/index.ts"
 compatibility_date = "2026-03-01"
+account_id = "4117c19ce59b8b576312408d6b0ae4a7"
 
 [vars]
 PAY_TO_ADDRESS = "0x573AaAfce41839cEF3E6D5b9Ad727db44BcE8BA9"
