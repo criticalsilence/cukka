@@ -687,21 +687,29 @@
       <div class="input-row">
         <div class="field">
           <label for="inp-query">Aranacak Ürün / Kelime</label>
-          <input id="inp-query" class="input" type="text" value="runner" placeholder="Örn: runner, shoe, shirt, coffee..." />
+          <input id="inp-query" class="input" type="text" value="runner" placeholder="Örn: runner, serum, hoodie, coffee, wallet..." />
         </div>
         <div class="field">
-          <label for="inp-stores">Taranacak Canlı Shopify Mağazaları</label>
-          <input id="inp-stores" class="input mono" type="text" value="allbirds.com, tentree.com, gymshark.com" />
+          <label for="inp-category">Mağaza & Kategori Havuzu (Otomatik)</label>
+          <select id="inp-category" class="input" onchange="executeQuery(false)">
+            <option value="auto">✨ Otomatik Algıla (Kelimeye Göre Kendisi Seçer)</option>
+            <option value="footwear">👟 Ayakkabı & Sneaker Mağazaları</option>
+            <option value="apparel">👕 Giyim & Streetwear Mağazaları</option>
+            <option value="cosmetics">🧴 Kozmetik & Cilt Bakımı (INCI) Mağazaları</option>
+            <option value="coffee_nutrition">☕ Kahve & Takviye Gıda Mağazaları</option>
+            <option value="accessories_gear">🎒 Cüzdan, Çanta & Teknoloji Aksesuarları</option>
+          </select>
         </div>
       </div>
 
       <!-- Quick Presets -->
       <div class="preset-bar">
-        <span style="font-size:12px;color:var(--text-subtle);">Hızlı Dene:</span>
-        <button class="preset-chip" onclick="setQuickQuery('runner')">runner (Ayakkabı)</button>
-        <button class="preset-chip" onclick="setQuickQuery('shirt')">shirt (Tişört)</button>
-        <button class="preset-chip" onclick="setQuickQuery('hoodie')">hoodie (Sweatshirt)</button>
-        <button class="preset-chip" onclick="setQuickQuery('sock')">sock (Çorap)</button>
+        <span style="font-size:12px;color:var(--text-subtle);">Hızlı Dene (Otomatik Mağaza Seçimi):</span>
+        <button class="preset-chip" onclick="setQuickQuery('runner')">👟 runner (Ayakkabı)</button>
+        <button class="preset-chip" onclick="setQuickQuery('serum')">🧴 serum (Cilt Bakımı)</button>
+        <button class="preset-chip" onclick="setQuickQuery('coffee')">☕ coffee (Kahve)</button>
+        <button class="preset-chip" onclick="setQuickQuery('hoodie')">👕 hoodie (Sweatshirt)</button>
+        <button class="preset-chip" onclick="setQuickQuery('wallet')">🎒 wallet (Cüzdan/Aksesuar)</button>
       </div>
 
       <!-- Action Buttons -->
@@ -1146,22 +1154,65 @@
 
     function setQuickQuery(q) {
       document.getElementById("inp-query").value = q;
+      document.getElementById("inp-category").value = "auto";
       executeQuery(false);
     }
 
-    // Live Shopify Storefront Fetcher
-    async function fetchShopifyProducts(queryStr, storesStr) {
-      const stores = storesStr
-        .split(",")
-        .map((s) => s.trim().replace(/^https?:\/\//, "").replace(/\/$/, ""))
-        .filter(Boolean);
+    const AUTO_STORE_REGISTRY = {
+      footwear: {
+        label: "Ayakkabı & Sneaker",
+        stores: ["allbirds.com", "kizik.com", "greats.com", "koio.co"],
+      },
+      apparel: {
+        label: "Giyim & Streetwear",
+        stores: ["gymshark.com", "tentree.com", "chubbies.com", "kotn.com"],
+      },
+      cosmetics: {
+        label: "Kozmetik & Cilt Bakımı (INCI)",
+        stores: ["colourpop.com", "cocokind.com", "versedskin.com"],
+      },
+      coffee_nutrition: {
+        label: "Kahve & Takviye Gıda",
+        stores: ["deathwishcoffee.com", "organifi.com", "foursigmatic.com"],
+      },
+      accessories_gear: {
+        label: "Cüzdan, Çanta & Aksesuar",
+        stores: ["ridge.com", "nomadgoods.com", "puravidabracelets.com"],
+      },
+    };
+
+    function autoSelectStores(queryStr, categoryKey) {
+      if (categoryKey && categoryKey !== "auto" && AUTO_STORE_REGISTRY[categoryKey]) {
+        return AUTO_STORE_REGISTRY[categoryKey];
+      }
+      const q = (queryStr || "").toLowerCase();
+      if (/shoe|runner|sneaker|boot|slip|loafer|ayakkab/.test(q)) return AUTO_STORE_REGISTRY.footwear;
+      if (/serum|cream|cleanser|lip|skin|glow|acne|spf|niacinamide|retinol|mask|kozmetik/.test(q))
+        return AUTO_STORE_REGISTRY.cosmetics;
+      if (/coffee|roast|espresso|mug|tea|protein|vitamin|matcha|mushroom|kahve/.test(q))
+        return AUTO_STORE_REGISTRY.coffee_nutrition;
+      if (/wallet|case|cable|watch|strap|bag|ring|bracelet|pack|cüzdan|çanta/.test(q))
+        return AUTO_STORE_REGISTRY.accessories_gear;
+      if (/shirt|hoodie|short|jogger|pant|top|jacket|sock|legging|sweater|tişört/.test(q))
+        return AUTO_STORE_REGISTRY.apparel;
+
+      return {
+        label: "Genel Global Mağaza Havuzu",
+        stores: ["allbirds.com", "gymshark.com", "tentree.com", "cocokind.com", "deathwishcoffee.com", "ridge.com"],
+      };
+    }
+
+    // Live Shopify Storefront Auto-Fetcher
+    async function fetchShopifyProducts(queryStr, categoryKey) {
+      const selection = autoSelectStores(queryStr, categoryKey);
+      const stores = selection.stores;
       const q = (queryStr || "").toLowerCase().trim();
       const variants = [];
 
       await Promise.all(
         stores.map(async (domain) => {
           try {
-            const res = await fetch(`https://${domain}/products.json?limit=30`);
+            const res = await fetch(`https://${domain}/products.json?limit=35`);
             if (!res.ok) return;
             const data = await res.json();
             for (const p of data.products || []) {
@@ -1189,6 +1240,7 @@
                   discountPct,
                   matched,
                   image: p.images && p.images[0] ? p.images[0].src : null,
+                  checkoutUrl: `https://${domain}/cart/${v.id}:1`,
                   productUrl: `https://${domain}/products/${p.handle}`,
                 });
               }
@@ -1200,14 +1252,19 @@
       const exact = variants.filter((v) => v.matched);
       const pool = exact.length > 0 ? exact : variants;
       pool.sort((a, b) => a.priceUsd - b.priceUsd);
-      return { totalScanned: variants.length, items: pool.slice(0, 8) };
+      return {
+        categoryLabel: selection.label,
+        scannedStores: stores,
+        totalScanned: variants.length,
+        items: pool.slice(0, 8),
+      };
     }
 
     async function executeQuery(requireWalletSignature) {
       const m = MODES[STATE.modeKey];
       const chain = CONFIG.chains[STATE.network];
       const queryVal = document.getElementById("inp-query").value.trim();
-      const storesVal = document.getElementById("inp-stores").value.trim();
+      const categoryVal = document.getElementById("inp-category").value;
 
       // Step 1: HTTP 402 Challenge
       document.getElementById("step-1").className = "step-item done";
@@ -1283,7 +1340,7 @@
       document.getElementById("ui-summary-banner").textContent = "Canlı Shopify katalogları taranıyor...";
 
       // Step 3: Fetch Live Data
-      const result = await fetchShopifyProducts(queryVal, storesVal);
+      const result = await fetchShopifyProducts(queryVal, categoryVal);
       document.getElementById("step-3").className = "step-item done";
 
       const settledAtomic =
@@ -1319,6 +1376,8 @@
           payer,
           payTo: CONFIG.payTo,
           signaturePreview: signature.slice(0, 42) + "...",
+          autoSelectedCategory: result.categoryLabel,
+          autoScannedStores: result.scannedStores,
           liveShopifyMatchCount: result.items.length,
           sampleWinner: result.items[0] || null,
         },
@@ -1332,13 +1391,13 @@
       const listEl = document.getElementById("ui-results-list");
 
       if (!result.items || result.items.length === 0) {
-        banner.textContent = "Belirtilen mağazalarda stokta ürün bulunamadı.";
+        banner.textContent = "Otomatik taranan mağazalarda stokta ürün bulunamadı.";
         listEl.innerHTML = "";
         return;
       }
 
       const best = result.items[0];
-      banner.innerHTML = `Toplam <strong>${result.totalScanned}</strong> canlı varyant tarandı · En ucuz: <strong style="color:#34D399;">$${best.priceUsd.toFixed(2)} (${best.store})</strong>`;
+      banner.innerHTML = `Otomatik Kategori: <strong>${result.categoryLabel}</strong> (${result.scannedStores.join(", ")}) · <strong>${result.totalScanned}</strong> varyant tarandı · En ucuz: <strong style="color:#34D399;">$${best.priceUsd.toFixed(2)} (${best.store})</strong>`;
 
       listEl.innerHTML = result.items
         .map(
@@ -1370,8 +1429,8 @@
               </div>
             </div>
 
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div style="text-align:right;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="text-align:right;margin-right:4px;">
                 <div style="font-size:18px;font-weight:800;color:${i === 0 ? "#34D399" : "var(--text)"};">
                   $${item.priceUsd.toFixed(2)}
                 </div>
@@ -1379,8 +1438,11 @@
                   ≈ ${(item.priceUsd * STATE.usdTryRate).toFixed(0)} ₺
                 </div>
               </div>
-              <a href="${item.productUrl}" target="_blank" rel="noopener noreferrer" class="btn sm ${i === 0 ? "primary" : ""}">
-                Mağaza ↗
+              <a href="${item.checkoutUrl}" target="_blank" rel="noopener noreferrer" class="btn sm ${i === 0 ? "primary" : ""}" title="Tek Tıkla Sepete Ekle">
+                Sepete Ekle ↗
+              </a>
+              <a href="${item.productUrl}" target="_blank" rel="noopener noreferrer" class="btn sm">
+                Ürün
               </a>
             </div>
           </div>
