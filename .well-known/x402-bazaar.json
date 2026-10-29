@@ -3,6 +3,8 @@
   "provider": {
     "name": "Cukka — Shopify Global Catalog Agent Data Layer",
     "url": "https://cukka.org/app.html",
+    "workerEndpoint": "https://cukka.canerkaraogul.workers.dev",
+    "bazaarDiscoveryUrl": "https://cukka.canerkaraogul.workers.dev/.well-known/x402-bazaar.json",
     "payTo": "0x573AaAfce41839cEF3E6D5b9Ad727db44BcE8BA9",
     "defaultNetwork": "eip155:8453",
     "networks": ["eip155:8453", "eip155:84532"]
@@ -10,6 +12,7 @@
   "resources": [
     {
       "path": "/v1/catalog/cheapest-variant",
+      "url": "https://cukka.canerkaraogul.workers.dev/v1/catalog/cheapest-variant",
       "method": "POST",
       "scheme": "exact",
       "amount": "2000",
@@ -27,7 +30,7 @@
             "required": ["query"],
             "properties": {
               "query": { "type": "string" },
-              "stores": { "type": "array", "items": { "type": "string" } },
+              "category": { "type": "string", "default": "auto" },
               "inStockOnly": { "type": "boolean", "default": true },
               "preferredSize": { "type": "string" }
             }
@@ -37,6 +40,7 @@
     },
     {
       "path": "/v1/catalog/enrich-product",
+      "url": "https://cukka.canerkaraogul.workers.dev/v1/catalog/enrich-product",
       "method": "POST",
       "scheme": "upto",
       "amount": "25000",
@@ -51,9 +55,9 @@
           },
           "schema": {
             "type": "object",
-            "required": ["productUrlOrHandle"],
+            "required": ["query"],
             "properties": {
-              "productUrlOrHandle": { "type": "string" },
+              "query": { "type": "string" },
               "targetRegion": { "type": "string", "enum": ["TR", "EU", "US", "UK"] }
             }
           }
@@ -62,6 +66,7 @@
     },
     {
       "path": "/v1/catalog/price-stock-watch",
+      "url": "https://cukka.canerkaraogul.workers.dev/v1/catalog/price-stock-watch",
       "method": "POST",
       "scheme": "exact",
       "amount": "1000",
@@ -70,7 +75,7 @@
       "extensions": {
         "bazaar": {
           "info": {
-            "name": "Real-Time Restock Alert & 30d Price Delta Signal",
+            "name": "Real-Time Restock Alert & Genuine Discount Signal",
             "description": "Monitors Shopify variant stock state and price drops across merchants.",
             "category": "commerce"
           }
@@ -79,6 +84,7 @@
     },
     {
       "path": "/v1/catalog/niche-match",
+      "url": "https://cukka.canerkaraogul.workers.dev/v1/catalog/niche-match",
       "method": "POST",
       "scheme": "upto",
       "amount": "50000",

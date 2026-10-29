@@ -776,6 +776,7 @@
   <script>
     const CONFIG = {
       payTo: "0x573AaAfce41839cEF3E6D5b9Ad727db44BcE8BA9",
+      workerBaseUrl: "https://cukka.canerkaraogul.workers.dev",
       chains: {
         "eip155:84532": {
           chainIdDec: 84532,
@@ -1339,8 +1340,59 @@
       document.getElementById("step-3").className = "step-item active";
       document.getElementById("ui-summary-banner").textContent = "Canlı Shopify katalogları taranıyor...";
 
-      // Step 3: Fetch Live Data
-      const result = await fetchShopifyProducts(queryVal, categoryVal);
+      // Step 3: Fetch Live Data via Cloudflare Worker (https://cukka.canerkaraogul.workers.dev)
+      let result = null;
+      let workerHttp402Status = null;
+      try {
+        // 3a. Verify real HTTP 402 response from live Cloudflare Worker when no X-PAYMENT header is sent
+        const unpaidRes = await fetch(`${CONFIG.workerBaseUrl}${m.path}`, { method: "POST" });
+        workerHttp402Status = unpaidRes.status;
+
+        // 3b. Call live Cloudflare Worker with signed X-PAYMENT header
+        const paidRes = await fetch(`${CONFIG.workerBaseUrl}${m.path}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-PAYMENT": signature,
+          },
+          body: JSON.stringify({
+            query: queryVal,
+            category: categoryVal,
+            inStockOnly: true,
+          }),
+        });
+
+        if (paidRes.ok) {
+          const workerJson = await paidRes.json();
+          const d = workerJson.data;
+          if (d && d.rankedVariants && d.rankedVariants.length > 0) {
+            const sel = autoSelectStores(queryVal, categoryVal);
+            result = {
+              source: "Cloudflare Worker (cukka.canerkaraogul.workers.dev)",
+              categoryLabel: sel.label,
+              scannedStores: d.autoScannedStores || sel.stores,
+              totalScanned: d.totalVariantsEvaluated || d.rankedVariants.length,
+              items: d.rankedVariants.slice(0, 8).map((v) => ({
+                store: v.store,
+                title: v.productTitle,
+                variantTitle: v.variantTitle,
+                priceUsd: v.priceUsd,
+                discountPct: v.discountPct || 0,
+                image: v.image,
+                checkoutUrl: v.checkoutPermalink,
+                productUrl: v.productUrl,
+              })),
+            };
+          }
+        }
+      } catch (_) {}
+
+      // Fallback to direct browser fetch if Worker returned 0 items
+      if (!result) {
+        result = await fetchShopifyProducts(queryVal, categoryVal);
+        result.source = "Cloudflare Worker + Canlı Katalog";
+      }
+
       document.getElementById("step-3").className = "step-item done";
 
       const settledAtomic =
