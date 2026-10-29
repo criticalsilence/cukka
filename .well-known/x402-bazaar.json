@@ -4,7 +4,8 @@
     "name": "Cukka — Shopify Global Catalog Agent Data Layer",
     "url": "https://cukka.org/app.html",
     "payTo": "0x573AaAfce41839cEF3E6D5b9Ad727db44BcE8BA9",
-    "networks": ["eip155:84532", "eip155:8453"]
+    "defaultNetwork": "eip155:8453",
+    "networks": ["eip155:8453", "eip155:84532"]
   },
   "resources": [
     {

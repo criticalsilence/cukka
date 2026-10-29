@@ -565,13 +565,13 @@
       </a>
 
       <div class="top-actions">
-        <!-- Testnet / Mainnet Switcher -->
+        <!-- Mainnet / Testnet Switcher -->
         <div class="net-toggle" title="Ağı Değiştir">
-          <button id="btn-net-sepolia" class="net-btn active-sepolia" onclick="switchNetwork('eip155:84532')">
-            Testnet (Sepolia)
-          </button>
-          <button id="btn-net-mainnet" class="net-btn" onclick="switchNetwork('eip155:8453')">
+          <button id="btn-net-mainnet" class="net-btn active-mainnet" onclick="switchNetwork('eip155:8453')">
             Mainnet (Base)
+          </button>
+          <button id="btn-net-sepolia" class="net-btn" onclick="switchNetwork('eip155:84532')">
+            Testnet (Sepolia)
           </button>
         </div>
 
@@ -600,7 +600,7 @@
       <div class="card-header">
         <div class="card-title">
           <span>1. Cüzdan ve Kasa Durumu</span>
-          <span id="lbl-active-network" class="pill amber">Base Sepolia Testnet</span>
+          <span id="lbl-active-network" class="pill green">Base Mainnet</span>
         </div>
         <button class="btn sm" onclick="refreshAllBalances()">↻ Bakiyeyi Yenile</button>
       </div>
@@ -821,7 +821,7 @@
     };
 
     const STATE = {
-      network: localStorage.getItem("cukka_net") || "eip155:84532",
+      network: localStorage.getItem("cukka_net_v2") || "eip155:8453",
       modeKey: "cheapest-variant",
       walletAddress: null,
       walletName: null,
@@ -919,7 +919,7 @@
     // Network Switcher (Sepolia <-> Mainnet)
     async function switchNetwork(targetNet) {
       STATE.network = targetNet;
-      localStorage.setItem("cukka_net", targetNet);
+      localStorage.setItem("cukka_net_v2", targetNet);
       updateNetworkUI();
 
       // If wallet is connected, ask wallet to switch chain too
