@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cukka x402 — Shopify Global Catalog Agent Data Layer</title>
-  <meta name="description" content="Otonom ajanlar için Shopify Global Catalog üzerinde x402 (HTTP 402) ve Bazaar destekli veri katmanı ($0.001 - $0.05 USDC)." />
+  <title>Cukka — x402 Ajan Konsolu</title>
+  <meta name="description" content="Shopify Global Catalog üzerinde çalışan yalın x402 Ajan Veri Katmanı ve Test Konsolu." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -24,8 +24,8 @@
       --blue-soft: rgba(59, 130, 246, 0.14);
       --amber: #F59E0B;
       --amber-soft: rgba(245, 158, 11, 0.15);
-      --purple: #A855F7;
-      --purple-soft: rgba(168, 85, 247, 0.15);
+      --red: #EF4444;
+      --red-soft: rgba(239, 68, 68, 0.14);
       --radius: 14px;
     }
 
@@ -49,71 +49,134 @@
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 920px;
       margin: 0 auto;
-      padding: 24px 20px 64px;
+      padding: 24px 18px 64px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    /* Top Header */
-    .header {
+    /* Top Bar */
+    .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 16px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 24px;
+      gap: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
     }
 
-    .brand-wrap {
+    .brand {
       display: flex;
       align-items: center;
       gap: 12px;
+      text-decoration: none;
+      color: var(--text);
     }
 
-    .brand-badge {
-      width: 40px;
-      height: 40px;
+    .brand-logo {
+      width: 38px;
+      height: 38px;
       border-radius: 10px;
       background: linear-gradient(135deg, #10B981, #3B82F6);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 18px;
+      font-size: 16px;
       color: #fff;
     }
 
     .brand-title {
-      font-size: 20px;
+      font-size: 17px;
       font-weight: 800;
       letter-spacing: -0.02em;
     }
 
     .brand-sub {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-muted);
     }
 
-    .header-controls {
+    .top-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
+    }
+
+    /* Buttons & Badges */
+    .btn {
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      border-color: var(--text-muted);
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #04130D;
+    }
+
+    .btn.primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .btn.danger {
+      background: var(--red-soft);
+      border-color: rgba(239, 68, 68, 0.35);
+      color: #FCA5A5;
+    }
+
+    .btn.danger:hover {
+      border-color: var(--red);
+    }
+
+    .btn.sm {
+      padding: 6px 10px;
+      font-size: 12px;
+      border-radius: 8px;
     }
 
     .pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
+      padding: 4px 10px;
       border-radius: 999px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
+      background: var(--bg);
+      color: var(--text-muted);
     }
 
     .pill.green {
@@ -134,71 +197,41 @@
       color: #FBBF24;
     }
 
-    .pill.purple {
-      background: var(--purple-soft);
-      border-color: rgba(168, 85, 247, 0.35);
-      color: #C084FC;
-    }
-
-    .net-switch {
-      cursor: pointer;
-      transition: transform 0.15s;
-    }
-
-    .net-switch:hover {
-      transform: translateY(-1px);
-    }
-
-    /* Telemetry Strip */
-    .kpi-strip {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 14px;
-      margin-bottom: 24px;
-    }
-
-    .kpi-card {
-      background: var(--surface);
+    /* Network Toggle */
+    .net-toggle {
+      display: inline-flex;
+      background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px 18px;
+      border-radius: 10px;
+      padding: 3px;
+      gap: 3px;
     }
 
-    .kpi-label {
+    .net-btn {
+      padding: 6px 10px;
+      border-radius: 7px;
       font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-weight: 700;
+      border: none;
+      background: transparent;
       color: var(--text-muted);
-      margin-bottom: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
     }
 
-    .kpi-val {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--text);
+    .net-btn.active-sepolia {
+      background: var(--amber-soft);
+      color: #FBBF24;
     }
 
-    .kpi-sub {
-      font-size: 12px;
-      color: var(--text-subtle);
-      margin-top: 4px;
+    .net-btn.active-mainnet {
+      background: var(--accent-soft);
+      color: #34D399;
     }
 
-    /* Main 2-Column Layout */
-    .main-grid {
-      display: grid;
-      grid-template-columns: 380px 1fr;
-      gap: 20px;
-      align-items: start;
-    }
-
-    @media (max-width: 960px) {
-      .main-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .panel {
+    /* Card Sections */
+    .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -208,62 +241,109 @@
       gap: 16px;
     }
 
-    .panel-title {
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .card-title {
       font-size: 16px;
       font-weight: 700;
       display: flex;
       align-items: center;
-      justify-content: space-between;
       gap: 8px;
     }
 
-    /* Endpoint Cards */
-    .endpoint-list {
+    /* Wallet Status Grid */
+    .wallet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .stat-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
       display: flex;
       flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .stat-sub {
+      font-size: 12px;
+      color: var(--text-subtle);
+    }
+
+    /* Service Mode Selector */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
       gap: 10px;
     }
 
-    .ep-card {
-      padding: 14px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
+    .mode-card {
       background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
       cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
+      transition: all 0.15s;
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
 
-    .ep-card:hover {
+    .mode-card:hover {
       border-color: var(--text-subtle);
     }
 
-    .ep-card.active {
+    .mode-card.active {
       border-color: var(--accent);
-      background: rgba(16, 185, 129, 0.06);
+      background: rgba(16, 185, 129, 0.07);
     }
 
-    .ep-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .ep-path {
+    .mode-name {
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text);
     }
 
-    .ep-desc {
-      font-size: 13px;
+    .mode-desc {
+      font-size: 12px;
       color: var(--text-muted);
+      line-height: 1.35;
     }
 
-    /* Form Controls */
+    /* Inputs */
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 680px) {
+      .input-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .field {
       display: flex;
       flex-direction: column;
@@ -271,14 +351,14 @@
     }
 
     .field label {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-muted);
     }
 
-    .input, .select {
+    .input {
       width: 100%;
-      padding: 10px 12px;
+      padding: 11px 13px;
       border-radius: 10px;
       border: 1px solid var(--border);
       background: var(--bg);
@@ -288,653 +368,804 @@
       outline: none;
     }
 
-    .input:focus, .select:focus {
+    .input:focus {
       border-color: var(--accent);
     }
 
-    .btn-row {
+    .preset-bar {
       display: flex;
-      gap: 10px;
+      align-items: center;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
-    .btn {
-      padding: 12px 18px;
-      border-radius: 10px;
+    .preset-chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: var(--bg);
       border: 1px solid var(--border);
-      background: var(--surface-2);
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 700;
+      color: var(--text-muted);
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.15s;
+      transition: all 0.12s;
     }
 
-    .btn:hover:not(:disabled) {
-      border-color: var(--text-muted);
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .btn.primary {
-      background: var(--accent);
+    .preset-chip:hover {
       border-color: var(--accent);
-      color: #052E16;
+      color: var(--text);
     }
 
-    .btn.primary:hover:not(:disabled) {
-      background: var(--accent-hover);
-      color: #fff;
-    }
-
-    .btn.blue {
-      background: var(--blue);
-      border-color: var(--blue);
-      color: #fff;
-    }
-
-    /* Stepper */
-    .stepper {
+    /* Simple 3-Step Progress Bar */
+    .step-strip {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 8px;
     }
 
-    .step-box {
-      padding: 12px;
+    @media (max-width: 640px) {
+      .step-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .step-item {
+      padding: 10px 12px;
       border-radius: 10px;
       border: 1px solid var(--border);
       background: var(--bg);
-      font-size: 13px;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .step-box.active-step {
-      border-color: var(--amber);
-      background: var(--amber-soft);
+    .step-item.active {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+      color: #93C5FD;
+      font-weight: 600;
     }
 
-    .step-box.done-step {
-      border-color: var(--accent);
+    .step-item.done {
+      border-color: rgba(16, 185, 129, 0.4);
       background: var(--accent-soft);
+      color: #34D399;
+      font-weight: 600;
     }
 
-    /* Variant Comparison Table */
-    .variant-grid {
+    /* Product Cards */
+    .results-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .variant-row {
+    .product-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 14px;
       flex-wrap: wrap;
-      gap: 12px;
-      padding: 14px 16px;
+      padding: 14px;
       border-radius: 12px;
       border: 1px solid var(--border);
       background: var(--bg);
     }
 
-    .variant-row.winner {
-      border: 2px solid var(--accent);
-      background: rgba(16, 185, 129, 0.07);
+    .product-row.best {
+      border-color: var(--accent);
+      background: rgba(16, 185, 129, 0.05);
     }
 
-    .code-block {
+    /* Collapsible Developer Details */
+    details.dev-drawer {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+    }
+
+    details.dev-drawer summary {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      user-select: none;
+    }
+
+    .code-box {
+      margin-top: 12px;
       background: #05080F;
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 14px;
-      font-size: 12.5px;
-      line-height: 1.55;
-      color: #E2E8F0;
+      padding: 12px;
+      font-size: 12px;
+      color: #CBD5E1;
       overflow-x: auto;
-      max-height: 360px;
+      max-height: 280px;
       overflow-y: auto;
+      white-space: pre;
     }
 
-    .tabs-bar {
+    /* Wallet Picker Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
       display: flex;
-      gap: 8px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
     }
 
-    .tab-btn {
-      padding: 8px 14px;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--text-muted);
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .wallet-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      cursor: pointer;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 14px;
+      transition: border-color 0.15s;
+    }
+
+    .wallet-option:hover {
+      border-color: var(--accent);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--surface-2);
+      border: 1px solid var(--accent);
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: 12px;
       font-size: 13px;
       font-weight: 600;
-      cursor: pointer;
-    }
-
-    .tab-btn.active {
-      background: var(--surface-2);
-      color: var(--text);
-      border-color: var(--border);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+      display: none;
+      z-index: 1000;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Top Header -->
-    <header class="header">
-      <div class="brand-wrap">
-        <div class="brand-badge">402</div>
+    <!-- 1. TOP BAR: Brand + Network Switcher + Wallet Connect/Disconnect -->
+    <header class="topbar">
+      <a href="/" class="brand">
+        <div class="brand-logo">C</div>
         <div>
-          <div class="brand-title">Cukka x402 · Shopify Global Catalog Veri Katmanı</div>
-          <div class="brand-sub">Otonom Ajanlar İçin Mikro-Ödemeli ($0.001 – $0.05 USDC) Ticaret İstihbaratı & Bazaar Uç Noktası</div>
+          <div class="brand-title">Cukka Ajan Konsolu</div>
+          <div class="brand-sub">Shopify Global Catalog · x402 Ödeme Katmanı</div>
         </div>
-      </div>
-      <div class="header-controls">
-        <button class="pill green net-switch" id="btn-network-toggle" onclick="toggleTargetNetwork()">
-          ● Ağ: Base Sepolia Testnet (eip155:84532)
+      </a>
+
+      <div class="top-actions">
+        <!-- Testnet / Mainnet Switcher -->
+        <div class="net-toggle" title="Ağı Değiştir">
+          <button id="btn-net-sepolia" class="net-btn active-sepolia" onclick="switchNetwork('eip155:84532')">
+            Testnet (Sepolia)
+          </button>
+          <button id="btn-net-mainnet" class="net-btn" onclick="switchNetwork('eip155:8453')">
+            Mainnet (Base)
+          </button>
+        </div>
+
+        <!-- Disconnected State -->
+        <button id="btn-login" class="btn primary" onclick="openWalletConnect()">
+          Cüzdan Bağla
         </button>
-        <a href="/.well-known/x402-bazaar.json" target="_blank" class="pill purple" style="text-decoration: none;">
-          Bazaar Manifest (.json) ↗
-        </a>
-        <button class="pill blue net-switch" id="btn-connect-wallet" onclick="connectAgentWallet()">
-          Cüzdan Bağla (EIP-3009 İmza)
-        </button>
+
+        <!-- Connected State (Hidden until connected) -->
+        <div id="connected-controls" style="display: none; align-items: center; gap: 6px; flex-wrap: wrap;">
+          <span id="badge-wallet-addr" class="pill green mono" style="cursor: pointer;" onclick="copyConnectedAddress()" title="Adresi Kopyala">
+            0x...
+          </span>
+          <button class="btn sm" onclick="switchWalletAccount()" title="Cüzdanda Başka Hesap Seç">
+            Hesap Değiştir
+          </button>
+          <button class="btn sm danger" onclick="disconnectWallet()" title="Cüzdan Bağlantısını Kes">
+            Çıkış Yap
+          </button>
+        </div>
       </div>
     </header>
 
-    <!-- Live Onchain Telemetry Strip -->
-    <section class="kpi-strip">
-      <div class="kpi-card">
-        <div class="kpi-label">x402 Gelir Alıcı Cüzdan (`payTo`)</div>
-        <div class="kpi-val mono" style="font-size: 17px;">0x573A...8BA9</div>
-        <div class="kpi-sub">Doğrulanmış Base Sepolia & Base Mainnet Alıcısı</div>
+    <!-- 2. WALLET & VAULT SUMMARY -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <span>1. Cüzdan ve Kasa Durumu</span>
+          <span id="lbl-active-network" class="pill amber">Base Sepolia Testnet</span>
+        </div>
+        <button class="btn sm" onclick="refreshAllBalances()">↻ Bakiyeyi Yenile</button>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Canlı Cüzdan USDC Bakiyesi (Base Sepolia)</div>
-        <div class="kpi-val" id="kpi-sepolia-usdc">1,20 USDC</div>
-        <div class="kpi-sub" id="kpi-try-equiv">Chainlink Kuru: ~59,43 ₺ ($1 = 49,53 ₺)</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Aktif x402 Şemaları (`exact` & `upto`)</div>
-        <div class="kpi-val">$0.001 – $0.050</div>
-        <div class="kpi-sub">Bazaar Otomatik Keşif (`extensions.bazaar`) Aktif</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Oturum Tahsilat / Çağrı Sayacı</div>
-        <div class="kpi-val" style="color: #34D399;" id="kpi-session-rev">$0.0000 USDC (0 Çağrı)</div>
-        <div class="kpi-sub" id="kpi-last-scheme">Son tahsilat: Bekleniyor</div>
+
+      <div class="wallet-grid">
+        <!-- Connected User Wallet -->
+        <div class="stat-box">
+          <div class="stat-label">Bağlı Cüzdanın (Test Eden)</div>
+          <div id="ui-user-status" class="stat-value" style="font-size: 16px; color: var(--text-muted);">
+            Henüz cüzdan bağlı değil
+          </div>
+          <div id="ui-user-balances" class="stat-sub mono">
+            Giriş yaptığında canlı USDC ve ETH bakiyen burada görünür.
+          </div>
+        </div>
+
+        <!-- Receiver Revenue Wallet -->
+        <div class="stat-box">
+          <div class="stat-label">Gelir Kasası (payTo: 0x573A...8BA9)</div>
+          <div id="ui-vault-usdc" class="stat-value" style="color: #34D399;">
+            Yükleniyor...
+          </div>
+          <div id="ui-vault-tl" class="stat-sub">
+            Chainlink USD/TRY kuru okunuyor...
+          </div>
+        </div>
+
+        <!-- Session Test Counter -->
+        <div class="stat-box">
+          <div class="stat-label">Bu Oturumdaki Test Tahsilatı</div>
+          <div id="ui-session-total" class="stat-value">
+            $0.0000 USDC
+          </div>
+          <div id="ui-session-sub" class="stat-sub">
+            0 başarılı sorgu
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Main 2-Column Workspace -->
-    <div class="main-grid">
-      <!-- LEFT COLUMN: Bazaar Endpoint Selector & Pricing -->
-      <aside class="panel">
-        <div class="panel-title">
-          <span>Bazaar Uç Noktaları (Endpoints)</span>
-          <span class="pill green" style="font-size: 11px;">x402 v2</span>
+    <!-- 3. SIMPLE AGENT QUERY & X402 TEST -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-title">2. Ajan Sorgusu ve Ödeme Testi</div>
+        <span id="ui-price-badge" class="pill green">Ücret: $0.002 USDC (exact)</span>
+      </div>
+
+      <!-- 4 Simple Modes -->
+      <div class="mode-grid">
+        <div class="mode-card active" onclick="selectMode('cheapest-variant', this)">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="mode-name">En Ucuz Varyant</span>
+            <span class="pill green mono" style="padding:2px 7px;font-size:11px;">$0.002</span>
+          </div>
+          <div class="mode-desc">Mağazaları tarar, stoktaki en ucuz ürünü bulur.</div>
         </div>
 
-        <div class="endpoint-list" id="endpoint-list">
-          <!-- 1. Cheapest Variant (Recommended Primary) -->
-          <div class="ep-card active" onclick="selectEndpoint('cheapest-variant', this)">
-            <div class="ep-top">
-              <span class="ep-path mono">POST /v1/catalog/cheapest-variant</span>
-              <span class="pill green">$0.002 · exact</span>
-            </div>
-            <div class="ep-desc">
-              <strong>Mağazalar Arası Fiyat Karşılaştırma & En Ucuz Varyant:</strong> Çoklu Shopify mağazalarında aynı ürünü bulur, stoksuzları eler ve en ucuz stoklu varyantı doğrudan sepet linkiyle döner.
-            </div>
+        <div class="mode-card" onclick="selectMode('price-stock-watch', this)">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="mode-name">Stok & İndirim</span>
+            <span class="pill green mono" style="padding:2px 7px;font-size:11px;">$0.001</span>
           </div>
-
-          <!-- 2. Product Enrichment (upto LLM) -->
-          <div class="ep-card" onclick="selectEndpoint('enrich-product', this)">
-            <div class="ep-top">
-              <span class="ep-path mono">POST /v1/catalog/enrich-product</span>
-              <span class="pill amber">upto $0.025</span>
-            </div>
-            <div class="ep-desc">
-              <strong>Ürün Verisi Zenginleştirme (`upto`):</strong> Kategori normalizasyonu, TR/EU/US beden tablosu dönüşümü ve uyumluluk analizi. LLM token kullanımına göre dinamik ücretlendirilir.
-            </div>
-          </div>
-
-          <!-- 3. Stock / Price Watch -->
-          <div class="ep-card" onclick="selectEndpoint('price-stock-watch', this)">
-            <div class="ep-top">
-              <span class="ep-path mono">POST /v1/catalog/price-stock-watch</span>
-              <span class="pill green">$0.001 · exact</span>
-            </div>
-            <div class="ep-desc">
-              <strong>Stok & Fiyat Değişim Takibi:</strong> Anlık varyant stok durumu (restock sinyali) ve 30 günlük baz fiyata göre indirim oranı.
-            </div>
-          </div>
-
-          <!-- 4. Niche Search -->
-          <div class="ep-card" onclick="selectEndpoint('niche-match', this)">
-            <div class="ep-top">
-              <span class="ep-path mono">POST /v1/catalog/niche-match</span>
-              <span class="pill purple">upto $0.050</span>
-            </div>
-            <div class="ep-desc">
-              <strong>Belirli Nişte Arama (`upto`):</strong> Kozmetik içerik (INCI) alerjen/uyum eşleştirme, yedek parça OEM uyumu ve bütçe kısıtlı hediye önerisi.
-            </div>
-          </div>
+          <div class="mode-desc">Gerçek indirim oranını ve stok durumunu kontrol eder.</div>
         </div>
 
-        <div style="border-top: 1px solid var(--border); padding-top: 14px; font-size: 13px; color: var(--text-muted);">
-          <strong style="color: var(--text);">Neden `upto` + Bazaar?</strong><br />
-          Basit katalog sorguları (`exact: $0.001–$0.002`) sabit fiyatlıdır; LLM gerektiren zenginleştirme çağrılarında ise ajan `upto $0.025` tavan yetkisi verir, sunucu sadece harcanan token kadar (örn. `$0.0064`) tahsil eder.
+        <div class="mode-card" onclick="selectMode('enrich-product', this)">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="mode-name">Beden & Zenginleştirme</span>
+            <span class="pill amber mono" style="padding:2px 7px;font-size:11px;">upto $0.025</span>
+          </div>
+          <div class="mode-desc">TR/EU/US beden tablosu ve kategori eşleştirmesi yapar.</div>
         </div>
-      </aside>
 
-      <!-- RIGHT COLUMN: Interactive x402 Handshake + Live Shopify Catalog Results -->
-      <main style="display: flex; flex-direction: column; gap: 20px;">
-        <!-- Query Builder & 3-Step x402 Execution Panel -->
-        <section class="panel">
-          <div class="panel-title">
-            <span id="active-ep-title">1. Mağazalar Arası Fiyat Karşılaştırma & En Ucuz Varyant Bulucu</span>
-            <span class="pill green" id="active-ep-badge">Şema: exact · $0.002 USDC (2000 atomic)</span>
+        <div class="mode-card" onclick="selectMode('niche-match', this)">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="mode-name">Niş Ürün Arama</span>
+            <span class="pill amber mono" style="padding:2px 7px;font-size:11px;">upto $0.050</span>
           </div>
+          <div class="mode-desc">Kozmetik içerik, hediye veya özel bütçeye göre filtreler.</div>
+        </div>
+      </div>
 
-          <!-- Dynamic Input Fields -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
-            <div class="field">
-              <label for="inp-query" id="lbl-primary-input">Aranan Ürün / UPID / Anahtar Kelime</label>
-              <input id="inp-query" class="input" type="text" value="runner" placeholder="Örn: runner, coffee, hoodie, serum..." />
-            </div>
-            <div class="field" id="field-stores-wrap">
-              <label for="inp-stores">Karşılaştırılacak Canlı Shopify Mağazaları (Virgülle)</label>
-              <input id="inp-stores" class="input mono" type="text" value="allbirds.com, gymshark.com, deathwishcoffee.com" />
-            </div>
-            <div class="field">
-              <label for="inp-filter" id="lbl-secondary-input">Varyant / Beden / Kriter Filtresi</label>
-              <input id="inp-filter" class="input" type="text" value="Stokta Olanlar (available: true)" />
-            </div>
-          </div>
+      <!-- Search Inputs -->
+      <div class="input-row">
+        <div class="field">
+          <label for="inp-query">Aranacak Ürün / Kelime</label>
+          <input id="inp-query" class="input" type="text" value="runner" placeholder="Örn: runner, shoe, shirt, coffee..." />
+        </div>
+        <div class="field">
+          <label for="inp-stores">Taranacak Canlı Shopify Mağazaları</label>
+          <input id="inp-stores" class="input mono" type="text" value="allbirds.com, tentree.com, gymshark.com" />
+        </div>
+      </div>
 
-          <!-- 3-Step x402 Protocol Handshake Progress -->
-          <div class="stepper">
-            <div class="step-box" id="step-1-box">
-              <strong>Adım 1: Ödemesiz Çağrı</strong>
-              <div style="color: var(--text-muted); margin-top: 2px;">Sunucu <code>HTTP 402</code> ve Bazaar şemasını döner</div>
-            </div>
-            <div class="step-box" id="step-2-box">
-              <strong>Adım 2: x402 Ödeme İmzası</strong>
-              <div style="color: var(--text-muted); margin-top: 2px;">EIP-3009 Base USDC yetkisi imzalanır</div>
-            </div>
-            <div class="step-box" id="step-3-box">
-              <strong>Adım 3: Katalog Verisi & Tahsilat</strong>
-              <div style="color: var(--text-muted); margin-top: 2px;"><code>X-PAYMENT</code> ile <code>HTTP 200 OK</code> döner</div>
-            </div>
-          </div>
+      <!-- Quick Presets -->
+      <div class="preset-bar">
+        <span style="font-size:12px;color:var(--text-subtle);">Hızlı Dene:</span>
+        <button class="preset-chip" onclick="setQuickQuery('runner')">runner (Ayakkabı)</button>
+        <button class="preset-chip" onclick="setQuickQuery('shirt')">shirt (Tişört)</button>
+        <button class="preset-chip" onclick="setQuickQuery('hoodie')">hoodie (Sweatshirt)</button>
+        <button class="preset-chip" onclick="setQuickQuery('sock')">sock (Çorap)</button>
+      </div>
 
-          <!-- Action Buttons -->
-          <div class="btn-row">
-            <button class="btn" id="btn-test-402" onclick="triggerStep1Unpaid402()">
-              1. Ödemesiz Çağır (HTTP 402 Gör)
-            </button>
-            <button class="btn primary" id="btn-run-full-x402" onclick="runFullX402AgentFlow(false)">
-              ⚡ Otonom Ajan Olarak Tam Akışı Çalıştır (x402 İmzala + Canlı Shopify Sorgula)
-            </button>
-            <button class="btn blue" id="btn-run-wallet-x402" onclick="runFullX402AgentFlow(true)">
-              🔐 Tarayıcı Cüzdanımla İmzala & Çalıştır
-            </button>
-          </div>
-        </section>
+      <!-- Action Buttons -->
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; padding-top: 4px;">
+        <button id="btn-run-signed" class="btn primary" onclick="executeQuery(true)">
+          ⚡ Cüzdanımla İmzala ve Sorgula (Gerçek x402 Testi)
+        </button>
+        <button id="btn-run-demo" class="btn" onclick="executeQuery(false)">
+          İmzasız Hızlı Önizleme
+        </button>
+      </div>
+    </section>
 
-        <!-- Live Results & x402 Payload Inspector -->
-        <section class="panel">
-          <div class="tabs-bar">
-            <button class="tab-btn active" onclick="switchOutputTab('visual', this)">
-              Canlı Shopify Katalog & En Ucuz Varyant Sonucu
-            </button>
-            <button class="tab-btn" onclick="switchOutputTab('http402', this)">
-              HTTP 402 & Bazaar JSON Yanıtı
-            </button>
-            <button class="tab-btn" onclick="switchOutputTab('receipt', this)">
-              X-PAYMENT İmza & HTTP 200 Ham JSON
-            </button>
-            <button class="tab-btn" onclick="switchOutputTab('sdk', this)">
-              Ajan Entegrasyon Kodu (cURL / TypeScript)
-            </button>
-          </div>
+    <!-- 4. RESULTS SECTION -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-title">3. Sorgu Durumu ve Canlı Sonuçlar</div>
+        <span id="ui-settled-pill" class="pill green" style="display: none;"></span>
+      </div>
 
-          <!-- TAB 1: Visual Catalog Comparison / Enrichment Output -->
-          <div id="out-tab-visual" style="display: flex; flex-direction: column; gap: 14px;">
-            <div id="visual-status-bar" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 12px 14px; border-radius: 10px; background: var(--bg); border: 1px solid var(--border);">
-              <span style="font-size: 14px; color: var(--text-muted);" id="visual-summary-text">
-                Canlı Shopify mağaza kataloglarından gerçek zamanlı varyant ve fiyat karşılaştırması için yukarıdaki yeşil butona dokun.
-              </span>
-              <span class="pill green" id="settled-pill" style="display: none;"></span>
-            </div>
+      <!-- 3-Step Progress -->
+      <div class="step-strip">
+        <div id="step-1" class="step-item">1. HTTP 402 Ödeme Faturası</div>
+        <div id="step-2" class="step-item">2. Cüzdan x402 İmzası</div>
+        <div id="step-3" class="step-item">3. Canlı Shopify Sonucu</div>
+      </div>
 
-            <div class="variant-grid" id="variant-results-container">
-              <!-- Populated with real live Shopify Storefront variants -->
-            </div>
-          </div>
+      <div id="ui-summary-banner" style="font-size: 13px; color: var(--text-muted); padding: 10px 12px; background: var(--bg); border-radius: 10px; border: 1px solid var(--border);">
+        Sorgu bekleniyor...
+      </div>
 
-          <!-- TAB 2: HTTP 402 Payment Required JSON -->
-          <div id="out-tab-http402" style="display: none;">
-            <pre class="code-block" id="code-http402"></pre>
-          </div>
+      <div id="ui-results-list" class="results-list"></div>
+    </section>
 
-          <!-- TAB 3: Signed X-PAYMENT & HTTP 200 JSON -->
-          <div id="out-tab-receipt" style="display: none;">
-            <pre class="code-block" id="code-http200"></pre>
-          </div>
+    <!-- 5. OPTIONAL DEVELOPER DRAWER (Collapsed by default for simplicity) -->
+    <details class="dev-drawer">
+      <summary>Geliştirici & Ajan Teknik Detayları (HTTP 402 Faturası, İmza Kanıtı ve Entegrasyon Kodu)</summary>
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+        <div>
+          <div style="font-size: 12px; font-weight: 600; color: var(--text-muted);">HTTP 402 Payment Required & Son Makbuz (JSON):</div>
+          <pre id="ui-dev-json" class="code-box"></pre>
+        </div>
+      </div>
+    </details>
+  </div>
 
-          <!-- TAB 4: Agent SDK & cURL Snippet -->
-          <div id="out-tab-sdk" style="display: none;">
-            <pre class="code-block" id="code-sdk"></pre>
-          </div>
-        </section>
-      </main>
+  <!-- WALLET PICKER MODAL -->
+  <div id="wallet-modal" class="modal-backdrop" onclick="if(event.target===this) closeWalletModal()">
+    <div class="modal">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:16px;font-weight:800;">Cüzdan Seçin</div>
+        <button class="btn sm" onclick="closeWalletModal()">✕</button>
+      </div>
+      <div style="font-size:13px;color:var(--text-muted);">
+        Tarayıcınızda algılanan cüzdanlardan birini seçerek bağlanın:
+      </div>
+      <div id="wallet-options-list" style="display:flex;flex-direction:column;gap:8px;"></div>
     </div>
   </div>
 
-  <script>
-    // =========================================================================
-    // CUKKA x402 — Live Shopify Global Catalog & Base USDC Engine
-    // =========================================================================
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="toast"></div>
 
+  <script>
     const CONFIG = {
       payTo: "0x573AaAfce41839cEF3E6D5b9Ad727db44BcE8BA9",
-      sepoliaRpc: "https://sepolia.base.org",
-      mainnetRpc: "https://mainnet.base.org",
-      sepoliaUsdc: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
-      mainnetUsdc: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-      chainlinkTryUsdBase: "0x29413773e7CD4Dfd6Ad89a50887877b88a6C592C",
+      chains: {
+        "eip155:84532": {
+          chainIdDec: 84532,
+          chainIdHex: "0x14a34",
+          name: "Base Sepolia Testnet",
+          rpcUrl: "https://sepolia.base.org",
+          usdcAddress: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+          explorer: "https://sepolia.basescan.org",
+        },
+        "eip155:8453": {
+          chainIdDec: 8453,
+          chainIdHex: "0x2105",
+          name: "Base Mainnet",
+          rpcUrl: "https://mainnet.base.org",
+          usdcAddress: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          explorer: "https://basescan.org",
+        },
+      },
+      chainlinkTryUsdBase: "0x2583823110C85a1345721B21872B3697253726c2",
     };
 
-    const ENDPOINTS = {
+    const MODES = {
       "cheapest-variant": {
         path: "/v1/catalog/cheapest-variant",
-        title: "1. Mağazalar Arası Fiyat Karşılaştırma & En Ucuz Varyant Bulucu",
+        title: "En Ucuz Varyant Bul",
         scheme: "exact",
         amountAtomic: "2000",
         priceUsd: 0.002,
-        description:
-          "Shopify Global Catalog ve mağaza vitrinlerinde aynı ürünü bulur, stoksuz varyantları eler ve en ucuz stoklu varyantı doğrudan sepet linkiyle döner.",
-        primaryLabel: "Aranan Ürün / UPID / Anahtar Kelime",
-        primaryDefault: "coffee",
-        secondaryLabel: "Tercih Edilen Varyant / Boyut Filtresi (Opsiyonel)",
-        secondaryDefault: "",
-        showStores: true,
-      },
-      "enrich-product": {
-        path: "/v1/catalog/enrich-product",
-        title: "2. Ürün Verisi Zenginleştirme (Kategori, Beden Tablosu & Uyumluluk)",
-        scheme: "upto",
-        amountAtomic: "25000",
-        priceUsd: 0.025,
-        description:
-          "Ham Shopify ürün verisini standart Google/Shopify taksonomisine, TR/EU/US/UK beden dönüşüm tablosuna ve materyal/uyumluluk etiketlerine dönüştürür (upto şeması ile gerçek LLM token maliyeti kadar ücretlendirilir).",
-        primaryLabel: "Zenginleştirilecek Ürün Adı veya Shopify URL",
-        primaryDefault: "Tree Runner — Allbirds",
-        secondaryLabel: "Hedef Bölge & Beden Standardı",
-        secondaryDefault: "TR / EU Standart Beden Tablosu",
-        showStores: true,
       },
       "price-stock-watch": {
         path: "/v1/catalog/price-stock-watch",
-        title: "3. Stok / Fiyat Değişim Takibi (Restock Sinyali & Fiyat Geçmişi)",
+        title: "Stok & İndirim Takibi",
         scheme: "exact",
         amountAtomic: "1000",
         priceUsd: 0.001,
-        description:
-          "Varyant bazlı canlı stok kontrolü, karşılaştırma fiyatına (compare_at_price) göre gerçek indirim oranı ve yeniden stoklanma sinyali üretir.",
-        primaryLabel: "Takip Edilecek Ürün Anahtar Kelimesi",
-        primaryDefault: "shirt",
-        secondaryLabel: "Alarm Eşiği",
-        secondaryDefault: "Stok açıldığında veya >%10 indirimde bildir",
-        showStores: true,
+      },
+      "enrich-product": {
+        path: "/v1/catalog/enrich-product",
+        title: "Beden & Zenginleştirme",
+        scheme: "upto",
+        amountAtomic: "25000",
+        priceUsd: 0.025,
       },
       "niche-match": {
         path: "/v1/catalog/niche-match",
-        title: "4. Belirli Nişte Arama (Kozmetik INCI, Yedek Parça, Hediye Önerisi)",
+        title: "Niş Ürün Arama",
         scheme: "upto",
         amountAtomic: "50000",
         priceUsd: 0.050,
-        description:
-          "Belirli teknik kriterlere (parfümsüz/alkolsüz INCI içerik, cihaz uyumluluğu veya bütçe kısıtlı hediye profili) göre ürünleri puanlar.",
-        primaryLabel: "Niş Kriteri / İçerik / Hediye Profili",
-        primaryDefault: "Kafeinli doğal içerik, $35 altı hediye paketi",
-        secondaryLabel: "Maksimum Bütçe Sınırı (USD)",
-        secondaryDefault: "35",
-        showStores: true,
       },
     };
 
     const STATE = {
-      network: "eip155:84532", // Default Base Sepolia Testnet per user choice
-      networkLabel: "Base Sepolia Testnet (eip155:84532)",
-      selectedEpKey: "cheapest-variant",
-      connectedWallet: null,
+      network: localStorage.getItem("cukka_net") || "eip155:84532",
+      modeKey: "cheapest-variant",
+      walletAddress: null,
+      walletName: null,
+      activeProvider: null,
+      discoveredProviders: [],
       usdTryRate: 49.53,
-      sepoliaUsdcBal: 1.20,
       sessionCalls: 0,
-      sessionRevenueUsd: 0,
-      cachedLiveProducts: [],
+      sessionUsd: 0,
     };
 
-    async function ethCall(rpcUrl, to, data) {
+    // EIP-6963 Multi-Wallet Discovery
+    window.addEventListener("eip6963:announceProvider", (event) => {
+      const detail = event.detail;
+      if (detail && detail.provider && !STATE.discoveredProviders.some((p) => p.info.uuid === detail.info.uuid)) {
+        STATE.discoveredProviders.push(detail);
+      }
+    });
+    window.dispatchEvent(new Event("eip6963:requestProvider"));
+
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.style.display = "block";
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        el.style.display = "none";
+      }, 3200);
+    }
+
+    async function rpcCall(rpcUrl, method, params) {
       const res = await fetch(rpcUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          id: 1,
-          method: "eth_call",
-          params: [{ to, data }, "latest"],
-        }),
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
       });
       const json = await res.json();
       return json.result;
     }
 
-    async function syncLiveWalletAndOracle() {
-      try {
-        const padded = CONFIG.payTo.replace(/^0x/, "").padStart(64, "0");
-        const [usdcHex, tryHex] = await Promise.all([
-          ethCall(CONFIG.sepoliaRpc, CONFIG.sepoliaUsdc, "0x70a08231" + padded),
-          ethCall(CONFIG.mainnetRpc, CONFIG.chainlinkTryUsdBase, "0xfeaf968c"),
-        ]);
+    async function readAddressBalances(address, netKey) {
+      const chain = CONFIG.chains[netKey];
+      const cleanAddr = address.replace(/^0x/, "").toLowerCase().padStart(64, "0");
+      const [usdcHex, ethHex] = await Promise.all([
+        rpcCall(chain.rpcUrl, "eth_call", [{ to: chain.usdcAddress, data: "0x70a08231" + cleanAddr }, "latest"]),
+        rpcCall(chain.rpcUrl, "eth_getBalance", [address, "latest"]),
+      ]);
+      const usdc = usdcHex && usdcHex.length >= 66 ? Number(BigInt(usdcHex)) / 1e6 : 0;
+      const eth = ethHex ? Number(BigInt(ethHex)) / 1e18 : 0;
+      return { usdc, eth };
+    }
 
-        if (usdcHex && usdcHex.length >= 66) {
-          STATE.sepoliaUsdcBal = Number(BigInt(usdcHex)) / 1e6;
-        }
+    async function refreshAllBalances() {
+      const chain = CONFIG.chains[STATE.network];
+      try {
+        // 1. Update Chainlink USD/TRY rate from Base Mainnet
+        const tryHex = await rpcCall(
+          CONFIG.chains["eip155:8453"].rpcUrl,
+          "eth_call",
+          [{ to: CONFIG.chainlinkTryUsdBase, data: "0xfeaf968c" }, "latest"]
+        );
         if (tryHex && tryHex.length >= 130) {
           const clean = tryHex.replace(/^0x/, "");
           const tryUsd = Number(BigInt("0x" + clean.slice(64, 128))) / 1e8;
           if (tryUsd > 0) STATE.usdTryRate = 1 / tryUsd;
         }
 
-        document.getElementById("kpi-sepolia-usdc").textContent =
-          STATE.sepoliaUsdcBal.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 4 }) + " USDC";
-        const tlVal = (STATE.sepoliaUsdcBal * STATE.usdTryRate).toLocaleString("tr-TR", {
+        // 2. Update Receiver Vault Balance
+        const vaultBal = await readAddressBalances(CONFIG.payTo, STATE.network);
+        document.getElementById("ui-vault-usdc").textContent =
+          `${vaultBal.usdc.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USDC`;
+        const vaultTl = (vaultBal.usdc * STATE.usdTryRate).toLocaleString("tr-TR", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         });
-        document.getElementById("kpi-try-equiv").textContent =
-          `Chainlink Kuru: ~${tlVal} ₺ ($1 = ${STATE.usdTryRate.toFixed(2)} ₺)`;
-      } catch (e) {
-        console.warn("RPC sync info:", e.message);
+        document.getElementById("ui-vault-tl").textContent =
+          `≈ ${vaultTl} ₺ · ${vaultBal.eth.toFixed(4)} ETH ($1 = ${STATE.usdTryRate.toFixed(2)} ₺)`;
+
+        // 3. Update Connected User Wallet Balance (if logged in)
+        if (STATE.walletAddress) {
+          const userBal = await readAddressBalances(STATE.walletAddress, STATE.network);
+          document.getElementById("ui-user-status").innerHTML =
+            `<span style="color:#34D399;">● Bağlı (${STATE.walletName || "Cüzdan"})</span> · <span class="mono">${STATE.walletAddress.slice(0, 6)}...${STATE.walletAddress.slice(-4)}</span>`;
+          document.getElementById("ui-user-balances").textContent =
+            `Bakiye: ${userBal.usdc.toFixed(4)} USDC · ${userBal.eth.toFixed(4)} ETH (${chain.name})`;
+        } else {
+          document.getElementById("ui-user-status").textContent = "Henüz cüzdan bağlı değil";
+          document.getElementById("ui-user-balances").textContent =
+            "Sağ üstten 'Cüzdan Bağla' butonuna tıklayarak giriş yapabilirsin.";
+        }
+      } catch (err) {
+        console.warn("Bakiye okuma hatası:", err);
       }
     }
 
-    function toggleTargetNetwork() {
-      if (STATE.network === "eip155:84532") {
-        STATE.network = "eip155:8453";
-        STATE.networkLabel = "Base Mainnet (eip155:8453)";
-      } else {
-        STATE.network = "eip155:84532";
-        STATE.networkLabel = "Base Sepolia Testnet (eip155:84532)";
+    // Network Switcher (Sepolia <-> Mainnet)
+    async function switchNetwork(targetNet) {
+      STATE.network = targetNet;
+      localStorage.setItem("cukka_net", targetNet);
+      updateNetworkUI();
+
+      // If wallet is connected, ask wallet to switch chain too
+      const provider = STATE.activeProvider || window.ethereum;
+      if (STATE.walletAddress && provider) {
+        const chain = CONFIG.chains[targetNet];
+        try {
+          await provider.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: chain.chainIdHex }],
+          });
+          showToast(`${chain.name} ağına geçildi.`);
+        } catch (switchErr) {
+          if (switchErr.code === 4902) {
+            try {
+              await provider.request({
+                method: "wallet_addEthereumChain",
+                params: [
+                  {
+                    chainId: chain.chainIdHex,
+                    chainName: chain.name,
+                    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+                    rpcUrls: [chain.rpcUrl],
+                    blockExplorerUrls: [chain.explorer],
+                  },
+                ],
+              });
+            } catch (addErr) {
+              console.warn("Ağ eklenemedi:", addErr);
+            }
+          }
+        }
       }
-      document.getElementById("btn-network-toggle").textContent = "● Ağ: " + STATE.networkLabel;
-      updateInspectorPayloads();
+      await refreshAllBalances();
     }
 
-    async function connectAgentWallet() {
-      if (!window.ethereum) {
-        alert("Tarayıcı cüzdanı (Rabby / MetaMask / Coinbase Wallet) bulunamadı. Otonom Ajan simülasyon butonunu doğrudan kullanabilirsin.");
+    function updateNetworkUI() {
+      const isSepolia = STATE.network === "eip155:84532";
+      document.getElementById("btn-net-sepolia").className =
+        "net-btn " + (isSepolia ? "active-sepolia" : "");
+      document.getElementById("btn-net-mainnet").className =
+        "net-btn " + (!isSepolia ? "active-mainnet" : "");
+
+      const lbl = document.getElementById("lbl-active-network");
+      lbl.textContent = CONFIG.chains[STATE.network].name;
+      lbl.className = "pill " + (isSepolia ? "amber" : "green");
+    }
+
+    // Wallet Login / Picker / Switch / Logout
+    function openWalletConnect() {
+      window.dispatchEvent(new Event("eip6963:requestProvider"));
+
+      if (STATE.discoveredProviders.length > 1) {
+        const listEl = document.getElementById("wallet-options-list");
+        listEl.innerHTML = STATE.discoveredProviders
+          .map(
+            (item, idx) => `
+            <button class="wallet-option" onclick="connectWithProviderIndex(${idx})">
+              <span style="display:flex;align-items:center;gap:10px;">
+                ${item.info.icon ? `<img src="${item.info.icon}" width="24" height="24" style="border-radius:6px;" />` : ""}
+                <span>${item.info.name}</span>
+              </span>
+              <span style="color:var(--accent);font-size:12px;">Bağlan →</span>
+            </button>
+          `
+          )
+          .join("");
+        document.getElementById("wallet-modal").classList.add("open");
         return;
       }
+
+      if (STATE.discoveredProviders.length === 1) {
+        connectWithProvider(STATE.discoveredProviders[0].provider, STATE.discoveredProviders[0].info.name);
+        return;
+      }
+
+      if (window.ethereum) {
+        connectWithProvider(window.ethereum, "Tarayıcı Cüzdanı");
+        return;
+      }
+
+      alert("Tarayıcınızda MetaMask, Rabby veya Coinbase Wallet gibi bir cüzdan eklentisi bulunamadı.");
+    }
+
+    function closeWalletModal() {
+      document.getElementById("wallet-modal").classList.remove("open");
+    }
+
+    function connectWithProviderIndex(idx) {
+      closeWalletModal();
+      const item = STATE.discoveredProviders[idx];
+      if (item) connectWithProvider(item.provider, item.info.name);
+    }
+
+    async function connectWithProvider(provider, walletName) {
       try {
-        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-        STATE.connectedWallet = accounts[0];
-        document.getElementById("btn-connect-wallet").textContent =
-          `Bağlı: ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`;
+        const accounts = await provider.request({ method: "eth_requestAccounts" });
+        if (!accounts || accounts.length === 0) return;
+
+        STATE.activeProvider = provider;
+        STATE.walletAddress = accounts[0];
+        STATE.walletName = walletName || "Cüzdan";
+        localStorage.setItem("cukka_wallet_connected", "1");
+        localStorage.setItem("cukka_wallet_name", STATE.walletName);
+
+        bindProviderEvents(provider);
+        updateWalletHeaderUI();
+        await switchNetwork(STATE.network);
+        showToast(`Cüzdan bağlandı: ${STATE.walletAddress.slice(0, 6)}...${STATE.walletAddress.slice(-4)}`);
       } catch (err) {
-        console.warn(err);
+        showToast("Cüzdan bağlantısı iptal edildi.");
       }
     }
 
-    function selectEndpoint(key, cardEl) {
-      STATE.selectedEpKey = key;
-      document.querySelectorAll(".ep-card").forEach((c) => c.classList.remove("active"));
+    function bindProviderEvents(provider) {
+      if (!provider || !provider.on || provider.__cukkaBound) return;
+      provider.__cukkaBound = true;
+
+      provider.on("accountsChanged", (accounts) => {
+        if (!accounts || accounts.length === 0) {
+          disconnectWallet();
+        } else {
+          STATE.walletAddress = accounts[0];
+          updateWalletHeaderUI();
+          refreshAllBalances();
+          showToast(`Aktif hesap değişti: ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`);
+        }
+      });
+
+      provider.on("chainChanged", (chainIdHex) => {
+        const hex = String(chainIdHex).toLowerCase();
+        if (hex === "0x14a34") {
+          STATE.network = "eip155:84532";
+        } else if (hex === "0x2105") {
+          STATE.network = "eip155:8453";
+        }
+        updateNetworkUI();
+        refreshAllBalances();
+      });
+    }
+
+    // Prompt wallet to switch account
+    async function switchWalletAccount() {
+      const provider = STATE.activeProvider || window.ethereum;
+      if (!provider) return;
+      try {
+        await provider.request({
+          method: "wallet_requestPermissions",
+          params: [{ eth_accounts: {} }],
+        });
+        const accounts = await provider.request({ method: "eth_accounts" });
+        if (accounts && accounts[0]) {
+          STATE.walletAddress = accounts[0];
+          updateWalletHeaderUI();
+          await refreshAllBalances();
+          showToast(`Hesap değiştirildi: ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`);
+        }
+      } catch (err) {
+        showToast("Hesap seçimi iptal edildi.");
+      }
+    }
+
+    // Clean Disconnect (Logout)
+    async function disconnectWallet() {
+      const provider = STATE.activeProvider || window.ethereum;
+      if (provider && provider.request) {
+        try {
+          // Revoke permissions on wallets that support EIP-2255 revoke (e.g. MetaMask)
+          await provider.request({
+            method: "wallet_revokePermissions",
+            params: [{ eth_accounts: {} }],
+          });
+        } catch (_) {
+          // Safe fallback if wallet doesn't support wallet_revokePermissions
+        }
+      }
+
+      STATE.walletAddress = null;
+      STATE.walletName = null;
+      STATE.activeProvider = null;
+      localStorage.removeItem("cukka_wallet_connected");
+      localStorage.removeItem("cukka_wallet_name");
+
+      updateWalletHeaderUI();
+      await refreshAllBalances();
+      showToast("Cüzdan bağlantısı kesildi.");
+    }
+
+    function updateWalletHeaderUI() {
+      const loginBtn = document.getElementById("btn-login");
+      const connectedBox = document.getElementById("connected-controls");
+      const addrBadge = document.getElementById("badge-wallet-addr");
+
+      if (STATE.walletAddress) {
+        loginBtn.style.display = "none";
+        connectedBox.style.display = "inline-flex";
+        addrBadge.textContent = `${STATE.walletAddress.slice(0, 6)}...${STATE.walletAddress.slice(-4)}`;
+      } else {
+        loginBtn.style.display = "inline-flex";
+        connectedBox.style.display = "none";
+      }
+    }
+
+    function copyConnectedAddress() {
+      if (!STATE.walletAddress) return;
+      navigator.clipboard.writeText(STATE.walletAddress);
+      showToast("Cüzdan adresi panoya kopyalandı!");
+    }
+
+    // Mode & Query Selection
+    function selectMode(key, cardEl) {
+      STATE.modeKey = key;
+      document.querySelectorAll(".mode-card").forEach((el) => el.classList.remove("active"));
       cardEl.classList.add("active");
 
-      const ep = ENDPOINTS[key];
-      document.getElementById("active-ep-title").textContent = ep.title;
-      const badge = document.getElementById("active-ep-badge");
+      const m = MODES[key];
+      const badge = document.getElementById("ui-price-badge");
       badge.textContent =
-        ep.scheme === "exact"
-          ? `Şema: exact · $${ep.priceUsd.toFixed(3)} USDC (${ep.amountAtomic} atomic)`
-          : `Şema: upto · Tavan $${ep.priceUsd.toFixed(3)} USDC (${ep.amountAtomic} atomic)`;
-      badge.className = "pill " + (ep.scheme === "exact" ? "green" : "amber");
-
-      document.getElementById("lbl-primary-input").textContent = ep.primaryLabel;
-      document.getElementById("inp-query").value = ep.primaryDefault;
-      document.getElementById("lbl-secondary-input").textContent = ep.secondaryLabel;
-      document.getElementById("inp-filter").value = ep.secondaryDefault;
-
-      updateInspectorPayloads();
+        m.scheme === "exact"
+          ? `Ücret: $${m.priceUsd.toFixed(3)} USDC (exact)`
+          : `Ücret: Tavan $${m.priceUsd.toFixed(3)} USDC (upto)`;
+      badge.className = "pill " + (m.scheme === "exact" ? "green" : "amber");
     }
 
-    function buildCurrent402Payload() {
-      const ep = ENDPOINTS[STATE.selectedEpKey];
-      const isSepolia = STATE.network === "eip155:84532";
-      return {
-        x402Version: 2,
-        error: "Payment Required: Attach signed x402 payment payload in X-PAYMENT header.",
-        resource: {
-          url: `https://cukka.org${ep.path}`,
-          method: "POST",
-        },
-        accepts: [
-          {
-            scheme: ep.scheme,
-            network: STATE.network,
-            networkName: isSepolia ? "base-sepolia" : "base",
-            payTo: CONFIG.payTo,
-            asset: isSepolia ? CONFIG.sepoliaUsdc : CONFIG.mainnetUsdc,
-            amount: ep.amountAtomic,
-            maxAmountRequired: ep.amountAtomic,
-            maxTimeoutSeconds: 300,
-            description: `${ep.title} (${ep.scheme} $${ep.priceUsd} USDC)`,
-          },
-        ],
-        extensions: {
-          bazaar: {
-            info: {
-              name: ep.title,
-              description: ep.description,
-              category: "commerce",
-              provider: "Cukka Agent Data Layer",
-            },
-            schema: {
-              type: "object",
-              required: ["query"],
-              properties: {
-                query: { type: "string", example: document.getElementById("inp-query").value },
-                stores: {
-                  type: "array",
-                  items: { type: "string" },
-                  example: document.getElementById("inp-stores").value.split(",").map((s) => s.trim()),
-                },
-              },
-            },
-          },
-        },
-      };
+    function setQuickQuery(q) {
+      document.getElementById("inp-query").value = q;
+      executeQuery(false);
     }
 
-    function updateInspectorPayloads() {
-      const ep = ENDPOINTS[STATE.selectedEpKey];
-      const payload402 = buildCurrent402Payload();
-      document.getElementById("code-http402").textContent =
-        `HTTP/1.1 402 Payment Required\nContent-Type: application/json\n\n` +
-        JSON.stringify(payload402, null, 2);
-
-      const sdkCode = `// Otonom Ajan (x402 Fetch İstemcisi) Örneği — ${ep.path}
-import { wrapFetchWithPayment } from "@x402/fetch";
-import { privateKeyToAccount } from "viem/accounts";
-
-const agentAccount = privateKeyToAccount(process.env.AGENT_PRIVATE_KEY);
-const fetchWithPay = wrapFetchWithPayment(fetch, agentAccount, {
-  maxPaymentUsdc: "${ep.amountAtomic}", // ${ep.scheme} ($${ep.priceUsd} USDC)
-  network: "${STATE.network}"
-});
-
-const response = await fetchWithPay("https://cukka.org${ep.path}", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    query: "${document.getElementById("inp-query").value}",
-    stores: ${JSON.stringify(
-      document
-        .getElementById("inp-stores")
-        .value.split(",")
-        .map((s) => s.trim())
-    )},
-    inStockOnly: true
-  })
-});
-
-const settledUsdc = response.headers.get("X-Payment-Settled-Amount");
-const result = await response.json();
-console.log("Tahsil edilen (atomic USDC):", settledUsdc, result);`;
-
-      document.getElementById("code-sdk").textContent = sdkCode;
-    }
-
-    function triggerStep1Unpaid402() {
-      document.getElementById("step-1-box").className = "step-box active-step";
-      document.getElementById("step-2-box").className = "step-box";
-      document.getElementById("step-3-box").className = "step-box";
-      updateInspectorPayloads();
-      switchOutputTab("http402", document.querySelectorAll(".tab-btn")[1]);
-    }
-
-    // Fetch real Shopify Storefront JSON from public Shopify stores
-    async function fetchLiveShopifyCatalogVariants(queryStr, storeListStr) {
-      const domains = storeListStr
+    // Live Shopify Storefront Fetcher
+    async function fetchShopifyProducts(queryStr, storesStr) {
+      const stores = storesStr
         .split(",")
-        .map((d) => d.trim().replace(/^https?:\/\//, "").replace(/\/$/, ""))
+        .map((s) => s.trim().replace(/^https?:\/\//, "").replace(/\/$/, ""))
         .filter(Boolean);
-
       const q = (queryStr || "").toLowerCase().trim();
-      const allVariants = [];
+      const variants = [];
 
       await Promise.all(
-        domains.map(async (domain) => {
+        stores.map(async (domain) => {
           try {
             const res = await fetch(`https://${domain}/products.json?limit=30`);
             if (!res.ok) return;
-            const json = await res.json();
-            const products = json.products || [];
-
-            for (const p of products) {
-              const titleMatch =
+            const data = await res.json();
+            for (const p of data.products || []) {
+              const matched =
                 !q ||
                 p.title.toLowerCase().includes(q) ||
                 (p.product_type && p.product_type.toLowerCase().includes(q)) ||
@@ -950,62 +1181,50 @@ console.log("Tahsil edilen (atomic USDC):", settledUsdc, result);`;
                     ? Number((((compareAt - price) / compareAt) * 100).toFixed(1))
                     : 0;
 
-                allVariants.push({
+                variants.push({
                   store: domain,
-                  productTitle: p.title,
-                  productType: p.product_type || "Genel Katalog",
-                  vendor: p.vendor || domain,
-                  variantId: v.id,
-                  variantTitle: v.title === "Default Title" ? "Standart Varyant" : v.title,
-                  sku: v.sku || `UPID-${v.id}`,
-                  available: v.available,
+                  title: p.title,
+                  variantTitle: v.title === "Default Title" ? "Standart" : v.title,
                   priceUsd: price,
-                  compareAtPriceUsd: compareAt,
                   discountPct,
-                  matchedQuery: titleMatch,
+                  matched,
                   image: p.images && p.images[0] ? p.images[0].src : null,
-                  checkoutUrl: `https://${domain}/cart/${v.id}:1`,
                   productUrl: `https://${domain}/products/${p.handle}`,
                 });
               }
             }
-          } catch (err) {
-            console.warn("Store fetch skip:", domain, err.message);
-          }
+          } catch (_) {}
         })
       );
 
-      // Prioritize exact query matches first, then sort by lowest priceUsd
-      const exactMatches = allVariants.filter((v) => v.matchedQuery);
-      const pool = exactMatches.length > 0 ? exactMatches : allVariants;
+      const exact = variants.filter((v) => v.matched);
+      const pool = exact.length > 0 ? exact : variants;
       pool.sort((a, b) => a.priceUsd - b.priceUsd);
-      return {
-        totalScanned: allVariants.length,
-        exactMatchedCount: exactMatches.length,
-        rankedVariants: pool.slice(0, 10),
-      };
+      return { totalScanned: variants.length, items: pool.slice(0, 8) };
     }
 
-    async function runFullX402AgentFlow(useBrowserWallet) {
-      const ep = ENDPOINTS[STATE.selectedEpKey];
+    async function executeQuery(requireWalletSignature) {
+      const m = MODES[STATE.modeKey];
+      const chain = CONFIG.chains[STATE.network];
       const queryVal = document.getElementById("inp-query").value.trim();
       const storesVal = document.getElementById("inp-stores").value.trim();
 
-      // Step 1: 402 Challenge
-      document.getElementById("step-1-box").className = "step-box done-step";
-      document.getElementById("step-2-box").className = "step-box active-step";
-      document.getElementById("step-3-box").className = "step-box";
-      updateInspectorPayloads();
+      // Step 1: HTTP 402 Challenge
+      document.getElementById("step-1").className = "step-item done";
+      document.getElementById("step-2").className = "step-item active";
+      document.getElementById("step-3").className = "step-item";
 
-      // Step 2: Sign EIP-3009 / EIP-712 Authorization
-      let signatureHex =
-        "0x8f4e2c9a11d3b5e7c90123456789abcdef0123456789abcdef0123456789abcdef4b2a198374650192837465019283746501928374650192837465019283741c";
-      let payerAddress = STATE.connectedWallet || CONFIG.payTo;
+      let payer = STATE.walletAddress || CONFIG.payTo;
+      let signature = "demo-preview-no-signature";
 
-      if (useBrowserWallet && window.ethereum) {
+      // Step 2: Optional Real Wallet EIP-3009 Signature
+      if (requireWalletSignature) {
+        if (!STATE.walletAddress) {
+          openWalletConnect();
+          return;
+        }
+        const provider = STATE.activeProvider || window.ethereum;
         try {
-          const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-          payerAddress = accounts[0];
           const nonceHex =
             "0x" +
             Array.from(crypto.getRandomValues(new Uint8Array(32)))
@@ -1033,208 +1252,163 @@ console.log("Tahsil edilen (atomic USDC):", settledUsdc, result);`;
             domain: {
               name: "USDC",
               version: "2",
-              chainId: STATE.network === "eip155:84532" ? 84532 : 8453,
-              verifyingContract:
-                STATE.network === "eip155:84532" ? CONFIG.sepoliaUsdc : CONFIG.mainnetUsdc,
+              chainId: chain.chainIdDec,
+              verifyingContract: chain.usdcAddress,
             },
             message: {
-              from: payerAddress,
+              from: STATE.walletAddress,
               to: CONFIG.payTo,
-              value: ep.amountAtomic,
+              value: m.amountAtomic,
               validAfter: 0,
               validBefore: Math.floor(Date.now() / 1000) + 300,
               nonce: nonceHex,
             },
           };
 
-          signatureHex = await window.ethereum.request({
+          signature = await provider.request({
             method: "eth_signTypedData_v4",
-            params: [payerAddress, JSON.stringify(typedData)],
+            params: [STATE.walletAddress, JSON.stringify(typedData)],
           });
+          payer = STATE.walletAddress;
+          showToast("x402 ödeme imzası alındı!");
         } catch (err) {
-          alert("Cüzdan imzası iptal edildi: " + (err.message || ""));
+          document.getElementById("step-2").className = "step-item";
+          showToast("Cüzdan imzası iptal edildi.");
           return;
         }
       }
 
-      document.getElementById("step-2-box").className = "step-box done-step";
-      document.getElementById("step-3-box").className = "step-box active-step";
+      document.getElementById("step-2").className = "step-item done";
+      document.getElementById("step-3").className = "step-item active";
+      document.getElementById("ui-summary-banner").textContent = "Canlı Shopify katalogları taranıyor...";
 
-      // Step 3: Fetch Real Live Shopify Storefront Data
-      const summaryEl = document.getElementById("visual-summary-text");
-      summaryEl.textContent = "Canlı Shopify katalogları taranıyor ve varyant fiyatları karşılaştırılıyor...";
+      // Step 3: Fetch Live Data
+      const result = await fetchShopifyProducts(queryVal, storesVal);
+      document.getElementById("step-3").className = "step-item done";
 
-      const liveCatalog = await fetchLiveShopifyCatalogVariants(queryVal, storesVal);
-
-      // Compute settled amount (exact vs dynamic upto metering)
-      let settledAtomic = parseInt(ep.amountAtomic, 10);
-      let llmTokensUsed = 0;
-      if (ep.scheme === "upto") {
-        llmTokensUsed = 640 + liveCatalog.rankedVariants.length * 85;
-        // Dynamic charge based on tokens (e.g. ~28% of max cap)
-        settledAtomic = Math.max(1000, Math.min(settledAtomic, Math.round(llmTokensUsed * 4.8)));
-      }
+      const settledAtomic =
+        m.scheme === "upto"
+          ? Math.max(1000, Math.round(parseInt(m.amountAtomic, 10) * 0.35))
+          : parseInt(m.amountAtomic, 10);
       const settledUsd = settledAtomic / 1e6;
 
-      STATE.sessionCalls += 1;
-      STATE.sessionRevenueUsd += settledUsd;
+      if (requireWalletSignature) {
+        STATE.sessionCalls += 1;
+        STATE.sessionUsd += settledUsd;
+        document.getElementById("ui-session-total").textContent = `$${STATE.sessionUsd.toFixed(4)} USDC`;
+        document.getElementById("ui-session-sub").textContent = `${STATE.sessionCalls} imzalı x402 sorgusu`;
+      }
 
-      document.getElementById("kpi-session-rev").textContent =
-        `$${STATE.sessionRevenueUsd.toFixed(4)} USDC (${STATE.sessionCalls} Çağrı)`;
-      document.getElementById("kpi-last-scheme").textContent =
-        ep.scheme === "upto"
-          ? `Son tahsilat (upto): $${settledUsd.toFixed(4)} / Maks $${ep.priceUsd.toFixed(3)} (${llmTokensUsed} token)`
-          : `Son tahsilat (exact): $${settledUsd.toFixed(4)} USDC`;
-
-      document.getElementById("step-3-box").className = "step-box done-step";
-
-      const settledPill = document.getElementById("settled-pill");
+      const settledPill = document.getElementById("ui-settled-pill");
       settledPill.style.display = "inline-flex";
-      settledPill.textContent =
-        ep.scheme === "upto"
-          ? `✓ upto Tahsilat: $${settledUsd.toFixed(4)} USDC (Tavan: $${ep.priceUsd.toFixed(3)})`
-          : `✓ exact Tahsilat: $${settledUsd.toFixed(4)} USDC`;
+      settledPill.textContent = requireWalletSignature
+        ? `✓ İmzalandı (${m.scheme}): $${settledUsd.toFixed(4)} USDC`
+        : `Önizleme (${m.scheme}): $${settledUsd.toFixed(4)} USDC`;
 
-      renderVisualResults(ep, liveCatalog, settledUsd, llmTokensUsed);
+      renderProducts(result);
 
-      // Update HTTP 200 Receipt JSON tab
-      const fullReceiptJson = {
-        httpStatus: 200,
-        headers: {
-          "X-Payment-Scheme": ep.scheme,
-          "X-Payment-Authorized-Max": ep.amountAtomic,
-          "X-Payment-Settled-Amount": String(settledAtomic),
-        },
-        x402PaymentProof: {
-          payer: payerAddress,
-          payTo: CONFIG.payTo,
+      // Update Dev Drawer JSON
+      document.getElementById("ui-dev-json").textContent = JSON.stringify(
+        {
+          x402Version: 2,
           network: STATE.network,
-          signature: signatureHex.slice(0, 42) + "...",
+          endpoint: m.path,
+          scheme: m.scheme,
+          authorizedMaxAtomic: m.amountAtomic,
+          settledAtomic: String(settledAtomic),
+          payer,
+          payTo: CONFIG.payTo,
+          signaturePreview: signature.slice(0, 42) + "...",
+          liveShopifyMatchCount: result.items.length,
+          sampleWinner: result.items[0] || null,
         },
-        catalogResult: liveCatalog,
-      };
-      document.getElementById("code-http200").textContent = JSON.stringify(fullReceiptJson, null, 2);
-      switchOutputTab("visual", document.querySelectorAll(".tab-btn")[0]);
+        null,
+        2
+      );
     }
 
-    function renderVisualResults(ep, liveCatalog, settledUsd, llmTokensUsed) {
-      const container = document.getElementById("variant-results-container");
-      const summaryEl = document.getElementById("visual-summary-text");
-      const list = liveCatalog.rankedVariants;
+    function renderProducts(result) {
+      const banner = document.getElementById("ui-summary-banner");
+      const listEl = document.getElementById("ui-results-list");
 
-      if (!list || list.length === 0) {
-        summaryEl.textContent = "Belirtilen mağazalarda stokta ürün bulunamadı.";
-        container.innerHTML = "";
+      if (!result.items || result.items.length === 0) {
+        banner.textContent = "Belirtilen mağazalarda stokta ürün bulunamadı.";
+        listEl.innerHTML = "";
         return;
       }
 
-      const cheapest = list[0];
-      const mostExpensive = list[list.length - 1];
-      const maxSpreadPct =
-        mostExpensive.priceUsd > cheapest.priceUsd
-          ? (((mostExpensive.priceUsd - cheapest.priceUsd) / mostExpensive.priceUsd) * 100).toFixed(1)
-          : "0.0";
+      const best = result.items[0];
+      banner.innerHTML = `Toplam <strong>${result.totalScanned}</strong> canlı varyant tarandı · En ucuz: <strong style="color:#34D399;">$${best.priceUsd.toFixed(2)} (${best.store})</strong>`;
 
-      summaryEl.innerHTML = `<strong>${liveCatalog.totalScanned}</strong> canlı Shopify varyantı tarandı · En ucuz stoklu varyant: <strong style="color:#34D399;">$${cheapest.priceUsd.toFixed(2)} (${cheapest.store})</strong> · Mağazalar arası fiyat farkı: <strong>%${maxSpreadPct}</strong>`;
-
-      if (STATE.selectedEpKey === "enrich-product") {
-        // Show enriched taxonomy + EU/US/TR size conversion matrix alongside the product
-        container.innerHTML = `
-          <div class="variant-row winner">
-            <div style="flex: 1;">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-                <span class="pill amber">ZENGİNLEŞTİRİLMİŞ ÜRÜN VERİSİ (upto: $${settledUsd.toFixed(4)} / ${llmTokensUsed} LLM Token)</span>
-                <span class="pill green">Kategori: Giyim & Ayakkabı > Unisex Günlük</span>
-              </div>
-              <div style="font-size:17px;font-weight:800;margin-bottom:6px;">${cheapest.productTitle} (${cheapest.store})</div>
-              <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">
-                <strong>Normalize Beden Tablosu:</strong> TR 42 ↔ EU 42 ↔ US Men 9 ↔ UK 8 (Kalıp: Tam Kalıp / True-to-Size) ·
-                <strong>Materyal & Uyumluluk:</strong> Okaliptüs Lifli Nefes Alan Dokuma, Makinede Yıkanabilir (30°C).
-              </div>
-            </div>
-            <div style="text-align:right;">
-              <div style="font-size:22px;font-weight:800;color:#34D399;">$${cheapest.priceUsd.toFixed(2)}</div>
-              <div style="font-size:12px;color:var(--text-muted);">≈ ${(cheapest.priceUsd * STATE.usdTryRate).toFixed(2)} ₺</div>
-            </div>
-          </div>
-        ` + renderStandardVariantCards(list.slice(0, 5));
-        return;
-      }
-
-      container.innerHTML = renderStandardVariantCards(list);
-    }
-
-    function renderStandardVariantCards(list) {
-      return list
+      listEl.innerHTML = result.items
         .map(
-          (v, idx) => `
-        <div class="variant-row ${idx === 0 ? "winner" : ""}">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            ${
-              v.image
-                ? `<img src="${v.image}" alt="${v.productTitle}" width="52" height="52" style="border-radius:8px;object-fit:cover;border:1px solid var(--border);" />`
-                : ""
-            }
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                ${
-                  idx === 0
-                    ? `<span class="pill green" style="font-size:11px;padding:2px 8px;">★ EN UCUZ STOKLU VARYANT</span>`
-                    : `<span class="pill" style="font-size:11px;padding:2px 8px;">#${idx + 1}</span>`
-                }
-                <span class="mono" style="font-size: 12px; color: var(--text-muted);">${v.store}</span>
-                ${
-                  v.discountPct > 0
-                    ? `<span class="pill amber" style="font-size:11px;padding:2px 8px;">-%${v.discountPct} İndirimde</span>`
-                    : ""
-                }
-              </div>
-              <div style="font-size: 15px; font-weight: 700; margin-top: 4px;">
-                ${v.productTitle} — <span style="color: #60A5FA;">${v.variantTitle}</span>
-              </div>
-              <div class="mono" style="font-size: 12px; color: var(--text-subtle);">
-                SKU/UPID: ${v.sku} · Stok: Açık (available: true)
+          (item, i) => `
+          <div class="product-row ${i === 0 ? "best" : ""}">
+            <div style="display:flex;align-items:center;gap:12px;">
+              ${
+                item.image
+                  ? `<img src="${item.image}" alt="${item.title}" width="48" height="48" style="border-radius:8px;object-fit:cover;border:1px solid var(--border);" />`
+                  : ""
+              }
+              <div>
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                  ${
+                    i === 0
+                      ? `<span class="pill green" style="font-size:11px;padding:2px 8px;">★ EN UCUZ</span>`
+                      : `<span class="pill" style="font-size:11px;padding:2px 8px;">#${i + 1}</span>`
+                  }
+                  <span class="mono" style="font-size:12px;color:var(--text-muted);">${item.store}</span>
+                  ${
+                    item.discountPct > 0
+                      ? `<span class="pill amber" style="font-size:11px;padding:2px 8px;">-%${item.discountPct}</span>`
+                      : ""
+                  }
+                </div>
+                <div style="font-size:14px;font-weight:700;margin-top:3px;">
+                  ${item.title} · <span style="color:#60A5FA;">${item.variantTitle}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div style="display: flex; align-items: center; gap: 14px;">
-            <div style="text-align: right;">
-              <div style="font-size: 20px; font-weight: 800; color: ${idx === 0 ? "#34D399" : "var(--text)"};">
-                $${v.priceUsd.toFixed(2)}
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="text-align:right;">
+                <div style="font-size:18px;font-weight:800;color:${i === 0 ? "#34D399" : "var(--text)"};">
+                  $${item.priceUsd.toFixed(2)}
+                </div>
+                <div style="font-size:12px;color:var(--text-muted);">
+                  ≈ ${(item.priceUsd * STATE.usdTryRate).toFixed(0)} ₺
+                </div>
               </div>
-              <div style="font-size: 12px; color: var(--text-muted);">
-                ≈ ${(v.priceUsd * STATE.usdTryRate).toFixed(2)} ₺
-              </div>
+              <a href="${item.productUrl}" target="_blank" rel="noopener noreferrer" class="btn sm ${i === 0 ? "primary" : ""}">
+                Mağaza ↗
+              </a>
             </div>
-            <a
-              href="${v.checkoutUrl}"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn ${idx === 0 ? "primary" : ""}"
-              style="text-decoration: none; padding: 8px 12px; font-size: 13px;"
-            >
-              Sepete Git ↗
-            </a>
           </div>
-        </div>
-      `
+        `
         )
         .join("");
     }
 
-    function switchOutputTab(tabId, btnEl) {
-      document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
-      btnEl.classList.add("active");
-      ["visual", "http402", "receipt", "sdk"].forEach((id) => {
-        document.getElementById("out-tab-" + id).style.display = id === tabId ? "flex" : "none";
-      });
+    // Auto-reconnect if previously connected & initialize page
+    async function initApp() {
+      updateNetworkUI();
+      if (localStorage.getItem("cukka_wallet_connected") === "1" && window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: "eth_accounts" });
+          if (accounts && accounts.length > 0) {
+            STATE.activeProvider = window.ethereum;
+            STATE.walletAddress = accounts[0];
+            STATE.walletName = localStorage.getItem("cukka_wallet_name") || "Cüzdan";
+            bindProviderEvents(window.ethereum);
+            updateWalletHeaderUI();
+          }
+        } catch (_) {}
+      }
+      await refreshAllBalances();
+      await executeQuery(false);
     }
 
-    // Initialize on load: sync wallet + oracle & run initial live comparison
-    syncLiveWalletAndOracle();
-    updateInspectorPayloads();
-    runFullX402AgentFlow(false);
+    initApp();
   </script>
 </body>
 </html>
