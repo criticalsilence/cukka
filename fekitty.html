@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FeKitty 🐾 — Trustless Community Money Pots in Fe 26.5</title>
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --border: #E2E8F0;
+      --text: #0F172A;
+      --muted: #475569;
+      --primary: #EA580C;
+      --primary-hover: #C2410C;
+      --primary-soft: #FFF7ED;
+      --success: #16A34A;
+      --success-soft: #DCFCE7;
+      --refund: #2563EB;
+      --refund-soft: #DBEAFE;
+      --radius-card: 18px;
+      --radius-btn: 12px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 20px 60px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+    .brand h1 {
+      margin: 0;
+      font-size: 2rem;
+      letter-spacing: -0.03em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+    .wallet-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 10px 16px;
+      border-radius: 999px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      font-size: 0.9rem;
+    }
+    .wallet-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--success);
+      display: inline-block;
+    }
+    .ethskills-steps {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .step-pill {
+      background: #F1F5F9;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .step-pill.active {
+      background: var(--success-soft);
+      color: #166534;
+    }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .tab-btn {
+      padding: 11px 16px;
+      border-radius: var(--radius-btn);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tab-btn:hover {
+      border-color: var(--primary);
+    }
+    .tab-btn.active {
+      border: 2px solid var(--primary);
+      background: var(--primary-soft);
+      color: var(--primary-hover);
+    }
+    .new-btn {
+      margin-left: auto;
+      padding: 11px 18px;
+      border-radius: var(--radius-btn);
+      border: none;
+      background: var(--text);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 28px;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 5px 13px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: #FEF3C7;
+      color: #92400E;
+      margin-bottom: 10px;
+    }
+    .status-badge.done {
+      background: var(--success-soft);
+      color: #166534;
+    }
+    .status-badge.refund {
+      background: var(--refund-soft);
+      color: #1E40AF;
+    }
+    .kitty-title {
+      margin: 0 0 6px;
+      font-size: 1.65rem;
+    }
+    .kitty-story {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+    .recipient-lock {
+      background: #F8FAFC;
+      border: 1px dashed #CBD5E1;
+      border-radius: var(--radius-btn);
+      padding: 14px 16px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .recipient-lock small {
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .recipient-lock code {
+      background: #E2E8F0;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+    .progress-wrap {
+      margin-bottom: 24px;
+    }
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+    .progress-bar {
+      height: 18px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #16A34A, #22C55E);
+      transition: width 0.3s ease;
+    }
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .action-box {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .action-box h3 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+    }
+    .action-box p {
+      margin: 0 0 14px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .chip-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .chip-input {
+      width: 90px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .btn {
+      padding: 11px 15px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      flex: 1;
+    }
+    .btn-x402 {
+      background: var(--primary-soft);
+      color: var(--primary-hover);
+      border: 1px solid var(--primary);
+    }
+    .btn-release {
+      width: 100%;
+      background: var(--success);
+      color: #fff;
+    }
+    .btn-refund {
+      width: 100%;
+      background: var(--refund);
+      color: #fff;
+    }
+    .fe-terminal {
+      margin-top: 20px;
+      background: #0F172A;
+      color: #E2E8F0;
+      border-radius: 14px;
+      padding: 16px 20px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.86rem;
+    }
+    .fe-terminal .tag {
+      color: #FB923C;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .fe-terminal code {
+      color: #38BDF8;
+      word-break: break-all;
+    }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 18px;
+      padding: 24px;
+      width: 100%;
+      max-width: 440px;
+    }
+    .modal h3 { margin-top: 0; }
+    .modal input {
+      width: 100%;
+      padding: 11px 12px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <h1>🐾 FeKitty</h1>
+        <p>Trustless Community Money Pots in <strong>Fe 26.5</strong> — Goal met? Goes to recipient. Missed? 100% refund.</p>
+      </div>
+      <div class="wallet-bar">
+        <span class="wallet-dot"></span>
+        <span id="walletAddr">0xCa9e...402F (Interactive Demo)</span>
+        <strong><span id="walletBal">2.50</span> ETH</strong>
+      </div>
+    </header>
+
+    <div class="ethskills-steps">
+      <span class="step-pill active">✓ 1. Wallet Ready (ETHSkills UX)</span>
+      <span class="step-pill active">✓ 2. EVM / Fe 26.5 VM</span>
+      <span class="step-pill active">✓ 3. Recipient Address Locked</span>
+      <span class="step-pill active">⚡ 4. x402 Instant Chip-In Enabled</span>
+    </div>
+
+    <div class="tabs" id="tabsContainer"></div>
+
+    <main class="card">
+      <span id="statusBadge" class="status-badge">⏳ Active</span>
+      <h2 id="kittyTitle" class="kitty-title"></h2>
+      <p id="kittyStory" class="kitty-story"></p>
+
+      <div class="recipient-lock">
+        <div>
+          <small>🔒 Locked Recipient (Funds can ONLY go here when goal is reached)</small>
+          <strong id="recipientName"></strong>
+        </div>
+        <code id="recipientAddress"></code>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-top">
+          <span id="progressText"></span>
+          <span id="shareText"></span>
+        </div>
+        <div class="progress-bar">
+          <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="actions-grid">
+        <div class="action-box">
+          <div>
+            <h3>1. Chip In to Kitty</h3>
+            <p>Contribute directly or use an account-free <strong>x402</strong> instant micro-payment receipt.</p>
+          </div>
+          <div class="chip-controls">
+            <input id="chipAmount" class="chip-input" type="number" step="0.05" min="0.01" value="0.10" />
+            <button id="chipBtn" class="btn btn-primary" onclick="chipIn(false)">Chip In</button>
+            <button id="x402Btn" class="btn btn-x402" onclick="chipIn(true)">⚡ x402</button>
+          </div>
+        </div>
+
+        <div class="action-box">
+          <div>
+            <h3>2. Release to Recipient</h3>
+            <p>Anyone can trigger payout once 100% of the goal is reached. Sends directly to the locked recipient.</p>
+          </div>
+          <button id="releaseBtn" class="btn btn-release" onclick="releaseFunds()">Release to Recipient</button>
+        </div>
+
+        <div class="action-box">
+          <div>
+            <h3>3. Claim 100% Refund</h3>
+            <p>If the deadline expires and the goal was not met, every contributor gets 100% of their ETH back.</p>
+          </div>
+          <button id="refundBtn" class="btn btn-refund" onclick="claimRefund()">Claim 100% Refund</button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="fe-terminal">
+      <span class="tag">🦀 Live Fe 26.5 Execution Trace (src/lib.fe · Zyzz Styled · x402 Ready)</span>
+      <code id="feLog">FeKitty::GetProgress {} -> (raised: 400000000000000000, remaining: 100000000000000000, bps: 8000, settled: false)</code>
+    </footer>
+  </div>
+
+  <!-- Create New Kitty Modal -->
+  <div id="modalBackdrop" class="modal-backdrop">
+    <form class="modal" onsubmit="createKitty(event)">
+      <h3>+ Create a New Community Kitty (30s)</h3>
+      <input id="newTitle" placeholder="What are we pooling for? (e.g., Street Dog Vet Bill)" required />
+      <input id="newRecipientName" placeholder="Recipient Name (e.g., Kadikoy Vet Clinic)" required />
+      <input id="newRecipientAddr" placeholder="Recipient Wallet Address (0x...)" value="0x88F1c2D9E0A4b5C6d7E8F90123456789AbCdEf12" required />
+      <input id="newGoal" type="number" step="0.05" min="0.05" placeholder="Target Goal in ETH (e.g., 0.50)" value="0.50" required />
+      <div style="display:flex; gap:10px;">
+        <button type="submit" class="btn btn-primary">Deploy FeKitty Clone</button>
+        <button type="button" class="tab-btn" onclick="toggleModal(false)">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const kitties = [
+      {
+        id: 1,
+        emoji: '🐾',
+        title: 'Pamuk the Street Cat — Vet Surgery',
+        story: 'Neighbors on Moda Street pooling funds for Pamuk’s broken paw operation at Moda Vet Clinic.',
+        recipientName: 'Moda Vet Clinic (Verified)',
+        recipientAddress: '0x71BF2B94a47d88E3A1f7c9D24E6F1B0C9e4A3F8D',
+        goalEth: 0.50,
+        raisedEth: 0.40,
+        myContributionEth: 0.10,
+        deadlineLabel: '5 days left',
+        expired: false,
+        settled: false,
+        contributorsCount: 9
+      },
+      {
+        id: 2,
+        emoji: '🏠',
+        title: 'Apartment #12 — Roof Insulation Repair',
+        story: 'Shared building maintenance pot before winter rains. Releases directly to the roofing contractor.',
+        recipientName: 'Master Roofing Co.',
+        recipientAddress: '0x94A2c8E1104B3f792D1a7A0019c85E2B411081C0',
+        goalEth: 1.00,
+        raisedEth: 1.00,
+        myContributionEth: 0.20,
+        deadlineLabel: 'Goal Reached Early!',
+        expired: false,
+        settled: false,
+        contributorsCount: 8
+      },
+      {
+        id: 3,
+        emoji: '🚲',
+        title: 'Shared Courtyard Electric Cargo Bike',
+        story: 'Community cargo bike for grocery runs. Target was not reached in time, so 100% refunds are unlocked.',
+        recipientName: 'GreenCycle Local Shop',
+        recipientAddress: '0x38E1F09c72B4a5D6E8f1029384756AbcDeF099B4',
+        goalEth: 0.80,
+        raisedEth: 0.35,
+        myContributionEth: 0.15,
+        deadlineLabel: 'Deadline Passed',
+        expired: true,
+        settled: false,
+        contributorsCount: 4
+      }
+    ];
+
+    let selectedId = 1;
+    let walletBalance = 2.50;
+
+    function getActive() {
+      return kitties.find(k => k.id === selectedId) || kitties[0];
+    }
+
+    function render() {
+      const k = getActive();
+      const bps = Math.min(10000, Math.round((k.raisedEth / k.goalEth) * 10000));
+      const pct = Math.round(bps / 100);
+      const goalMet = k.raisedEth >= k.goalEth - 1e-6;
+
+      document.getElementById('walletBal').textContent = walletBalance.toFixed(2);
+
+      const tabsEl = document.getElementById('tabsContainer');
+      tabsEl.innerHTML = kitties.map(item => `
+        <button class="tab-btn ${item.id === k.id ? 'active' : ''}" onclick="selectKitty(${item.id})">
+          ${item.emoji} ${item.title}
+        </button>
+      `).join('') + `<button class="new-btn" onclick="toggleModal(true)">+ New Kitty (30s)</button>`;
+
+      const badge = document.getElementById('statusBadge');
+      if (k.settled) {
+        badge.className = 'status-badge done';
+        badge.textContent = '✅ Settled — Sent to Verified Recipient';
+      } else if (k.expired && !goalMet) {
+        badge.className = 'status-badge refund';
+        badge.textContent = '⏪ Deadline Passed — 100% Refunds Unlocked';
+      } else if (goalMet) {
+        badge.className = 'status-badge done';
+        badge.textContent = '🎉 100% Goal Reached — Ready to Release!';
+      } else {
+        badge.className = 'status-badge';
+        badge.textContent = `⏳ Active · ${k.deadlineLabel}`;
+      }
+
+      document.getElementById('kittyTitle').textContent = `${k.emoji} ${k.title}`;
+      document.getElementById('kittyStory').textContent = k.story;
+      document.getElementById('recipientName').textContent = k.recipientName;
+      document.getElementById('recipientAddress').textContent = k.recipientAddress;
+
+      document.getElementById('progressText').innerHTML =
+        `Raised: <strong>${k.raisedEth.toFixed(2)} ETH</strong> of <strong>${k.goalEth.toFixed(2)} ETH</strong> (${pct}% · ${bps} bps)`;
+      document.getElementById('shareText').innerHTML =
+        `${k.contributorsCount} neighbors · Your share: <strong>${k.myContributionEth.toFixed(2)} ETH</strong>`;
+      document.getElementById('progressFill').style.width = `${Math.min(100, pct)}%`;
+
+      const canContribute = !k.settled && !k.expired;
+      document.getElementById('chipBtn').disabled = !canContribute;
+      document.getElementById('x402Btn').disabled = !canContribute;
+
+      const releaseBtn = document.getElementById('releaseBtn');
+      releaseBtn.disabled = !goalMet || k.settled;
+      releaseBtn.textContent = k.settled
+        ? `✅ Released to ${k.recipientName}`
+        : `Release ${k.raisedEth.toFixed(2)} ETH to ${k.recipientName}`;
+
+      const refundBtn = document.getElementById('refundBtn');
+      const canRefund = k.expired && !goalMet && k.myContributionEth > 0 && !k.settled;
+      refundBtn.disabled = !canRefund;
+      refundBtn.textContent = canRefund
+        ? `Claim 100% Refund (${k.myContributionEth.toFixed(2)} ETH)`
+        : 'Refund Locked (Kitty Active or Goal Met)';
+    }
+
+    function selectKitty(id) {
+      selectedId = id;
+      const k = getActive();
+      const rem = Math.max(0, k.goalEth - k.raisedEth);
+      const bps = Math.min(10000, Math.round((k.raisedEth / k.goalEth) * 10000));
+      document.getElementById('feLog').textContent =
+        `FeKitty::GetProgress {} -> evaluate_progress(ProgressSnapshot(${Math.round(k.raisedEth*1e18)}, ${Math.round(k.goalEth*1e18)})) => (rem: ${Math.round(rem*1e18)}, bps: ${bps}, settled: ${k.settled})`;
+      render();
+    }
+
+    function chipIn(viaX402) {
+      const k = getActive();
+      const amt = parseFloat(document.getElementById('chipAmount').value);
+      if (isNaN(amt) || amt <= 0 || k.settled || k.expired) return;
+      k.raisedEth = Number((k.raisedEth + amt).toFixed(4));
+      k.myContributionEth = Number((k.myContributionEth + amt).toFixed(4));
+      k.contributorsCount += 1;
+      walletBalance = Number((walletBalance - amt).toFixed(4));
+      const tag = viaX402 ? '0x402a9f81c3 (HTTP 402 PAYMENT-SIGNATURE)' : '0x0';
+      document.getElementById('feLog').textContent =
+        `FeKitty::Contribute { receipt_tag: ${tag} } uses (ctx, mut store, mut log) [value: wei(${Math.round(amt * 1e18)})] -> emit Contributed(new_total: ${Math.round(k.raisedEth * 1e18)})`;
+      render();
+    }
+
+    function releaseFunds() {
+      const k = getActive();
+      if (k.settled || k.raisedEth < k.goalEth - 1e-6) return;
+      k.settled = true;
+      document.getElementById('feLog').textContent =
+        `FeKitty::Release {} uses (ctx, mut store, mut log, mut call) -> call.send_value(addr: ${k.recipientAddress}, gas: ctx.gas(), value: wei(${Math.round(k.raisedEth * 1e18)})) => Ok()`;
+      render();
+    }
+
+    function claimRefund() {
+      const k = getActive();
+      if (!k.expired || k.settled || k.myContributionEth <= 0) return;
+      const refunded = k.myContributionEth;
+      k.raisedEth = Number((k.raisedEth - refunded).toFixed(4));
+      k.myContributionEth = 0;
+      walletBalance = Number((walletBalance + refunded).toFixed(4));
+      document.getElementById('feLog').textContent =
+        `FeKitty::ClaimRefund {} uses (ctx, mut store, mut log, mut call) -> call.send_value(addr: caller, gas: ctx.gas(), value: wei(${Math.round(refunded * 1e18)})) => RefundClaimed`;
+      render();
+    }
+
+    function toggleModal(open) {
+      document.getElementById('modalBackdrop').className = open ? 'modal-backdrop open' : 'modal-backdrop';
+    }
+
+    function createKitty(e) {
+      e.preventDefault();
+      const title = document.getElementById('newTitle').value.trim();
+      const recipientName = document.getElementById('newRecipientName').value.trim();
+      const recipientAddress = document.getElementById('newRecipientAddr').value.trim();
+      const goalEth = parseFloat(document.getElementById('newGoal').value);
+      if (!title || isNaN(goalEth) || goalEth <= 0) return;
+      const newPot = {
+        id: Date.now(),
+        emoji: '🤝',
+        title,
+        story: 'Created in 30 seconds via std::evm::clones ERC-1167 minimal proxy in Fe 26.5.',
+        recipientName,
+        recipientAddress,
+        goalEth,
+        raisedEth: 0,
+        myContributionEth: 0,
+        deadlineLabel: '7 days left',
+        expired: false,
+        settled: false,
+        contributorsCount: 0
+      };
+      kitties.unshift(newPot);
+      selectedId = newPot.id;
+      toggleModal(false);
+      document.getElementById('feLog').textContent =
+        `std::evm::clones::clone_deterministic() + FeKitty::InitializeClone { recipient: ${recipientAddress}, goal: wei(${Math.round(goalEth * 1e18)}), deadline: +7d }`;
+      render();
+    }
+
+    render();
+  </script>
+</body>
+</html>
