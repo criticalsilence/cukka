@@ -1,0 +1,926 @@
+:root {
+  --bg: #F6F5F1;
+  --surface: #FFFFFF;
+  --ink: #17232B;
+  --ink-muted: #56636C;
+  --line: #D9DDDF;
+  --primary: #14505A;
+  --primary-hover: #0E3D45;
+  --note-bg: #FBF6E9;
+  --note-line: #C9A44A;
+  --danger: #9B2C2C;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.3;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 120ms ease;
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.mono-num {
+  font-family: "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Header */
+.site-header {
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.header-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand-title {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  display: block;
+  line-height: 1.2;
+}
+
+.brand-subtitle {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+  margin-top: 4px;
+}
+
+.header-contact-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+}
+
+.header-contact-link:hover {
+  border-color: var(--line);
+  color: var(--primary-hover);
+}
+
+/* Main Container & Stepper */
+.main-container {
+  flex: 1;
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.stepper-nav {
+  margin-bottom: 24px;
+}
+
+.stepper {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stepper-item {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.stepper-item:last-child {
+  flex: 0 0 auto;
+}
+
+.stepper-btn {
+  background: none;
+  border: none;
+  padding: 4px 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--ink-muted);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: left;
+  border-radius: 4px;
+  transition: color 120ms ease;
+}
+
+.stepper-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background-color: var(--surface);
+  color: var(--ink-muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.stepper-btn.is-active {
+  color: var(--ink);
+}
+
+.stepper-btn.is-active .stepper-circle {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--surface);
+}
+
+.stepper-btn.is-complete {
+  color: var(--ink);
+}
+
+.stepper-btn.is-complete .stepper-circle {
+  background-color: var(--surface);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.stepper-line {
+  flex: 1;
+  height: 1px;
+  background-color: var(--line);
+  margin: 0 12px;
+}
+
+.stepper-mobile-caption {
+  display: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink-muted);
+  margin-top: 8px;
+}
+
+/* Two-Column Workspace */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.step-panel {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 24px;
+}
+
+.step-hidden {
+  display: none !important;
+}
+
+.step-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.step-title {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+.step-desc {
+  font-size: 0.9375rem;
+  color: var(--ink-muted);
+}
+
+/* Mobile collapsible summary */
+.summary-mobile {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.summary-mobile summary {
+  padding: 12px 16px;
+  min-height: 44px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+}
+
+.summary-mobile summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary-mobile-body {
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--line);
+  font-size: 0.875rem;
+}
+
+/* Desktop Sticky Summary Panel */
+.summary-panel {
+  display: none;
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 24px;
+}
+
+.summary-title {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.summary-dl {
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 0.875rem;
+}
+
+.summary-row dt {
+  color: var(--ink-muted);
+}
+
+.summary-row dd {
+  margin: 0;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: right;
+}
+
+.summary-divider {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 16px 0;
+}
+
+.summary-footnote {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+  margin-top: 12px;
+}
+
+/* Form Fields */
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.field-hint {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+.input-unit-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.input-number,
+.input-text,
+.input-select,
+.input-textarea {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 8px 12px;
+  min-height: 44px;
+  transition: border-color 120ms ease;
+}
+
+.input-number {
+  width: 112px;
+  font-family: "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.input-text,
+.input-select,
+.input-textarea {
+  width: 100%;
+}
+
+.input-textarea {
+  min-height: 112px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.input-number:hover,
+.input-text:hover,
+.input-select:hover,
+.input-textarea:hover {
+  border-color: var(--ink-muted);
+}
+
+.input-number:disabled,
+.range-slider:disabled {
+  background-color: var(--bg);
+  color: var(--ink-muted);
+  cursor: not-allowed;
+}
+
+.unit-text {
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+}
+
+.range-slider {
+  width: 100%;
+  height: 24px;
+  accent-color: var(--primary);
+  cursor: pointer;
+  margin: 4px 0 0;
+}
+
+.checkbox-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 0.875rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* Fieldset & Radio Stack */
+.fieldset-clean {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.fieldset-legend {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink);
+  padding: 0;
+  margin-bottom: 8px;
+}
+
+.radio-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background-color: var(--surface);
+  cursor: pointer;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.radio-option:hover {
+  border-color: var(--ink-muted);
+}
+
+.radio-option.is-active {
+  border-color: var(--primary);
+  background-color: var(--bg);
+}
+
+.radio-option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  accent-color: var(--primary);
+  flex-shrink: 0;
+}
+
+.radio-title {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.radio-criteria {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+  margin-top: 2px;
+}
+
+/* 4-Part Segmented Control */
+.segmented-control {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.segmented-btn {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background-color: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.segmented-btn:hover {
+  border-color: var(--ink-muted);
+}
+
+.segmented-btn.is-active {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--surface);
+}
+
+/* Buttons & Actions */
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.btn-primary,
+.btn-secondary {
+  min-height: 44px;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
+  color: var(--surface);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: var(--surface);
+}
+
+.btn-secondary {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.btn-secondary:hover {
+  border-color: var(--ink-muted);
+  color: var(--ink);
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* Step 2 — Report Table & Scale */
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.report-table th,
+.report-table td {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.report-table tr:last-child th,
+.report-table tr:last-child td {
+  border-bottom: none;
+}
+
+.report-table th {
+  font-weight: 500;
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+
+.report-table td {
+  text-align: right;
+  font-family: "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.scale-block {
+  margin-top: 16px;
+}
+
+.scale-track {
+  position: relative;
+  height: 4px;
+  background-color: var(--line);
+  border-radius: 2px;
+  margin: 12px 0 8px;
+}
+
+.scale-marker {
+  position: absolute;
+  top: -6px;
+  width: 2px;
+  height: 16px;
+  background-color: var(--primary);
+  transform: translateX(-50%);
+}
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+.used-inputs-block {
+  margin-top: 24px;
+}
+
+.section-subhead {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.used-inputs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.used-inputs-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.875rem;
+}
+
+.used-inputs-list .item-key {
+  color: var(--ink-muted);
+}
+
+.used-inputs-list .item-val {
+  font-weight: 500;
+  color: var(--ink);
+  text-align: right;
+}
+
+.clinical-note {
+  margin-top: 24px;
+  background-color: var(--note-bg);
+  border-left: 3px solid var(--note-line);
+  padding: 16px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: var(--ink);
+}
+
+.disclosure-box {
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background-color: var(--surface);
+}
+
+.disclosure-box summary {
+  padding: 12px 16px;
+  min-height: 44px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.disclosure-body {
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--line);
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+}
+
+/* Step 3 — Embryologist Info & Request Form */
+.embryologist-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background-color: var(--bg);
+  margin-bottom: 24px;
+}
+
+.embryologist-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background-color: var(--surface);
+  color: var(--primary);
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.embryologist-name {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.embryologist-meta {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+.field-error {
+  font-size: 0.8125rem;
+  color: var(--danger);
+  display: none;
+}
+
+.field-error.is-visible {
+  display: block;
+}
+
+.secondary-links-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  font-size: 0.875rem;
+}
+
+.confirmation-box {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 24px;
+  background-color: var(--bg);
+}
+
+.confirmation-title {
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+}
+
+/* Step 4 — Payment Plan Table */
+.two-field-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 24px;
+  font-size: 0.875rem;
+}
+
+.schedule-table th,
+.schedule-table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.schedule-table th {
+  font-weight: 500;
+  color: var(--ink-muted);
+  font-size: 0.8125rem;
+}
+
+.schedule-table td:last-child,
+.schedule-table th:last-child {
+  text-align: right;
+  font-family: "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.schedule-table tr.refund-row td {
+  border-top: 2px solid var(--ink);
+  border-bottom: none;
+  font-weight: 500;
+  padding-top: 16px;
+}
+
+.scenario-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid var(--line);
+  background-color: var(--surface);
+  padding: 16px 24px;
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+.footer-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 959px) {
+  .stepper-label {
+    display: none;
+  }
+  .stepper-mobile-caption {
+    display: block;
+  }
+}
+
+@media (min-width: 600px) {
+  .two-field-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 960px) {
+  .main-container {
+    padding: 32px 24px 48px;
+  }
+  .step-panel {
+    padding: 32px;
+  }
+  .workspace-grid {
+    grid-template-columns: minmax(0, 620px) 1fr;
+    gap: 32px;
+  }
+  .summary-mobile {
+    display: none;
+  }
+  .summary-panel {
+    display: block;
+    position: sticky;
+    top: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
