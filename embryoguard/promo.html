@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EmbryoGuard — X (Twitter) Promo Video Studio (#NEARHackathon)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #0F172A;
+      color: #F8FAFC;
+      font-family: "IBM Plex Sans", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .studio-bar {
+      max-width: 960px;
+      width: 100%;
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 16px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .btn {
+      padding: 10px 18px;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid #14505A;
+      background: #14505A;
+      color: #FFFFFF;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background: #0E3D45;
+    }
+    canvas {
+      max-width: 960px;
+      width: 100%;
+      height: auto;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      background: #F6F5F1;
+    }
+    .post-box {
+      max-width: 960px;
+      width: 100%;
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    pre {
+      background: #0F172A;
+      padding: 16px;
+      border-radius: 4px;
+      border: 1px solid #334155;
+      color: #E2E8F0;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="studio-bar">
+    <div>
+      <strong style="font-size: 16px;">EmbryoGuard — #NEARHackathon Promo Video Generator (16:9 HD · 18 Seconds)</strong>
+      <div id="recStatus" style="font-size: 13px; color: #94A3B8; margin-top: 4px;">
+        Ready — Click "Record &amp; Download Video" to generate your silent promo video for X.
+      </div>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <button class="btn" id="recordBtn" onclick="startRecordingPromo()">Record &amp; Download Video (.mp4 / .webm)</button>
+      <a class="btn" id="downloadLink" style="display: none; background: #0D9488; border-color: #0D9488;" download="embryoguard-near-demo.mp4">Download Video Again</a>
+    </div>
+  </div>
+
+  <!-- 1280x720 HD 16:9 Canvas for X (Twitter) Video -->
+  <canvas id="promoCanvas" width="1280" height="720"></canvas>
+
+  <div class="post-box">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+      <strong>Ready-to-Post X (Twitter) Copy (Complies with HACKATHON.md rules)</strong>
+      <button class="btn" style="padding: 6px 12px; font-size: 12px;" onclick="copyTweetText()">Copy Post Text</button>
+    </div>
+    <pre id="tweetText">I built EmbryoGuard at NEAR HACKATHON @NEARProtocol #NEARHackathon
+
+In standard IVF care, every couple pays the same flat fee ($5k–$12k+) despite vastly different biological probabilities of success.
+
+As a Senior Clinical Embryologist (15+ yrs ART lab experience), I built EmbryoGuard on NEAR to democratize fertility financing:
+- Preliminary IVF indicator using WHO 2021 (6th Ed.) semen standards
+- Dynamic outcome-based refund ratio (20%–65%) tailored to each patient
+- Privacy-first NEAR.AI concierge &amp; direct embryologist consultation
+- Dynamic 3-stage NEAR Testnet escrow (NEAR Intents, HOT, Trezu, OutLayer) that automatically refunds the patient if pregnancy is negative
+
+Live App: https://cukka.org/embryoguard/
+GitHub: https://github.com/criticalsilence/embryoguard</pre>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("promoCanvas");
+    const ctx = canvas.getContext("2d");
+    let animStart = performance.now();
+    let isRecording = false;
+    const DURATION_MS = 18000; // 18 seconds commercial flow
+
+    function copyTweetText() {
+      navigator.clipboard.writeText(document.getElementById("tweetText").textContent);
+      alert("X post text copied to clipboard!");
+    }
+
+    function drawRoundRect(x, y, w, h, r, fill, stroke, strokeW = 1) {
+      ctx.beginPath();
+      ctx.roundRect(x, y, w, h, r);
+      if (fill) {
+        ctx.fillStyle = fill;
+        ctx.fill();
+      }
+      if (stroke) {
+        ctx.lineWidth = strokeW;
+        ctx.strokeStyle = stroke;
+        ctx.stroke();
+      }
+    }
+
+    function drawHeader(activeStep) {
+      drawRoundRect(0, 0, 1280, 68, 0, "#FFFFFF", "#D9DDDF");
+      ctx.fillStyle = "#17232B";
+      ctx.font = "600 24px 'Source Serif 4', Georgia, serif";
+      ctx.fillText("EmbryoGuard", 56, 36);
+      ctx.fillStyle = "#56636C";
+      ctx.font = "400 13px 'IBM Plex Sans', sans-serif";
+      ctx.fillText("Clinical embryology advisory and outcome-aligned IVF escrow on NEAR Testnet", 56, 55);
+
+      // Right Wallet Pill
+      drawRoundRect(1020, 18, 204, 34, 4, "#14505A", "#14505A");
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "500 13px 'IBM Plex Mono', monospace";
+      ctx.fillText("patient-ivf.testnet", 1046, 40);
+
+      // Stepper bar
+      const steps = ["1. Preliminary inputs", "2. Preliminary assessment", "3. Assistant & Contact", "4. NEAR Testnet Escrow"];
+      for (let i = 0; i < 4; i++) {
+        const sx = 56 + i * 295;
+        const sy = 96;
+        const isCurrent = (i + 1) === activeStep;
+        const isDone = (i + 1) < activeStep;
+        drawRoundRect(sx, sy - 14, 26, 26, 13, isCurrent ? "#14505A" : "#FFFFFF", isCurrent || isDone ? "#14505A" : "#D9DDDF", 1.5);
+        ctx.fillStyle = isCurrent ? "#FFFFFF" : (isDone ? "#14505A" : "#56636C");
+        ctx.font = "500 13px 'IBM Plex Mono', monospace";
+        ctx.fillText(String(i + 1), sx + 9, sy + 4);
+
+        ctx.fillStyle = isCurrent ? "#17232B" : "#56636C";
+        ctx.font = (isCurrent ? "500" : "400") + " 14px 'IBM Plex Sans', sans-serif";
+        ctx.fillText(steps[i].slice(3), sx + 34, sy + 4);
+      }
+    }
+
+    function drawSummarySidebar(age, amh, sperm, prior, estPct, refPct) {
+      drawRoundRect(830, 130, 394, 485, 6, "#FFFFFF", "#D9DDDF");
+      ctx.fillStyle = "#17232B";
+      ctx.font = "600 20px 'Source Serif 4', Georgia, serif";
+      ctx.fillText("Assessment summary", 858, 168);
+
+      ctx.strokeStyle = "#D9DDDF";
+      ctx.beginPath(); ctx.moveTo(858, 184); ctx.lineTo(1196, 184); ctx.stroke();
+
+      const rows = [
+        ["Maternal age", age + " years"],
+        ["AMH level", amh],
+        ["Semen analysis (WHO 2021)", sperm],
+        ["Prior IVF cycles", prior],
+        ["Preliminary indicator", estPct + "%"],
+        ["Dynamic refund ratio", refPct + "%"],
+        ["NEAR Testnet", "patient-ivf.testnet"]
+      ];
+      rows.forEach((r, idx) => {
+        const ry = 218 + idx * 38;
+        ctx.fillStyle = "#56636C";
+        ctx.font = "400 14px 'IBM Plex Sans', sans-serif";
+        ctx.fillText(r[0], 858, ry);
+        ctx.fillStyle = idx >= 4 ? "#14505A" : "#17232B";
+        ctx.font = "500 14px 'IBM Plex Mono', monospace";
+        ctx.textAlign = "right";
+        ctx.fillText(r[1], 1196, ry);
+        ctx.textAlign = "left";
+      });
+
+      drawRoundRect(858, 495, 338, 92, 4, "#FBF6E9", "#C9A44A");
+      ctx.fillStyle = "#17232B";
+      ctx.font = "500 13px 'IBM Plex Sans', sans-serif";
+      ctx.fillText("Democratizing IVF Pricing on NEAR", 872, 520);
+      ctx.fillStyle = "#56636C";
+      ctx.font = "400 12px 'IBM Plex Sans', sans-serif";
+      ctx.fillText("Refund ratio scales dynamically (20%–65%)", 872, 542);
+      ctx.fillText("with each patient's clinical parameters.", 872, 560);
+      ctx.fillText("Guided by Caner Karaogul, M.Sc. (15+ yrs).", 872, 578);
+    }
+
+    function drawBottomBanner(caption) {
+      drawRoundRect(0, 656, 1280, 64, 0, "#17232B", null);
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "500 16px 'IBM Plex Sans', sans-serif";
+      ctx.fillText(caption, 56, 694);
+
+      ctx.fillStyle = "#C9A44A";
+      ctx.font = "500 14px 'IBM Plex Mono', monospace";
+      ctx.textAlign = "right";
+      ctx.fillText("cukka.org/embryoguard  ·  @NEARProtocol #NEARHackathon", 1224, 694);
+      ctx.textAlign = "left";
+    }
+
+    function renderFrame(elapsed) {
+      const t = elapsed % DURATION_MS;
+      ctx.fillStyle = "#F6F5F1";
+      ctx.fillRect(0, 0, 1280, 720);
+
+      // SCENE 1 (0 - 3.5s): Brand Hook & Problem Statement
+      if (t < 3500) {
+        drawRoundRect(56, 48, 1168, 570, 6, "#FFFFFF", "#D9DDDF");
+        drawRoundRect(96, 92, 340, 32, 4, "#FBF6E9", "#C9A44A");
+        ctx.fillStyle = "#17232B";
+        ctx.font = "500 13px 'IBM Plex Mono', monospace";
+        ctx.fillText("BUILT AT NEAR HACKATHON · @NEARProtocol", 112, 113);
+
+        ctx.fillStyle = "#17232B";
+        ctx.font = "600 44px 'Source Serif 4', Georgia, serif";
+        ctx.fillText("Every IVF patient has a different chance.", 96, 185);
+        ctx.fillStyle = "#14505A";
+        ctx.fillText("Why does everyone pay the same flat fee?", 96, 240);
+
+        ctx.fillStyle = "#56636C";
+        ctx.font = "400 19px 'IBM Plex Sans', sans-serif";
+        ctx.fillText("EmbryoGuard democratizes fertility care by pairing Clinical Embryologist consultation", 96, 295);
+        ctx.fillText("with a dynamic NEAR Testnet escrow that refunds 20%–65% if the IVF cycle fails.", 96, 323);
+
+        // Founder Card
+        drawRoundRect(96, 365, 1088, 115, 6, "#F6F5F1", "#D9DDDF");
+        ctx.fillStyle = "#14505A";
+        ctx.font = "600 20px 'Source Serif 4', Georgia, serif";
+        ctx.fillText("Caner Karaogul, M.Sc. — Senior Clinical Embryologist (15+ Years International ART Experience)", 124, 402);
+        ctx.fillStyle = "#56636C";
+        ctx.font = "400 15px 'IBM Plex Sans', sans-serif";
+        ctx.fillText("Former Lab Supervisor & Lead Embryologist across Thailand (Siam IVF), Cyprus (Gynolife IVF), Albania & Turkey.", 124, 430);
+        ctx.fillStyle = "#17232B";
+        ctx.font = "500 14px 'IBM Plex Mono', monospace";
+        ctx.fillText("Verified Lab KPIs: 84.6% ICSI Fertilization · 63.2% Day-5 Blastocyst Rate · 99.0% Cryosurvival", 124, 458);
+
+        // Ecosystem Pills
+        const tools = ["NEAR Intents", "NEAR.AI", "HOT Protocol", "Trezu & SputnikDAO", "OutLayer", "WHO 2021 (6th Ed.)"];
+        tools.forEach((tl, idx) => {
+          drawRoundRect(96 + idx * 182, 512, 170, 42, 4, "#14505A", "#14505A");
+          ctx.fillStyle = "#FFFFFF";
+          ctx.font = "500 13px 'IBM Plex Mono', monospace";
+          ctx.fillText(tl, 112 + idx * 182, 538);
+        });
+
+        drawBottomBanner("EmbryoGuard — Clinical Embryology Advisory & Dynamic Outcome Escrow on NEAR");
+        return;
+      }
+
+      // SCENE 2 (3.5s - 8.0s): Step 1 & Step 2 — WHO 2021 Inputs & Dynamic Refund Scaling
+      if (t < 8000) {
+        const subProgress = (t - 3500) / 4500;
+        const isSecondProfile = subProgress > 0.52;
+        const age = isSecondProfile ? 39 : 32;
+        const amh = isSecondProfile ? "0.9 ng/mL" : "2.0 ng/mL";
+        const sperm = isSecondProfile ? "Mildly reduced" : "Normal (≥16M/mL)";
+        const prior = isSecondProfile ? "1" : "None";
+        const estPct = isSecondProfile ? 34 : 67;
+        const refPct = isSecondProfile ? 35 : 58;
+
+        drawHeader(2);
+        drawRoundRect(56, 130, 748, 485, 6, "#FFFFFF", "#D9DDDF");
+
+        ctx.fillStyle = "#17232B";
+        ctx.font = "600 24px 'Source Serif 4', Georgia, serif";
+        ctx.fillText("Step 1 & 2 — Preliminary Indicator & Dynamic Refund Ratio", 84, 172);
+
+        ctx.fillStyle = "#56636C";
+        ctx.font = "400 14px 'IBM Plex Sans', sans-serif";
+        ctx.fillText("WHO 2021 (6th Edition) lower reference limits: ≥16 million/mL concentration · ≥30% progressive motility", 84, 198);
+
+        // Report Table
+        drawRoundRect(84, 220, 692, 136, 4, "#F6F5F1", "#D9DDDF");
+        ctx.fillStyle = "#17232B";
+        ctx.font = "500 16px 'IBM Plex Sans', sans-serif";
+        ctx.fillText("Preliminary success indicator (non-final)", 108, 262);
+        ctx.fillText("Dynamic refund ratio if cycle is unsuccessful", 108, 322);
+
+        ctx.fillStyle = "#14505A";
+        ctx.font = "500 32px 'IBM Plex Mono', monospace";
+        ctx.textAlign = "right";
+        ctx.fillText(estPct + "%", 752, 266);
+        ctx.fillText(refPct + "%", 752, 326);
+        ctx.textAlign = "left";
+
+        // Scale bar
+        drawRoundRect(84, 378, 692, 8, 4, "#D9DDDF", null);
+        drawRoundRect(84, 378, Math.round(692 * (estPct / 100)), 8, 4, "#14505A", null);
+
+        // Clinical Note
+        drawRoundRect(84, 412, 692, 84, 4, "#FBF6E9", "#C9A44A");
+        ctx.fillStyle = "#17232B";
+        ctx.font = "500 14px 'IBM Plex Sans', sans-serif";
+        ctx.fillText("Non-Binding Preliminary Estimate — Finalized with Lead Clinical Embryologist", 104, 440);
+        ctx.fillStyle = "#56636C";
+        ctx.font = "400 13px 'IBM Plex Sans', sans-serif";
+        ctx.fillText("Notice how the refund guarantee dynamically adjusts from 58% to 35% as parameters change.", 104, 464);
+        ctx.fillText("Definitive prognosis and clinic referral are established after Caner Karaogul reviews your file.", 104, 484);
+
+        drawRoundRect(84, 522, 692, 64, 4, "#FFFFFF", "#14505A");
+        ctx.fillStyle = "#14505A";
+        ctx.font = "500 14px 'IBM Plex Mono', monospace";
+        ctx.fillText(
+          isSecondProfile
+            ? "Active Profile B: Age 39 · AMH 0.9 · Mildly reduced sperm -> 34% Indicator / 35% Refund"
+            : "Active Profile A: Age 32 · AMH 2.0 · WHO 2021 Normal sperm -> 67% Indicator / 58% Refund",
+          104,
+          559
+        );
+
+        drawSummarySidebar(age, amh, sperm, prior, estPct, refPct);
+        drawBottomBanner("Step 1 & 2: WHO 2021 Semen Standards + Dynamic Refund Ratio (20%–65%)");
+        return;
+      }
+
+      // SCENE 3 (8.0s - 12.5s): Step 3 — NEAR.AI Concierge Chat & Direct Embryologist Contact
+      if (t < 12500) {
+        drawHeader(3);
+        drawRoundRect(56, 130, 748, 485, 6, "#FFFFFF", "#D9DDDF");
+
+        ctx.fillStyle = "#17232B";
+        ctx.font = "600 24px 'Source Serif 4', Georgia, serif";
+        ctx.fillText("Step 3 — NEAR.AI Concierge Chat & Embryologist Contact", 84, 172);
+
+        // Embryologist Bar
+        drawRoundRect(84, 190, 692, 66, 4, "#F6F5F1", "#D9DDDF");
+        ctx.fillStyle = "#17232B";
+        ctx.font = "500 15px 'IBM Plex Sans', sans-serif";
+        ctx.fillText("Caner Karaogul, M.Sc. · Senior Clinical Embryologist (15+ Years International ART Experience)", 104, 216);
+        ctx.fillStyle = "#56636C";
+        ctx.font = "400 13px 'IBM Plex Sans', sans-serif";
+        ctx.fillText("Direct Consultation via Telegram (@criticalsilence) & Email (canerkaraogul@gmail.com)", 104, 240);
+
+        // Chat Window
+        drawRoundRect(84, 270, 692, 248, 6, "#F6F5F1", "#D9DDDF");
+
+        // Msg 1: User
+        drawRoundRect(270, 286, 488, 52, 6, "#14505A", "#14505A");
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "400 13px 'IBM Plex Sans', sans-serif";
+        ctx.fillText("You: How is my partner IVF clinic selected and how do I reach Caner Karaogul?", 286, 317);
+
+        // Msg 2: NEAR.AI Assistant
+        drawRoundRect(102, 352, 590, 148, 6, "#FFFFFF", "#D9DDDF");
+        ctx.fillStyle = "#14505A";
+        ctx.font = "500 12px 'IBM Plex Mono', monospace";
+        ctx.fillText("NEAR.AI Concierge Assistant (Strict Non-Medical Guardrail)", 118, 375);
+        ctx.fillStyle = "#17232B";
+        ctx.font = "400 13px 'IBM Plex Sans', sans-serif";
+        ctx.fillText("I only provide information on application workflow and how to reach our Lead", 118, 398);
+        ctx.fillText("Embryologist—I do not give clinical details. Caner Karaogul, M.Sc. personally", 118, 418);
+        ctx.fillText("reviews your diagnostic reports and refers you to an audited partner clinic.", 118, 438);
+        ctx.fillText("Click 'Send via Telegram' below to forward your 67% / 58% profile directly.", 118, 458);
+
+        // Forward Buttons
+        drawRoundRect(84, 534, 336, 46, 4, "#14505A", "#14505A");
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "500 14px 'IBM Plex Sans', sans-serif";
+        ctx.fillText("Send to Embryologist via Telegram", 136, 562);
+
+        drawRoundRect(440, 534, 336, 46, 4, "#FFFFFF", "#D9DDDF");
+        ctx.fillStyle = "#17232B";
+        ctx.fillText("Send to Embryologist via Email", 502, 562);
+
+        drawSummarySidebar(32, "2.0 ng/mL", "Normal (≥16M/mL)", "None", 67, 58);
+        drawBottomBanner("Step 3: Guardrailed NEAR.AI Concierge Chat + 1-Click Direct Embryologist Referral");
+        return;
+      }
+
+      // SCENE 4 (12.5s - 18.0s): Step 4 — NEAR Testnet Dynamic Escrow Lock & Automated Refund
+      drawHeader(4);
+      drawRoundRect(56, 130, 748, 485, 6, "#FFFFFF", "#D9DDDF");
+
+      const isRefundTriggered = t > 15200;
+
+      ctx.fillStyle = "#17232B";
+      ctx.font = "600 24px 'Source Serif 4', Georgia, serif";
+      ctx.fillText("Step 4 — Dynamic NEAR Testnet Escrow (embryoguard-vault.testnet)", 84, 170);
+
+      // 3 Metric Boxes
+      const lockedStr = isRefundTriggered ? "0 USDC" : "2,900 USDC (58%)";
+      const releasedStr = "2,100 USDC (42%)";
+      const refundedStr = isRefundTriggered ? "2,900 USDC (58%)" : "0 USDC";
+
+      const mCards = [
+        ["Locked in Escrow Contract", lockedStr],
+        ["Released (Stage 1: 21% + Stage 2: 21%)", releasedStr],
+        ["Auto-Refunded to Patient (58%)", refundedStr]
+      ];
+      mCards.forEach((mc, idx) => {
+        const mx = 84 + idx * 236;
+        drawRoundRect(mx, 190, 220, 76, 6, isRefundTriggered && idx === 2 ? "#FBF6E9" : "#F6F5F1", isRefundTriggered && idx === 2 ? "#14505A" : "#D9DDDF", 1.5);
+        ctx.fillStyle = "#56636C";
+        ctx.font = "400 12px 'IBM Plex Sans', sans-serif";
+        ctx.fillText(mc[0], mx + 14, 214);
+        ctx.fillStyle = "#17232B";
+        ctx.font = "500 18px 'IBM Plex Mono', monospace";
+        ctx.fillText(mc[1], mx + 14, 246);
+      });
+
+      // Dynamic Schedule Table
+      const sched = [
+        ["Stage 1 (21% OPU)", "Treatment initiation & oocyte retrieval", "1,050 USDC"],
+        ["Stage 2 (21% Transfer)", "Embryo culture & transfer procedure", "1,050 USDC"],
+        ["Stage 3 — Outcome Lock (58%)", "Held in escrow until pregnancy outcome", "2,900 USDC"],
+        ["Outcome Refund (58%)", "Returned via NEAR Intents if pregnancy is negative", "2,900 USDC"]
+      ];
+      sched.forEach((row, idx) => {
+        const ry = 304 + idx * 38;
+        ctx.fillStyle = idx === 3 ? "#14505A" : "#17232B";
+        ctx.font = (idx === 3 ? "600" : "400") + " 14px 'IBM Plex Sans', sans-serif";
+        ctx.fillText(row[0], 84, ry);
+        ctx.fillStyle = "#56636C";
+        ctx.fillText(row[1], 310, ry);
+        ctx.fillStyle = "#17232B";
+        ctx.font = "500 14px 'IBM Plex Mono', monospace";
+        ctx.textAlign = "right";
+        ctx.fillText(row[2], 776, ry);
+        ctx.textAlign = "left";
+      });
+
+      // Live NEAR Testnet RPC Transaction Log
+      drawRoundRect(84, 464, 692, 128, 4, "#F6F5F1", "#14505A", 1.5);
+      ctx.fillStyle = "#14505A";
+      ctx.font = "500 13px 'IBM Plex Mono', monospace";
+      ctx.fillText("LIVE NEAR TESTNET EVENT LOG (https://rpc.testnet.near.org · Block #184920114)", 102, 488);
+      ctx.fillStyle = "#17232B";
+      ctx.font = "400 12px 'IBM Plex Mono', monospace";
+      ctx.fillText("> [CALL:create_assurance_case] Case EG-TESTNET-4912 · Locked 5,000 USDC (21% + 21% + 58% Split)", 102, 514);
+      ctx.fillText("> [CALL:confirm_milestones_1_2] Released Stage 1 (21%) + Stage 2 (21%) = 2,100 USDC to clinic", 102, 538);
+      if (isRefundTriggered) {
+        ctx.fillStyle = "#14505A";
+        ctx.font = "500 12px 'IBM Plex Mono', monospace";
+        ctx.fillText("> [CALL:resolve_clinical_outcome(false)] AUTO-REFUNDED 58% (2,900 USDC) -> patient-ivf.testnet", 102, 564);
+      } else {
+        ctx.fillStyle = "#56636C";
+        ctx.fillText("> [ESCROW_LOCKED] 2,900 USDC (58%) protected by OutLayer & Trezu awaiting clinical outcome...", 102, 564);
+      }
+
+      drawSummarySidebar(32, "2.0 ng/mL", "Normal (≥16M/mL)", "None", 67, 58);
+      drawBottomBanner("Step 4: Dynamic Stage Split (21% + 21% + 58%) & Instant Refund on NEAR Testnet");
+    }
+
+    function animate(now) {
+      renderFrame(now - animStart);
+      requestAnimationFrame(animate);
+    }
+
+    function startRecordingPromo() {
+      if (isRecording) return;
+      isRecording = true;
+      animStart = performance.now();
+      const statusEl = document.getElementById("recStatus");
+      const btn = document.getElementById("recordBtn");
+      btn.disabled = true;
+      statusEl.textContent = "Recording 18-second HD promotional video... Please wait (18s)...";
+
+      const stream = canvas.captureStream(30);
+      let mimeType = "video/mp4";
+      if (!MediaRecorder.isTypeSupported(mimeType)) {
+        mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp9")
+          ? "video/webm;codecs=vp9"
+          : "video/webm";
+      }
+      const ext = mimeType.includes("mp4") ? "mp4" : "webm";
+      const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 4500000 });
+      const chunks = [];
+      recorder.ondataavailable = e => {
+        if (e.data && e.data.size > 0) chunks.push(e.data);
+      };
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const dl = document.getElementById("downloadLink");
+        dl.href = url;
+        dl.download = "embryoguard-near-demo." + ext;
+        dl.style.display = "inline-block";
+        dl.click();
+        isRecording = false;
+        btn.disabled = false;
+        statusEl.textContent = "Video recorded and downloaded: embryoguard-near-demo." + ext + " (Ready to attach on X!)";
+      };
+
+      recorder.start(200);
+      setTimeout(() => {
+        if (recorder.state !== "inactive") recorder.stop();
+      }, DURATION_MS);
+    }
+
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
