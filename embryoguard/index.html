@@ -2,497 +2,687 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>EmbryoGuard | Uzman Embriyolog Danışmanlığı & Güvenceli IVF Kasası</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EmbryoGuard — Klinik embriyoloji danışmanlığı ve ön değerlendirme</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Source+Serif+4:wght@600&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
   <script src="./src/embryology_engine.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #0B111E;
-      color: #F8FAFC;
-    }
-    .step-card {
-      background: #131C2E;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-    }
-    input[type="range"] {
-      accent-color: #00EC97;
-    }
-    .step-hidden {
-      display: none !important;
-    }
-  </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-[#00EC97] selection:text-slate-950">
+<body>
 
-  <!-- Minimal Mobile-First Top Bar -->
-  <header class="border-b border-slate-800/80 bg-[#0B111E]/95 sticky top-0 z-40 backdrop-blur-md">
-    <div class="max-w-2xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-[#00EC97] text-slate-950 flex items-center justify-center font-extrabold text-lg shadow-md shadow-[#00EC97]/20">
-          🧬
-        </div>
-        <div>
-          <div class="font-bold text-base text-white leading-tight flex items-center gap-2">
-            <span>EmbryoGuard</span>
-            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#00EC97]/15 text-[#00EC97]">NEAR</span>
-          </div>
-          <p class="text-[11px] text-slate-400" id="headerSub">Uzman Embriyolog Danışmanlığı & İade Güvenceli IVF</p>
-        </div>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <a href="#main-content" class="brand-title" onclick="goToStep(1); return false;">EmbryoGuard</a>
+        <p class="brand-subtitle">Klinik embriyoloji danışmanlığı</p>
       </div>
-
-      <div class="flex items-center gap-2">
-        <button onclick="toggleLang()" id="langBtn" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700">
-          TR / EN
-        </button>
-        <button onclick="openSettingsModal()" title="Embriyolog İletişim Ayarları" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs">
-          ⚙️
-        </button>
-      </div>
+      <a href="#adim-3" class="header-contact-link" onclick="goToStep(3); return false;">İletişim</a>
     </div>
   </header>
 
-  <!-- Main Wizard Container (Centered, Clean, Mobile-First) -->
-  <main class="flex-1 max-w-2xl w-full mx-auto px-4 py-6 sm:py-10">
+  <main id="main-content" class="main-container">
 
-    <!-- Step Progress Bar -->
-    <div class="mb-6">
-      <div class="grid grid-cols-4 gap-2 text-center">
-        <button onclick="goToStep(1)" id="tabStep1" class="py-2 px-1 rounded-xl text-xs font-semibold border transition">
-          1. Ön Bilgiler
-        </button>
-        <button onclick="goToStep(2)" id="tabStep2" class="py-2 px-1 rounded-xl text-xs font-semibold border transition">
-          2. Ön Değer & İade
-        </button>
-        <button onclick="goToStep(3)" id="tabStep3" class="py-2 px-1 rounded-xl text-xs font-semibold border transition">
-          3. Embriyolog Chat
-        </button>
-        <button onclick="goToStep(4)" id="tabStep4" class="py-2 px-1 rounded-xl text-xs font-semibold border transition">
-          4. NEAR Güvencesi
-        </button>
+    <nav class="stepper-nav" aria-label="Değerlendirme adımları">
+      <ol class="stepper">
+        <li class="stepper-item">
+          <button type="button" id="tabStep1" class="stepper-btn is-active" aria-current="step" onclick="goToStep(1)">
+            <span class="stepper-circle">1</span>
+            <span class="stepper-label">Ön bilgiler</span>
+          </button>
+          <span class="stepper-line" aria-hidden="true"></span>
+        </li>
+        <li class="stepper-item">
+          <button type="button" id="tabStep2" class="stepper-btn" onclick="goToStep(2)">
+            <span class="stepper-circle">2</span>
+            <span class="stepper-label">Ön değerlendirme</span>
+          </button>
+          <span class="stepper-line" aria-hidden="true"></span>
+        </li>
+        <li class="stepper-item">
+          <button type="button" id="tabStep3" class="stepper-btn" onclick="goToStep(3)">
+            <span class="stepper-circle">3</span>
+            <span class="stepper-label">Danışmanlık talebi</span>
+          </button>
+          <span class="stepper-line" aria-hidden="true"></span>
+        </li>
+        <li class="stepper-item">
+          <button type="button" id="tabStep4" class="stepper-btn" onclick="goToStep(4)">
+            <span class="stepper-circle">4</span>
+            <span class="stepper-label">Ödeme planı</span>
+          </button>
+        </li>
+      </ol>
+      <p id="mobileStepCaption" class="stepper-mobile-caption">Adım 1 / 4 — Ön bilgiler</p>
+    </nav>
+
+    <!-- Mobil açılır-kapanır özet satırı -->
+    <details class="summary-mobile">
+      <summary>
+        <span>Değerlendirme özeti</span>
+        <span id="mobileSummaryShort" class="mono-num">Ön tahmin: %67 · İade: %58</span>
+      </summary>
+      <div class="summary-mobile-body">
+        <dl class="summary-dl">
+          <div class="summary-row">
+            <dt>Kadın yaşı</dt>
+            <dd id="mobSumAge" class="mono-num">32 yaş</dd>
+          </div>
+          <div class="summary-row">
+            <dt>AMH düzeyi</dt>
+            <dd id="mobSumAmh" class="mono-num">2,0 ng/mL</dd>
+          </div>
+          <div class="summary-row">
+            <dt>Sperm analizi</dt>
+            <dd id="mobSumSperm">Normal</dd>
+          </div>
+          <div class="summary-row">
+            <dt>Önceki deneme</dt>
+            <dd id="mobSumPrior">Yok</dd>
+          </div>
+          <hr class="summary-divider" />
+          <div class="summary-row">
+            <dt>Tahmini başarı göstergesi</dt>
+            <dd id="mobSumEstimate" class="mono-num">%67</dd>
+          </div>
+          <div class="summary-row">
+            <dt>Olumsuz sonuçta iade oranı</dt>
+            <dd id="mobSumRefund" class="mono-num">%58</dd>
+          </div>
+        </dl>
       </div>
+    </details>
+
+    <div class="workspace-grid">
+      <div class="step-column">
+
+        <!-- ADIM 1: Ön bilgiler -->
+        <section id="step1" class="step-panel" aria-labelledby="step1Heading">
+          <header class="step-header">
+            <h1 id="step1Heading" class="step-title">Ön değerlendirme bilgileri</h1>
+            <p class="step-desc">
+              Dört temel bilgiyle bir ön değerlendirme hesaplanır. Bilgileriniz yalnızca danışmanlık talebinizle birlikte embriyoloğa iletilir.
+            </p>
+          </header>
+
+          <div class="form-stack">
+            <!-- Kadın yaşı -->
+            <div class="field">
+              <label for="inpAgeNum" class="field-label">Kadın yaşı</label>
+              <div class="input-unit-row">
+                <input
+                  id="inpAgeNum"
+                  type="number"
+                  min="20"
+                  max="45"
+                  step="1"
+                  value="32"
+                  class="input-number"
+                  oninput="syncAgeFromNumber()"
+                />
+                <span class="unit-text">yaş</span>
+              </div>
+              <input
+                id="inpAge"
+                type="range"
+                min="20"
+                max="45"
+                step="1"
+                value="32"
+                aria-label="Kadın yaşı kaydırıcısı"
+                class="range-slider"
+                oninput="syncAgeFromSlider()"
+              />
+            </div>
+
+            <!-- AMH -->
+            <div class="field">
+              <label for="inpAmhNum" class="field-label">AMH (yumurtalık rezervi göstergesi)</label>
+              <div class="input-unit-row">
+                <input
+                  id="inpAmhNum"
+                  type="number"
+                  min="0.2"
+                  max="5.5"
+                  step="0.1"
+                  value="2.0"
+                  class="input-number"
+                  oninput="syncAmhFromNumber()"
+                />
+                <span class="unit-text">ng/mL</span>
+              </div>
+              <input
+                id="inpAmh"
+                type="range"
+                min="0.2"
+                max="5.5"
+                step="0.1"
+                value="2.0"
+                aria-label="AMH düzeyi kaydırıcısı"
+                class="range-slider"
+                oninput="syncAmhFromSlider()"
+              />
+              <p class="field-hint">Düşük &lt; 1,0 · Normal 1,0–3,5 · Yüksek &gt; 3,5</p>
+              <label for="inpAmhUnknown" class="checkbox-row">
+                <input id="inpAmhUnknown" type="checkbox" onchange="toggleAmhUnknown()" />
+                <span>Değerimi bilmiyorum</span>
+              </label>
+            </div>
+
+            <!-- Sperm analizi -->
+            <fieldset class="fieldset-clean">
+              <legend class="fieldset-legend">Sperm analizi</legend>
+              <div class="radio-stack" id="spermRadioGroup">
+                <label class="radio-option is-active" for="sperm_normal">
+                  <input id="sperm_normal" type="radio" name="spermCategory" value="normal" checked onchange="handleSpermChange(this.value)" />
+                  <span>
+                    <span class="radio-title">Normal</span>
+                    <span class="radio-criteria">Sayı: 15 milyon/mL üzeri · Hareketlilik: %40 üzeri</span>
+                  </span>
+                </label>
+
+                <label class="radio-option" for="sperm_mild_low">
+                  <input id="sperm_mild_low" type="radio" name="spermCategory" value="mild_low" onchange="handleSpermChange(this.value)" />
+                  <span>
+                    <span class="radio-title">Hafif düşük</span>
+                    <span class="radio-criteria">Sayı: 5–15 milyon/mL · Hareketlilik: %20–%40</span>
+                  </span>
+                </label>
+
+                <label class="radio-option" for="sperm_severe_low">
+                  <input id="sperm_severe_low" type="radio" name="spermCategory" value="severe_low" onchange="handleSpermChange(this.value)" />
+                  <span>
+                    <span class="radio-title">Belirgin düşük</span>
+                    <span class="radio-criteria">Sayı: 5 milyon/mL altı · Hareketlilik: %20 altı</span>
+                  </span>
+                </label>
+
+                <label class="radio-option" for="sperm_azoospermia">
+                  <input id="sperm_azoospermia" type="radio" name="spermCategory" value="azoospermia" onchange="handleSpermChange(this.value)" />
+                  <span>
+                    <span class="radio-title">Azospermi</span>
+                    <span class="radio-criteria">Menide sperm hücresi görülmedi</span>
+                  </span>
+                </label>
+
+                <label class="radio-option" for="sperm_unknown">
+                  <input id="sperm_unknown" type="radio" name="spermCategory" value="unknown" onchange="handleSpermChange(this.value)" />
+                  <span>
+                    <span class="radio-title">Tahlil yok / bilmiyorum</span>
+                    <span class="radio-criteria">Henüz spermiogram değerlendirmesi yapılmadı</span>
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+
+            <!-- Önceki IVF denemesi -->
+            <fieldset class="fieldset-clean">
+              <legend class="fieldset-legend">Önceki tüp bebek (IVF) denemesi</legend>
+              <div class="segmented-control" role="group" aria-label="Önceki tüp bebek denemesi sayısı">
+                <button type="button" id="btnPrior0" class="segmented-btn is-active" aria-pressed="true" onclick="selectPrior(0)">Yok</button>
+                <button type="button" id="btnPrior1" class="segmented-btn" aria-pressed="false" onclick="selectPrior(1)">1</button>
+                <button type="button" id="btnPrior2" class="segmented-btn" aria-pressed="false" onclick="selectPrior(2)">2</button>
+                <button type="button" id="btnPrior3" class="segmented-btn" aria-pressed="false" onclick="selectPrior(3)">3+</button>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="actions-row">
+            <button type="button" class="btn-primary btn-full" onclick="goToStep(2)">Değerlendirmeyi hesapla</button>
+          </div>
+        </section>
+
+        <!-- ADIM 2: Ön değerlendirme sonucu -->
+        <section id="step2" class="step-panel step-hidden" aria-labelledby="step2Heading">
+          <header class="step-header">
+            <h1 id="step2Heading" class="step-title">Ön değerlendirme sonucu</h1>
+          </header>
+
+          <table class="report-table" aria-label="Ön değerlendirme özet tablosu">
+            <tbody>
+              <tr>
+                <th scope="row">Tahmini başarı göstergesi</th>
+                <td id="dispPreliminaryPct">%67</td>
+              </tr>
+              <tr>
+                <th scope="row">Olumsuz sonuçta iade oranı</th>
+                <td id="dispDynamicRefundPct">%58</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="scale-block" aria-hidden="true">
+            <div class="scale-track">
+              <div id="scaleMarker" class="scale-marker" style="left: 67%;"></div>
+            </div>
+            <div class="scale-labels">
+              <span>0</span>
+              <span>50</span>
+              <span>100</span>
+            </div>
+          </div>
+
+          <div class="used-inputs-block">
+            <h2 class="section-subhead">Bu değerlendirmede kullanılan bilgiler</h2>
+            <ul class="used-inputs-list">
+              <li>
+                <span class="item-key">Kadın yaşı</span>
+                <span id="usedAge" class="item-val mono-num">32 yaş</span>
+              </li>
+              <li>
+                <span class="item-key">AMH düzeyi</span>
+                <span id="usedAmh" class="item-val mono-num">2,0 ng/mL</span>
+              </li>
+              <li>
+                <span class="item-key">Sperm analizi</span>
+                <span id="usedSperm" class="item-val">Normal (Sayı: 15 milyon/mL üzeri · Hareketlilik: %40 üzeri)</span>
+              </li>
+              <li>
+                <span class="item-key">Önceki tüp bebek denemesi</span>
+                <span id="usedPrior" class="item-val">Yok</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="clinical-note" role="note">
+            <p>
+              Bu sonuç, girdiğiniz dört bilgiye dayanan bir ön tahmindir; tıbbi görüş yerine geçmez. Kesin değerlendirme, embriyolog görüşmesinde tetkikleriniz incelendikten sonra yapılır.
+            </p>
+          </div>
+
+          <details class="disclosure-box">
+            <summary>İade oranı nasıl belirlenir?</summary>
+            <div class="disclosure-body">
+              <p>
+                Olumsuz sonuçta iade oranı sabit değildir; girdiğiniz ön bilgilerle hesaplanan değerlendirme göstergesine bağlı olarak %20 ile %65 arasında belirlenir. Sizin bilgilerinizle hesaplanan oran <span id="txtDynamicRefundInline" class="mono-num">%58</span> düzeyindedir ve nihai oran embriyolog görüşmesi sonrasında kesinleştirilir.
+              </p>
+            </div>
+          </details>
+
+          <div class="actions-row">
+            <button type="button" class="btn-secondary" onclick="goToStep(1)">Bilgileri düzenle</button>
+            <button type="button" class="btn-primary" onclick="goToStep(3)">Embriyoloğa danış</button>
+          </div>
+        </section>
+
+        <!-- ADIM 3: Danışmanlık talebi -->
+        <section id="step3" class="step-panel step-hidden" aria-labelledby="step3Heading">
+          <header class="step-header">
+            <h1 id="step3Heading" class="step-title">Danışmanlık talebi</h1>
+            <p class="step-desc">
+              Ön değerlendirme bilgileriniz talebinize eklenir. Tetkiklerinizin incelenmesi ve uygun merkez yönlendirmesi için aşağıdaki formu doldurabilirsiniz.
+            </p>
+          </header>
+
+          <div class="embryologist-bar">
+            <span class="embryologist-avatar" aria-hidden="true">C</span>
+            <div>
+              <div class="embryologist-name">Caner</div>
+              <div class="embryologist-meta">{{UNVAN}} · {{KURUM}}</div>
+            </div>
+          </div>
+
+          <form id="consultationForm" class="form-stack" novalidate onsubmit="handlePatientMessageSubmit(event)">
+            <div class="field">
+              <label for="patientName" class="field-label">Adınız ya da rumuzunuz</label>
+              <input
+                id="patientName"
+                type="text"
+                class="input-text"
+                autocomplete="name"
+                aria-describedby="errPatientName"
+                oninput="updateForwardLinks()"
+              />
+              <p id="errPatientName" class="field-error" role="alert">Lütfen adınızı ya da bir rumuz girin.</p>
+            </div>
+
+            <div class="field">
+              <label for="patientContact" class="field-label">İletişim bilginiz (telefon, e-posta ya da Telegram)</label>
+              <input
+                id="patientContact"
+                type="text"
+                class="input-text"
+                autocomplete="tel"
+                aria-describedby="errPatientContact"
+                oninput="updateForwardLinks()"
+              />
+              <p id="errPatientContact" class="field-error" role="alert">Size dönüş yapılabilmesi için bir iletişim bilgisi girin.</p>
+            </div>
+
+            <div class="field">
+              <label for="patientMsgInput" class="field-label">Sorunuz</label>
+              <textarea
+                id="patientMsgInput"
+                rows="4"
+                class="input-textarea"
+                aria-describedby="errPatientMsg"
+                oninput="updateForwardLinks()"
+              ></textarea>
+              <p id="errPatientMsg" class="field-error" role="alert">Lütfen danışmak istediğiniz konuyu kısaca yazın.</p>
+            </div>
+
+            <div class="field">
+              <label for="kvkkConsent" class="checkbox-row">
+                <input id="kvkkConsent" type="checkbox" aria-describedby="errKvkk" />
+                <span>
+                  <a href="{{KVKK_URL}}" target="_blank" rel="noopener">Kişisel verilerin korunması aydınlatma metnini</a> okudum ve bilgilerimin danışmanlık amacıyla incelenmesini onaylıyorum.
+                </span>
+              </label>
+              <p id="errKvkk" class="field-error" role="alert">Devam etmek için aydınlatma metnini onaylamanız gerekir.</p>
+            </div>
+
+            <div class="actions-row">
+              <button type="button" class="btn-secondary" onclick="goToStep(2)">Ön değerlendirmeye dön</button>
+              <button type="submit" class="btn-primary">Talebi gönder</button>
+            </div>
+
+            <div class="secondary-links-row">
+              <span>Alternatif iletim kanalları:</span>
+              <a id="tgDirectLink" href="https://t.me/criticalsilence" target="_blank" rel="noopener">Telegram ile ilet</a>
+              <a id="mailDirectLink" href="mailto:info@cukka.org">E-posta ile ilet</a>
+            </div>
+          </form>
+
+          <!-- Gönderim sonrası onay durumu -->
+          <div id="requestConfirmation" class="confirmation-box step-hidden" role="status" aria-live="polite">
+            <h2 class="confirmation-title">Talebiniz alındı</h2>
+            <p class="step-desc">
+              İlettiğiniz bilgiler kaydedildi. Embriyolog incelemesinin ardından <span>{{YANIT_SURESI}}</span> içinde belirttiğiniz iletişim kanalından size dönüş yapılacaktır.
+            </p>
+
+            <div class="used-inputs-block">
+              <h3 class="section-subhead">İletilen özet</h3>
+              <ul id="confirmedSummaryList" class="used-inputs-list"></ul>
+            </div>
+
+            <div class="secondary-links-row">
+              <span>Özetinizi doğrudan kendi uygulamanız üzerinden de gönderebilirsiniz:</span>
+              <a id="tgConfirmLink" href="https://t.me/criticalsilence" target="_blank" rel="noopener">Telegram ile ilet</a>
+              <a id="mailConfirmLink" href="mailto:info@cukka.org">E-posta ile ilet</a>
+            </div>
+
+            <div class="actions-row">
+              <button type="button" class="btn-secondary" onclick="resetConsultationForm()">Bilgileri düzenle</button>
+              <button type="button" class="btn-primary" onclick="goToStep(4)">Ödeme planını incele</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ADIM 4: Ödeme planı ve iade -->
+        <section id="step4" class="step-panel step-hidden" aria-labelledby="step4Heading">
+          <header class="step-header">
+            <h1 id="step4Heading" class="step-title">Ödeme planı ve iade koşulları</h1>
+            <p class="step-desc">
+              Ödemeniz kliniğe peşin aktarılmaz; emanet hesabında tutulur ve tedavi aşamaları tamamlandıkça serbest bırakılır.
+            </p>
+          </header>
+
+          <div class="two-field-grid">
+            <div class="field">
+              <label for="vaultAmountInput" class="field-label">Paket tutarı</label>
+              <div class="input-unit-row">
+                <input
+                  id="vaultAmountInput"
+                  type="number"
+                  value="5000"
+                  min="1000"
+                  step="100"
+                  class="input-number"
+                  style="width: 100%;"
+                  oninput="updateSimpleVault()"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="vaultAssetSelect" class="field-label">Para birimi</label>
+              <select id="vaultAssetSelect" class="input-select" onchange="updateSimpleVault()">
+                <option value="USDC">ABD doları (USDC)</option>
+                <option value="USDT">ABD doları (USDT)</option>
+                <option value="NEAR">NEAR</option>
+                <option value="SOL">SOL</option>
+                <option value="BTC">BTC</option>
+              </select>
+            </div>
+          </div>
+
+          <table class="schedule-table" aria-label="Aşamalı ödeme ve iade tablosu">
+            <thead>
+              <tr>
+                <th scope="col">Aşama</th>
+                <th scope="col">Ne zaman</th>
+                <th scope="col">Tutar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1. aşama (%25)</td>
+                <td>Tedavi başlangıcı ve yumurta toplama işlemi</td>
+                <td id="vStep1Usd">1.250 USDC</td>
+              </tr>
+              <tr>
+                <td>2. aşama (%25)</td>
+                <td>Embriyo gelişimi ve transfer süreci</td>
+                <td id="vStep2Usd">1.250 USDC</td>
+              </tr>
+              <tr>
+                <td>3. aşama (%50)</td>
+                <td>Klinik gebelik sonucunun netleşmesi</td>
+                <td id="vStep3Usd">2.500 USDC</td>
+              </tr>
+              <tr class="refund-row">
+                <td>Olumsuz sonuçta iade (<span id="vRefundPctLabel" class="mono-num">%58</span>)</td>
+                <td>Gebelik oluşmaması durumunda emanet hesabından iade</td>
+                <td id="vRefundUsd">2.900 USDC</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <details class="disclosure-box">
+            <summary>Örnek senaryo</summary>
+            <div class="disclosure-body">
+              <p class="field-hint">Bu bir gösterimdir; gerçek işlem yapılmaz.</p>
+              <div class="scenario-buttons">
+                <button type="button" class="btn-secondary" onclick="simulateVaultOutcome(true)">Gebelik pozitif</button>
+                <button type="button" class="btn-secondary" onclick="simulateVaultOutcome(false)">Gebelik negatif</button>
+              </div>
+              <p id="simResultText">
+                Tedavi sonucuna göre emanet hesabındaki tutarın nasıl dağıtıldığını görmek için yukarıdaki durumlardan birini seçin.
+              </p>
+            </div>
+          </details>
+
+          <details class="disclosure-box">
+            <summary>Teknik ayrıntılar</summary>
+            <div class="disclosure-body">
+              <p>
+                Aşamalı ödeme ve olumsuz sonuçta iade kuralları NEAR protokolü üzerindeki <span class="mono-num">embryoguard-vault.near</span> akıllı kontratı ve sınır ötesi mutabakat katmanı (NEAR Intents) aracılığıyla yürütülür.
+              </p>
+            </div>
+          </details>
+
+          <div class="actions-row">
+            <button type="button" class="btn-secondary" onclick="goToStep(3)">Danışmanlık talebine dön</button>
+            <button type="button" class="btn-secondary" onclick="goToStep(1)">Baştan başla</button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Masaüstü sağ yapışkan özet paneli -->
+      <aside class="summary-panel" aria-label="Değerlendirme özeti">
+        <h2 class="summary-title">Değerlendirme özeti</h2>
+        <dl class="summary-dl">
+          <div class="summary-row">
+            <dt>Kadın yaşı</dt>
+            <dd id="deskSumAge" class="mono-num">32 yaş</dd>
+          </div>
+          <div class="summary-row">
+            <dt>AMH düzeyi</dt>
+            <dd id="deskSumAmh" class="mono-num">2,0 ng/mL</dd>
+          </div>
+          <div class="summary-row">
+            <dt>Sperm analizi</dt>
+            <dd id="deskSumSperm">Normal</dd>
+          </div>
+          <div class="summary-row">
+            <dt>Önceki deneme</dt>
+            <dd id="deskSumPrior">Yok</dd>
+          </div>
+          <hr class="summary-divider" />
+          <div class="summary-row">
+            <dt>Tahmini başarı göstergesi</dt>
+            <dd id="deskSumEstimate" class="mono-num">%67</dd>
+          </div>
+          <div class="summary-row">
+            <dt>Olumsuz sonuçta iade oranı</dt>
+            <dd id="deskSumRefund" class="mono-num">%58</dd>
+          </div>
+        </dl>
+        <p class="summary-footnote">
+          Bu değerler girdiğiniz bilgilere göre hesaplanan ön tahmindir; kesin değerlendirme görüşme sonrasında yapılır.
+        </p>
+      </aside>
     </div>
-
-    <!-- ========================================================= -->
-    <!-- ADIM 1: HASTA DOSTU BASİT BİLGİ FORMU                     -->
-    <!-- ========================================================= -->
-    <section id="step1" class="step-card rounded-3xl p-5 sm:p-8 space-y-6">
-      <div>
-        <span class="text-xs font-bold uppercase tracking-wider text-[#00EC97]" data-i18n="s1_tag">ADIM 1 / 4 • KİŞİSEL ÖN BİLGİLER</span>
-        <h1 class="text-xl sm:text-2xl font-extrabold text-white mt-1" data-i18n="s1_title">
-          Sizi Tanıyalım
-        </h1>
-        <p class="text-xs sm:text-sm text-slate-400 mt-1" data-i18n="s1_desc">
-          Karmaşık tıbbi terimler olmadan sadece temel bilgilerinizi seçin. Verileriniz gizli tutulur.
-        </p>
-      </div>
-
-      <div class="space-y-5">
-        <!-- 1. Anne Adayı Yaşı -->
-        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800">
-          <div class="flex justify-between items-center mb-2">
-            <label class="text-sm font-semibold text-white" data-i18n="lbl_age">1. Kadın Yaşı</label>
-            <span class="px-3 py-1 rounded-lg bg-[#00EC97]/15 text-[#00EC97] font-bold text-sm">
-              <span id="valAge">32</span> <span data-i18n="unit_age">Yaş</span>
-            </span>
-          </div>
-          <input id="inpAge" type="range" min="20" max="45" value="32" oninput="updateCalculation()" class="w-full h-2 cursor-pointer" />
-          <div class="flex justify-between text-[11px] text-slate-500 mt-1">
-            <span>20</span><span>28</span><span>35</span><span>40</span><span>45</span>
-          </div>
-        </div>
-
-        <!-- 2. AMH Değeri -->
-        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3">
-          <div class="flex justify-between items-center">
-            <label class="text-sm font-semibold text-white" data-i18n="lbl_amh">2. AMH Değeri (Yumurta Rezervi)</label>
-            <span id="amhBadge" class="px-3 py-1 rounded-lg bg-[#00EC97]/15 text-[#00EC97] font-bold text-sm">
-              <span id="valAmh">2.0</span> ng/mL
-            </span>
-          </div>
-
-          <div id="amhSliderWrap">
-            <input id="inpAmh" type="range" min="0.2" max="5.5" step="0.1" value="2.0" oninput="updateCalculation()" class="w-full h-2 cursor-pointer" />
-            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
-              <span data-i18n="amh_low">&lt;1.0 (Düşük)</span>
-              <span data-i18n="amh_norm">1.0 – 3.5 (Normal)</span>
-              <span data-i18n="amh_high">&gt;3.5 (Yüksek)</span>
-            </div>
-          </div>
-
-          <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer pt-1">
-            <input id="inpAmhUnknown" type="checkbox" onchange="toggleAmhUnknown()" class="w-4 h-4 accent-[#00EC97] rounded" />
-            <span data-i18n="lbl_amh_unknown">AMH değerimi bilmiyorum / Henüz test yaptırmadım</span>
-          </label>
-        </div>
-
-        <!-- 3. Sperm Sayı ve Hareketlilik Bilgisi (Hasta Dostu) -->
-        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
-          <label class="block text-sm font-semibold text-white" data-i18n="lbl_sperm">
-            3. Sperm Testi (Sayı ve Hareketlilik Durumu)
-          </label>
-          <p class="text-xs text-slate-400" data-i18n="sperm_helper">
-            Tahlil sonucunuzdaki mililitredeki sperm sayısı ve ileri hareketlilik oranına göre seçebilirsiniz:
-          </p>
-          <select id="inpSperm" onchange="updateCalculation()" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-3 text-sm text-white focus:outline-none focus:border-[#00EC97]">
-            <option value="normal">Normal Değerler (Sayı: &gt;15 Milyon/mL • Hareketlilik: &gt;%40)</option>
-            <option value="mild_low">Hafif Düşük (Sayı: 5–15 Milyon/mL • Hareketlilik: %20–%40)</option>
-            <option value="severe_low">Belirgin Düşük (Sayı: &lt;5 Milyon/mL • Hareketlilik: &lt;%20)</option>
-            <option value="azoospermia">Azospermi (Tahlilde sperm hücresi görülmedi)</option>
-            <option value="unknown">Henüz sperm tahlilimiz yok / Bilmiyorum</option>
-          </select>
-        </div>
-
-        <!-- 4. Önceki Tüp Bebek Deneme Sayısı -->
-        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
-          <label class="block text-sm font-semibold text-white" data-i18n="lbl_prior">
-            4. Daha Önce Tüp Bebek Denemeniz Oldu mu?
-          </label>
-          <div class="grid grid-cols-4 gap-2 pt-1">
-            <button type="button" onclick="selectPrior(0)" id="btnPrior0" class="py-2.5 rounded-xl text-xs font-bold border transition">
-              İlk Deneme (0)
-            </button>
-            <button type="button" onclick="selectPrior(1)" id="btnPrior1" class="py-2.5 rounded-xl text-xs font-bold border transition">
-              1 Deneme
-            </button>
-            <button type="button" onclick="selectPrior(2)" id="btnPrior2" class="py-2.5 rounded-xl text-xs font-bold border transition">
-              2 Deneme
-            </button>
-            <button type="button" onclick="selectPrior(3)" id="btnPrior3" class="py-2.5 rounded-xl text-xs font-bold border transition">
-              3+ Deneme
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <button onclick="goToStep(2)" class="w-full py-4 rounded-2xl bg-[#00EC97] hover:bg-[#00d486] text-slate-950 font-extrabold text-base transition shadow-lg shadow-[#00EC97]/20">
-        Ön Değerlendirmemi Gör →
-      </button>
-    </section>
-
-    <!-- ========================================================= -->
-    <!-- ADIM 2: ÖN TAHMİN (NİHAİ OLMAYAN) & DİNAMİK İADE ORANI    -->
-    <!-- ========================================================= -->
-    <section id="step2" class="step-card rounded-3xl p-5 sm:p-8 space-y-6 step-hidden">
-      <div>
-        <span class="text-xs font-bold uppercase tracking-wider text-[#00EC97]">ADIM 2 / 4 • ÖN DEĞERLENDİRME & İADE ORANI</span>
-        <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-1">
-          Tahmini Ön Değerlendirme Sonucunuz
-        </h2>
-        <p class="text-xs sm:text-sm text-slate-400 mt-1">
-          Girdiğiniz bilgilere göre hesaplanan tahmini başarı göstergesi ve buna bağlı dinamik para iade oranınız:
-        </p>
-      </div>
-
-      <!-- 2 Clean Cards: Preliminary Score & Dynamic Refund Rate -->
-      <div class="grid sm:grid-cols-2 gap-4">
-        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2">
-          <div class="text-xs font-semibold text-slate-400 uppercase">ÖN DEĞERLENDİRME TAHMİNİ</div>
-          <div id="dispPreliminaryPct" class="text-4xl sm:text-5xl font-extrabold text-white">%63</div>
-          <div class="inline-block px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 text-[11px] font-semibold">
-            ⚠️ Ön Tahmindir (Nihai Değildir)
-          </div>
-        </div>
-
-        <div class="p-5 rounded-2xl bg-emerald-950/40 border border-[#00EC97]/50 text-center space-y-2">
-          <div class="text-xs font-semibold text-[#00EC97] uppercase">DİNAMİK PARA İADE ORANINIZ</div>
-          <div id="dispDynamicRefundPct" class="text-4xl sm:text-5xl font-extrabold text-[#00EC97]">%55</div>
-          <div class="text-[11px] text-slate-300">
-            Ön değerlendirme oranınıza göre özel hesaplanmıştır
-          </div>
-        </div>
-      </div>
-
-      <!-- Mandatory Important Disclaimer -->
-      <div class="p-4 rounded-2xl bg-amber-950/30 border border-amber-500/40 text-xs sm:text-sm text-amber-200 leading-relaxed space-y-1.5">
-        <div class="font-bold text-amber-300 flex items-center gap-1.5">
-          <span>ℹ️</span>
-          <span>Önemli Bilgilendirme (Nihai Sonuç Değildir)</span>
-        </div>
-        <p id="disclaimerText">
-          Yukarıdaki değer yalnızca girdiğiniz temel verilere dayalı bir <strong>ön tahmindir ve kesin/nihai tıbbi görüş yerine geçmez</strong>. Gerçek başarı beklentiniz, tedavi detaylarınız ve <strong>size en uygun anlaşmalı klinik yönlendirmesi</strong> Uzman Embriyolog ile yapacağınız birebir görüşme sonrasında netleştirilir.
-        </p>
-      </div>
-
-      <!-- Dynamic Refund Explanation -->
-      <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs sm:text-sm text-slate-300 space-y-1">
-        <div class="font-bold text-white">🛡️ Dinamik İade Güvencesi Nedir?</div>
-        <p>
-          Platformumuzda para iade oranı sabit değildir; profilinizin ön değerlendirme oranına göre <strong>%20 ile %65 arasında dinamik olarak</strong> belirlenir. Sizin profiliniz için hesaplanan ön iade oranı <strong class="text-[#00EC97]" id="txtDynamicRefundInline">%55</strong>'tir.
-        </p>
-      </div>
-
-      <div class="flex gap-3 pt-2">
-        <button onclick="goToStep(1)" class="w-1/3 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm transition">
-          ← Geri
-        </button>
-        <button onclick="goToStep(3)" class="w-2/3 py-3.5 rounded-2xl bg-[#00EC97] hover:bg-[#00d486] text-slate-950 font-extrabold text-sm sm:text-base transition shadow-lg shadow-[#00EC97]/20">
-          Uzman Embriyolog ile Görüş →
-        </button>
-      </div>
-    </section>
-
-    <!-- ========================================================= -->
-    <!-- ADIM 3: SADE EMBRİYOLOG CHAT (TELEGRAM & MAİL İLETİMLİ)   -->
-    <!-- ========================================================= -->
-    <section id="step3" class="step-card rounded-3xl p-5 sm:p-8 space-y-5 step-hidden">
-      <div>
-        <span class="text-xs font-bold uppercase tracking-wider text-[#00EC97]">ADIM 3 / 4 • UZMAN EMBRİYOLOG DANIŞMANLIĞI</span>
-        <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-1">
-          Uzman Embriyolog ile Görüşün
-        </h2>
-        <p class="text-xs sm:text-sm text-slate-400 mt-1">
-          Durumunuzu netleştirmek ve size en uygun anlaşmalı kliniğe yönlendirilmek için mesajınızı yazın. Yazdıklarınız doğrudan uzman embriyoloğun <strong>Telegram</strong> ve <strong>E-posta</strong> adresine iletilir.
-        </p>
-      </div>
-
-      <!-- Auto-Attached Patient Summary Pill -->
-      <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 flex flex-wrap items-center justify-between gap-2">
-        <span id="chatSummaryPill" class="font-medium">
-          📋 Özet: 32 Yaş • AMH: 2.0 • Ön Tahmin: %63 • İade Oranı: %55
-        </span>
-        <button onclick="goToStep(1)" class="text-[#00EC97] underline text-[11px]">Değiştir</button>
-      </div>
-
-      <!-- Simple Clean Chat Messages Area -->
-      <div id="simpleChatBox" class="h-64 overflow-y-auto rounded-2xl bg-slate-950/90 border border-slate-800 p-4 space-y-3 text-sm">
-        <div class="flex justify-start">
-          <div class="max-w-[88%] rounded-2xl rounded-tl-none bg-slate-800/90 border border-slate-700 px-4 py-3 text-slate-100 text-xs sm:text-sm leading-relaxed">
-            <div class="text-[11px] font-bold text-[#00EC97] mb-1">👨‍⚕️ Uzman Embriyolog Caner</div>
-            Merhaba, ön değerlendirme bilgilerinizi aldım. Kesin değerlendirmenizi yapabilmem ve size en uygun anlaşmalı kliniğimizi yönlendirebilmem için sorunuzu ve iletişim bilginizi aşağıya yazabilirsiniz. Mesajınız anında bana ulaşacaktır.
-          </div>
-        </div>
-      </div>
-
-      <!-- Patient Contact & Message Form -->
-      <form onsubmit="handlePatientMessageSubmit(event)" class="space-y-3">
-        <div class="grid sm:grid-cols-2 gap-2.5">
-          <input
-            id="patientName"
-            type="text"
-            required
-            placeholder="Adınız / Rumuzunuz"
-            class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#00EC97]"
-          />
-          <input
-            id="patientContact"
-            type="text"
-            required
-            placeholder="Telefon, WhatsApp, Telegram veya E-posta"
-            class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#00EC97]"
-          />
-        </div>
-
-        <div class="flex gap-2">
-          <input
-            id="patientMsgInput"
-            type="text"
-            required
-            placeholder="Embriyoloğa sorunuzu veya mesajınızı yazın..."
-            class="flex-1 rounded-xl bg-slate-900 border border-slate-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00EC97]"
-          />
-          <button type="submit" class="px-5 py-3 rounded-xl bg-[#00EC97] hover:bg-[#00d486] text-slate-950 font-extrabold text-sm transition shrink-0">
-            Gönder
-          </button>
-        </div>
-      </form>
-
-      <!-- Direct Forward Buttons (Shown/Updated on Message Send) -->
-      <div id="directForwardBox" class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2.5">
-        <div class="text-xs text-slate-400">
-          Mesajınızı tek tıkla doğrudan Uzman Embriyoloğun Telegram veya E-posta kutusuna da iletebilirsiniz:
-        </div>
-        <div class="grid grid-cols-2 gap-2.5">
-          <a id="tgDirectLink" href="#" target="_blank" rel="noopener" class="py-2.5 px-3 rounded-xl bg-[#229ED9]/20 hover:bg-[#229ED9] hover:text-white text-[#38bdf8] border border-[#229ED9]/40 font-bold text-xs text-center transition">
-            ✈️ Telegram ile Gönder
-          </a>
-          <a id="mailDirectLink" href="#" class="py-2.5 px-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500 hover:text-slate-950 text-emerald-300 border border-emerald-500/30 font-bold text-xs text-center transition">
-            ✉️ E-posta ile Gönder
-          </a>
-        </div>
-      </div>
-
-      <div class="flex gap-3 pt-1">
-        <button onclick="goToStep(2)" class="w-1/3 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm transition">
-          ← Geri
-        </button>
-        <button onclick="goToStep(4)" class="w-2/3 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-[#00EC97] border border-[#00EC97]/40 font-bold text-sm transition">
-          Güvenceli Ödeme Kasası (Adım 4) →
-        </button>
-      </div>
-    </section>
-
-    <!-- ========================================================= -->
-    <!-- ADIM 4: SADE & ANLAŞILIR NEAR ÖDEME VE İADE KASASI        -->
-    <!-- ========================================================= -->
-    <section id="step4" class="step-card rounded-3xl p-5 sm:p-8 space-y-6 step-hidden">
-      <div>
-        <span class="text-xs font-bold uppercase tracking-wider text-[#00EC97]">ADIM 4 / 4 • NEAR AKILLI KONTRAT GÜVENCESİ</span>
-        <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-1">
-          Şeffaf Ödeme & Otomatik İade Kasası
-        </h2>
-        <p class="text-xs sm:text-sm text-slate-400 mt-1">
-          Uzman embriyolog ile görüşmeniz sonucunda anlaşmalı kliniğiniz belirlendiğinde, ödemeniz kliniğe peşin verilmez; NEAR akıllı kontrat kasasında 3 adımda korunur:
-        </p>
-      </div>
-
-      <!-- Package & Asset Selector -->
-      <div class="grid sm:grid-cols-2 gap-3">
-        <div class="p-3.5 rounded-2xl bg-slate-900 border border-slate-800">
-          <label class="block text-xs text-slate-400 mb-1">Örnek Paket Tutarı (USD)</label>
-          <input id="vaultAmountInput" type="number" value="5000" min="1000" step="100" oninput="updateSimpleVault()" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-base font-bold text-white" />
-        </div>
-        <div class="p-3.5 rounded-2xl bg-slate-900 border border-slate-800">
-          <label class="block text-xs text-slate-400 mb-1">Ödeme & İade Para Birimi (NEAR Intents)</label>
-          <select id="vaultAssetSelect" onchange="updateSimpleVault()" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-sm font-semibold text-white">
-            <option value="USDC">USDC (Dijital Dolar)</option>
-            <option value="USDT">USDT (Tether)</option>
-            <option value="NEAR">NEAR</option>
-            <option value="SOL">SOL</option>
-            <option value="BTC">BTC</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- 3 Simple Steps of Money Protection -->
-      <div class="space-y-3">
-        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
-          <div>
-            <div class="text-xs font-bold text-[#00EC97]">1. AŞAMA (%25)</div>
-            <div class="text-sm font-semibold text-white">Tedavi Başlangıcı & Yumurta Toplama</div>
-          </div>
-          <div id="vStep1Usd" class="text-sm font-bold text-slate-200">$1,250</div>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
-          <div>
-            <div class="text-xs font-bold text-cyan-400">2. AŞAMA (%25)</div>
-            <div class="text-sm font-semibold text-white">Embriyo Gelişimi & Transfer Süreci</div>
-          </div>
-          <div id="vStep2Usd" class="text-sm font-bold text-slate-200">$1,250</div>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-emerald-950/40 border border-[#00EC97]/50 flex items-center justify-between">
-          <div>
-            <div class="text-xs font-bold text-[#00EC97]">3. AŞAMA • SONUÇ GÜVENCESİ (DİNAMİK İADE)</div>
-            <div class="text-sm font-semibold text-white">
-              Olumsuz Sonuçta Otomatik İade (<span id="vRefundPctLabel">%55</span>)
-            </div>
-            <div class="text-xs text-slate-400">Hiçbir aracı olmadan doğrudan cüzdanınıza iade edilir</div>
-          </div>
-          <div id="vRefundUsd" class="text-lg font-extrabold text-[#00EC97]">$2,750</div>
-        </div>
-      </div>
-
-      <!-- Interactive 1-Click Test for Patient / Hackathon Judge -->
-      <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-semibold text-slate-400">CANLI AKILLI KONTRAT SİMÜLASYONU</span>
-          <span id="simStatusBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#00EC97]/15 text-[#00EC97]">
-            Hazır
-          </span>
-        </div>
-
-        <div class="grid sm:grid-cols-2 gap-2.5">
-          <button onclick="simulateVaultOutcome(true)" class="py-3 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500 hover:text-slate-950 text-emerald-300 border border-emerald-500/40 font-bold text-xs transition">
-            ✅ Gebelik Pozitif (Ödeme Tamamlanır)
-          </button>
-          <button onclick="simulateVaultOutcome(false)" class="py-3 px-3 rounded-xl bg-rose-500/20 hover:bg-rose-500 hover:text-white text-rose-300 border border-rose-500/40 font-bold text-xs transition">
-            🛡️ Gebelik Negatif (Dinamik İadeyi Test Et)
-          </button>
-        </div>
-
-        <div id="simResultText" class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded-xl border border-slate-800">
-          Kontrat: embryoguard-vault.near • Dinamik iade korumanız aktif.
-        </div>
-      </div>
-
-      <div class="flex gap-3">
-        <button onclick="goToStep(3)" class="w-1/3 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm transition">
-          ← Sohbete Dön
-        </button>
-        <button onclick="goToStep(1)" class="w-2/3 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm transition">
-          Başa Dön (Adım 1)
-        </button>
-      </div>
-    </section>
 
   </main>
 
-  <!-- Modal: Embryologist Direct Notification Settings (Telegram & Email) -->
-  <div id="settingsModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="step-card rounded-3xl max-w-md w-full p-6 space-y-4">
-      <div class="flex justify-between items-center">
-        <h3 class="font-bold text-white text-base">⚙️ Embriyolog İletişim & Bildirim Ayarları</h3>
-        <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white">✕</button>
-      </div>
-      <p class="text-xs text-slate-400">
-        Hastaların Adım 3'te yazdığı mesajların doğrudan size ulaşması için Telegram ve E-posta bilgilerinizi buradan güncelleyebilirsiniz:
-      </p>
-      <form onsubmit="saveSettings(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="text-slate-300 font-semibold">E-posta Adresiniz</label>
-          <input id="cfgEmail" type="email" placeholder="ornek@domain.com" class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white" />
-        </div>
-        <div>
-          <label class="text-slate-300 font-semibold">Telegram Kullanıcı Adınız (@ olmadan)</label>
-          <input id="cfgTelegramUser" type="text" placeholder="criticalsilence" class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white" />
-        </div>
-        <div>
-          <label class="text-slate-300 font-semibold">Telegram Bot Token (Opsiyonel - Otomatik Anlık Mesaj İçin)</label>
-          <input id="cfgBotToken" type="text" placeholder="123456789:ABCdef..." class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white font-mono" />
-        </div>
-        <div>
-          <label class="text-slate-300 font-semibold">Telegram Chat ID (Opsiyonel)</label>
-          <input id="cfgChatId" type="text" placeholder="987654321" class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white font-mono" />
-        </div>
-        <button type="submit" class="w-full py-2.5 rounded-xl bg-[#00EC97] text-slate-950 font-bold text-sm">
-          Kaydet
-        </button>
-      </form>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>Bu sayfadaki hesaplamalar bilgilendirme amaçlıdır; tanı ve tedavi yerine geçmez.</span>
+      <span>İletişim: <a id="footerMailLink" href="mailto:info@cukka.org">info@cukka.org</a></span>
     </div>
-  </div>
-
-  <!-- Minimal Footer -->
-  <footer class="border-t border-slate-800/60 py-5 text-center text-xs text-slate-500 px-4">
-    EmbryoGuard • Uzman Embriyolog Danışmanlığı & NEAR Güvenceli IVF Kasası
   </footer>
 
-  <!-- Wizard & Logic -->
   <script>
     const Engine = window.EmbryoGuardEngine;
     let currentStep = 1;
     let priorCycles = 0;
-    let currentLang = "tr";
+    let selectedSpermCategory = "normal";
     let latestAssessment = null;
 
-    // Default contact config (customizable via ⚙️ modal & persisted in localStorage)
-    let contactConfig = {
+    const STEP_TITLES = {
+      1: "Adım 1 / 4 — Ön bilgiler",
+      2: "Adım 2 / 4 — Ön değerlendirme",
+      3: "Adım 3 / 4 — Danışmanlık talebi",
+      4: "Adım 4 / 4 — Ödeme planı"
+    };
+
+    const SPERM_SHORT_LABELS = {
+      normal: "Normal",
+      mild_low: "Hafif düşük",
+      severe_low: "Belirgin düşük",
+      azoospermia: "Azospermi",
+      unknown: "Tahlil yok / bilmiyorum"
+    };
+
+    const SPERM_FULL_LABELS = {
+      normal: "Normal (Sayı: 15 milyon/mL üzeri · Hareketlilik: %40 üzeri)",
+      mild_low: "Hafif düşük (Sayı: 5–15 milyon/mL · Hareketlilik: %20–%40)",
+      severe_low: "Belirgin düşük (Sayı: 5 milyon/mL altı · Hareketlilik: %20 altı)",
+      azoospermia: "Azospermi (Menide sperm hücresi görülmedi)",
+      unknown: "Tahlil yok / bilmiyorum"
+    };
+
+    const PRIOR_LABELS = {
+      0: "Yok",
+      1: "1",
+      2: "2",
+      3: "3+"
+    };
+
+    const contactConfig = {
       email: localStorage.getItem("eg_email") || "info@cukka.org",
       telegramUser: localStorage.getItem("eg_tg_user") || "criticalsilence",
       botToken: localStorage.getItem("eg_bot_token") || "",
       chatId: localStorage.getItem("eg_chat_id") || ""
     };
 
+    function formatTurkishDecimal(num) {
+      return Number(num).toFixed(1).replace(".", ",");
+    }
+
+    function formatIntegerThousands(num) {
+      return Math.round(Number(num)).toLocaleString("tr-TR");
+    }
+
     function goToStep(stepNum) {
       currentStep = stepNum;
       for (let i = 1; i <= 4; i++) {
         const sec = document.getElementById("step" + i);
         const tab = document.getElementById("tabStep" + i);
+        tab.classList.remove("is-active", "is-complete");
+        tab.removeAttribute("aria-current");
+
         if (i === stepNum) {
           sec.classList.remove("step-hidden");
-          tab.className = "py-2 px-1 rounded-xl text-xs font-bold border border-[#00EC97] bg-[#00EC97]/15 text-[#00EC97] transition";
+          tab.classList.add("is-active");
+          tab.setAttribute("aria-current", "step");
         } else {
           sec.classList.add("step-hidden");
-          tab.className = "py-2 px-1 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-400 hover:text-white transition";
+          if (i < stepNum) {
+            tab.classList.add("is-complete");
+          }
         }
       }
+      document.getElementById("mobileStepCaption").textContent = STEP_TITLES[stepNum];
       window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function syncAgeFromNumber() {
+      const numEl = document.getElementById("inpAgeNum");
+      const sliderEl = document.getElementById("inpAge");
+      let val = parseInt(numEl.value, 10);
+      if (isNaN(val)) return;
+      val = Math.max(20, Math.min(45, val));
+      sliderEl.value = String(val);
+      updateCalculation();
+    }
+
+    function syncAgeFromSlider() {
+      const numEl = document.getElementById("inpAgeNum");
+      const sliderEl = document.getElementById("inpAge");
+      numEl.value = sliderEl.value;
+      updateCalculation();
+    }
+
+    function syncAmhFromNumber() {
+      const numEl = document.getElementById("inpAmhNum");
+      const sliderEl = document.getElementById("inpAmh");
+      let val = parseFloat(numEl.value);
+      if (isNaN(val)) return;
+      val = Math.max(0.2, Math.min(5.5, val));
+      sliderEl.value = String(val);
+      updateCalculation();
+    }
+
+    function syncAmhFromSlider() {
+      const numEl = document.getElementById("inpAmhNum");
+      const sliderEl = document.getElementById("inpAmh");
+      numEl.value = Number(sliderEl.value).toFixed(1);
+      updateCalculation();
+    }
+
+    function toggleAmhUnknown() {
+      const unknown = document.getElementById("inpAmhUnknown").checked;
+      document.getElementById("inpAmhNum").disabled = unknown;
+      document.getElementById("inpAmh").disabled = unknown;
+      updateCalculation();
+    }
+
+    function handleSpermChange(val) {
+      selectedSpermCategory = val;
+      const options = document.querySelectorAll("#spermRadioGroup .radio-option");
+      options.forEach(label => {
+        const input = label.querySelector('input[type="radio"]');
+        if (input && input.value === val) {
+          label.classList.add("is-active");
+        } else {
+          label.classList.remove("is-active");
+        }
+      });
+      updateCalculation();
     }
 
     function selectPrior(num) {
@@ -500,213 +690,247 @@
       for (let i = 0; i <= 3; i++) {
         const btn = document.getElementById("btnPrior" + i);
         if (i === num) {
-          btn.className = "py-2.5 rounded-xl text-xs font-bold border border-[#00EC97] bg-[#00EC97]/15 text-[#00EC97] transition";
+          btn.classList.add("is-active");
+          btn.setAttribute("aria-pressed", "true");
         } else {
-          btn.className = "py-2.5 rounded-xl text-xs font-semibold border border-slate-700 bg-slate-950 text-slate-300 hover:border-slate-500 transition";
+          btn.classList.remove("is-active");
+          btn.setAttribute("aria-pressed", "false");
         }
       }
       updateCalculation();
     }
 
-    function toggleAmhUnknown() {
-      const unknown = document.getElementById("inpAmhUnknown").checked;
-      const wrap = document.getElementById("amhSliderWrap");
-      const badge = document.getElementById("amhBadge");
-      if (unknown) {
-        wrap.classList.add("opacity-40", "pointer-events-none");
-        badge.textContent = "Bilinmiyor";
-      } else {
-        wrap.classList.remove("opacity-40", "pointer-events-none");
-        const amh = Number(document.getElementById("inpAmh").value).toFixed(1);
-        badge.innerHTML = `<span id="valAmh">${amh}</span> ng/mL`;
-      }
-      updateCalculation();
-    }
-
     function updateCalculation() {
-      const age = Number(document.getElementById("inpAge").value);
+      const ageRaw = parseInt(document.getElementById("inpAgeNum").value, 10);
+      const age = isNaN(ageRaw) ? 32 : Math.max(20, Math.min(45, ageRaw));
       const amhKnown = !document.getElementById("inpAmhUnknown").checked;
-      const amh = Number(document.getElementById("inpAmh").value);
-      const spermCategory = document.getElementById("inpSperm").value;
-
-      document.getElementById("valAge").textContent = age;
-      if (amhKnown && document.getElementById("valAmh")) {
-        document.getElementById("valAmh").textContent = amh.toFixed(1);
-      }
+      const amhRaw = parseFloat(document.getElementById("inpAmhNum").value);
+      const amh = isNaN(amhRaw) ? 2.0 : Math.max(0.2, Math.min(5.5, amhRaw));
 
       const res = Engine.calculatePreliminaryAssessment({
         age,
         amh,
         amhKnown,
         priorCycles,
-        spermCategory
+        spermCategory: selectedSpermCategory
       });
-      latestAssessment = { age, amh: amhKnown ? amh.toFixed(1) : "Bilinmiyor", priorCycles, spermCategory, res };
 
-      // Step 2 UI updates
-      document.getElementById("dispPreliminaryPct").textContent = "%" + res.preliminaryEstimatePct;
-      document.getElementById("dispDynamicRefundPct").textContent = "%" + res.dynamicRefundPct;
-      document.getElementById("txtDynamicRefundInline").textContent = "%" + res.dynamicRefundPct;
+      const amhDisplay = amhKnown ? formatTurkishDecimal(amh) + " ng/mL" : "Bilinmiyor";
+      const spermShort = SPERM_SHORT_LABELS[selectedSpermCategory] || "Normal";
+      const spermFull = SPERM_FULL_LABELS[selectedSpermCategory] || SPERM_FULL_LABELS.normal;
+      const priorLabel = PRIOR_LABELS[priorCycles] || "Yok";
 
-      // Step 3 Chat summary pill
-      document.getElementById("chatSummaryPill").textContent =
-        `📋 Özet: ${age} Yaş • AMH: ${latestAssessment.amh} • Ön Tahmin: %${res.preliminaryEstimatePct} (Nihai Değil) • Dinamik İade: %${res.dynamicRefundPct}`;
+      latestAssessment = {
+        age,
+        amhKnown,
+        amhDisplay,
+        priorCycles,
+        priorLabel,
+        spermCategory: selectedSpermCategory,
+        spermShort,
+        spermFull,
+        res
+      };
 
-      updateForwardLinks("");
+      const estStr = "%" + res.preliminaryEstimatePct;
+      const refStr = "%" + res.dynamicRefundPct;
+
+      // Step 2 updates
+      document.getElementById("dispPreliminaryPct").textContent = estStr;
+      document.getElementById("dispDynamicRefundPct").textContent = refStr;
+      document.getElementById("txtDynamicRefundInline").textContent = refStr;
+      document.getElementById("scaleMarker").style.left = res.preliminaryEstimatePct + "%";
+
+      document.getElementById("usedAge").textContent = age + " yaş";
+      document.getElementById("usedAmh").textContent = amhDisplay;
+      document.getElementById("usedSperm").textContent = spermFull;
+      document.getElementById("usedPrior").textContent = priorLabel;
+
+      // Desktop & Mobile Summary updates
+      document.getElementById("deskSumAge").textContent = age + " yaş";
+      document.getElementById("deskSumAmh").textContent = amhDisplay;
+      document.getElementById("deskSumSperm").textContent = spermShort;
+      document.getElementById("deskSumPrior").textContent = priorLabel;
+      document.getElementById("deskSumEstimate").textContent = estStr;
+      document.getElementById("deskSumRefund").textContent = refStr;
+
+      document.getElementById("mobSumAge").textContent = age + " yaş";
+      document.getElementById("mobSumAmh").textContent = amhDisplay;
+      document.getElementById("mobSumSperm").textContent = spermShort;
+      document.getElementById("mobSumPrior").textContent = priorLabel;
+      document.getElementById("mobSumEstimate").textContent = estStr;
+      document.getElementById("mobSumRefund").textContent = refStr;
+      document.getElementById("mobileSummaryShort").textContent =
+        "Ön tahmin: " + estStr + " · İade: " + refStr;
+
+      updateForwardLinks();
       updateSimpleVault();
     }
 
     function buildSummaryPayload(customMessage, name, contact) {
       const s = latestAssessment;
       return [
-        `🧬 EmbryoGuard Yeni Hasta Danışmanlık Talebi`,
-        `👤 İsim: ${name || "-"}`,
-        `📞 İletişim: ${contact || "-"}`,
-        `• Kadın Yaşı: ${s.age}`,
-        `• AMH: ${s.amh}`,
-        `• Sperm Durumu: ${s.res.spermLabelTr}`,
-        `• Önceki Deneme: ${s.priorCycles}`,
-        `• Ön Değerlendirme Tahmini: %${s.res.preliminaryEstimatePct} (Nihai Değil)`,
-        `• Dinamik İade Oranı: %${s.res.dynamicRefundPct}`,
-        `💬 Mesaj: ${customMessage || "Klinik yönlendirmesi ve değerlendirme talep ediyorum."}`
+        "EmbryoGuard klinik danismanlik talebi",
+        "Ad / Rumuz: " + (name || "-"),
+        "Iletisim: " + (contact || "-"),
+        "Kadin yasi: " + s.age + " yas",
+        "AMH duzeyi: " + s.amhDisplay,
+        "Sperm analizi: " + s.spermFull,
+        "Onceki deneme: " + s.priorLabel,
+        "Tahmini basari gostergesi (on tahmin): %" + s.res.preliminaryEstimatePct,
+        "Olumsuz sonucta iade orani: %" + s.res.dynamicRefundPct,
+        "Soru / Not: " + (customMessage || "-")
       ].join("\n");
     }
 
-    function updateForwardLinks(customMessage) {
-      const name = document.getElementById("patientName")?.value || "";
-      const contact = document.getElementById("patientContact")?.value || "";
-      const fullText = buildSummaryPayload(customMessage, name, contact);
+    function updateForwardLinks() {
+      if (!latestAssessment) return;
+      const name = document.getElementById("patientName").value.trim();
+      const contact = document.getElementById("patientContact").value.trim();
+      const msg = document.getElementById("patientMsgInput").value.trim();
+      const fullText = buildSummaryPayload(msg, name, contact);
 
-      const tgUrl = `https://t.me/${contactConfig.telegramUser}?text=${encodeURIComponent(fullText)}`;
-      const mailUrl = `mailto:${contactConfig.email}?subject=${encodeURIComponent("EmbryoGuard IVF Danismanlik Talebi")}&body=${encodeURIComponent(fullText)}`;
+      const tgUrl = "https://t.me/" + encodeURIComponent(contactConfig.telegramUser) + "?text=" + encodeURIComponent(fullText);
+      const mailUrl = "mailto:" + encodeURIComponent(contactConfig.email) + "?subject=" + encodeURIComponent("EmbryoGuard klinik danismanlik talebi") + "&body=" + encodeURIComponent(fullText);
 
       document.getElementById("tgDirectLink").href = tgUrl;
       document.getElementById("mailDirectLink").href = mailUrl;
+      document.getElementById("tgConfirmLink").href = tgUrl;
+      document.getElementById("mailConfirmLink").href = mailUrl;
+      document.getElementById("footerMailLink").href = "mailto:" + encodeURIComponent(contactConfig.email);
+      document.getElementById("footerMailLink").textContent = contactConfig.email;
+    }
+
+    function setFieldError(inputId, errId, hasError) {
+      const inputEl = document.getElementById(inputId);
+      const errEl = document.getElementById(errId);
+      if (hasError) {
+        inputEl.setAttribute("aria-invalid", "true");
+        errEl.classList.add("is-visible");
+      } else {
+        inputEl.removeAttribute("aria-invalid");
+        errEl.classList.remove("is-visible");
+      }
     }
 
     async function handlePatientMessageSubmit(e) {
       e.preventDefault();
       const name = document.getElementById("patientName").value.trim();
       const contact = document.getElementById("patientContact").value.trim();
-      const msgInput = document.getElementById("patientMsgInput");
-      const text = msgInput.value.trim();
-      if (!text) return;
+      const text = document.getElementById("patientMsgInput").value.trim();
+      const kvkk = document.getElementById("kvkkConsent").checked;
 
-      const chatBox = document.getElementById("simpleChatBox");
+      const errName = !name;
+      const errContact = !contact;
+      const errMsg = !text;
+      const errKvkk = !kvkk;
 
-      // Append patient message
-      const pDiv = document.createElement("div");
-      pDiv.className = "flex justify-end";
-      pDiv.innerHTML = `
-        <div class="max-w-[85%] rounded-2xl rounded-tr-none bg-[#00EC97] text-slate-950 px-4 py-2.5 text-xs sm:text-sm font-medium">
-          <div class="text-[10px] font-bold opacity-75 mb-0.5">${name} (${contact})</div>
-          <div>${text}</div>
-        </div>
-      `;
-      chatBox.appendChild(pDiv);
-      msgInput.value = "";
-      chatBox.scrollTop = chatBox.scrollHeight;
+      setFieldError("patientName", "errPatientName", errName);
+      setFieldError("patientContact", "errPatientContact", errContact);
+      setFieldError("patientMsgInput", "errPatientMsg", errMsg);
+      setFieldError("kvkkConsent", "errKvkk", errKvkk);
 
-      updateForwardLinks(text);
+      if (errName || errContact || errMsg || errKvkk) {
+        return;
+      }
 
-      // If Telegram Bot Token & Chat ID are configured, send automatically in background
-      let sentViaBot = false;
+      updateForwardLinks();
+
       if (contactConfig.botToken && contactConfig.chatId) {
         try {
           const payload = buildSummaryPayload(text, name, contact);
-          await fetch(`https://api.telegram.org/bot${contactConfig.botToken}/sendMessage`, {
+          await fetch("https://api.telegram.org/bot" + contactConfig.botToken + "/sendMessage", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ chat_id: contactConfig.chatId, text: payload })
           });
-          sentViaBot = true;
         } catch (err) {}
       }
 
-      // Append clean acknowledgment
-      setTimeout(() => {
-        const rDiv = document.createElement("div");
-        rDiv.className = "flex justify-start";
-        rDiv.innerHTML = `
-          <div class="max-w-[88%] rounded-2xl rounded-tl-none bg-slate-800 border border-[#00EC97]/40 px-4 py-3 text-slate-100 text-xs sm:text-sm leading-relaxed">
-            <div class="text-[11px] font-bold text-[#00EC97] mb-1">👨‍⚕️ Uzman Embriyolog Bilgilendirmesi</div>
-            Teşekkürler <strong>${name}</strong>. Ön bilgileriniz (<strong>${latestAssessment.age} yaş, AMH: ${latestAssessment.amh}, Ön tahmin: %${latestAssessment.res.preliminaryEstimatePct}</strong>) ve mesajınız kaydedildi. ${sentViaBot ? "✅ <strong>Telegram üzerinden uzman embriyoloğa anında iletildi.</strong>" : "Aşağıdaki <strong>Telegram ile Gönder</strong> veya <strong>E-posta ile Gönder</strong> butonuna basarak doğrudan bana hemen ulaştırabilirsiniz."} Görüşmemizde nihai başarı oranınızı ve size en uygun anlaşmalı kliniğimizi netleştireceğiz.
-          </div>
-        `;
-        chatBox.appendChild(rDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }, 300);
+      // Build confirmation summary safely using createElement and textContent (no innerHTML)
+      const list = document.getElementById("confirmedSummaryList");
+      while (list.firstChild) {
+        list.removeChild(list.firstChild);
+      }
+
+      const rows = [
+        ["Ad ya da rumuz", name],
+        ["İletişim bilgisi", contact],
+        ["Kadın yaşı", latestAssessment.age + " yaş"],
+        ["AMH düzeyi", latestAssessment.amhDisplay],
+        ["Sperm analizi", latestAssessment.spermShort],
+        ["Önceki deneme", latestAssessment.priorLabel],
+        ["Tahmini başarı göstergesi", "%" + latestAssessment.res.preliminaryEstimatePct],
+        ["Olumsuz sonuçta iade oranı", "%" + latestAssessment.res.dynamicRefundPct],
+        ["Sorunuz", text]
+      ];
+
+      rows.forEach(pair => {
+        const li = document.createElement("li");
+        const spanKey = document.createElement("span");
+        spanKey.className = "item-key";
+        spanKey.textContent = pair[0];
+
+        const spanVal = document.createElement("span");
+        spanVal.className = "item-val";
+        spanVal.textContent = pair[1];
+
+        li.appendChild(spanKey);
+        li.appendChild(spanVal);
+        list.appendChild(li);
+      });
+
+      document.getElementById("consultationForm").classList.add("step-hidden");
+      document.getElementById("requestConfirmation").classList.remove("step-hidden");
+    }
+
+    function resetConsultationForm() {
+      document.getElementById("requestConfirmation").classList.add("step-hidden");
+      document.getElementById("consultationForm").classList.remove("step-hidden");
     }
 
     function updateSimpleVault() {
       const amount = Number(document.getElementById("vaultAmountInput").value) || 5000;
       const asset = document.getElementById("vaultAssetSelect").value;
-      const refundPct = latestAssessment ? latestAssessment.res.dynamicRefundPct : 55;
+      const refundPct = latestAssessment ? latestAssessment.res.dynamicRefundPct : 58;
 
       const step1 = Math.round(amount * 0.25);
       const step2 = Math.round(amount * 0.25);
+      const step3 = Math.round(amount * 0.50);
       const refundUsd = Math.round((amount * refundPct) / 100);
 
-      document.getElementById("vStep1Usd").textContent = `$${step1.toLocaleString()} (${asset})`;
-      document.getElementById("vStep2Usd").textContent = `$${step2.toLocaleString()} (${asset})`;
-      document.getElementById("vRefundPctLabel").textContent = `%${refundPct}`;
-      document.getElementById("vRefundUsd").textContent = `$${refundUsd.toLocaleString()} ${asset}`;
+      document.getElementById("vStep1Usd").textContent = formatIntegerThousands(step1) + " " + asset;
+      document.getElementById("vStep2Usd").textContent = formatIntegerThousands(step2) + " " + asset;
+      document.getElementById("vStep3Usd").textContent = formatIntegerThousands(step3) + " " + asset;
+      document.getElementById("vRefundPctLabel").textContent = "%" + refundPct;
+      document.getElementById("vRefundUsd").textContent = formatIntegerThousands(refundUsd) + " " + asset;
     }
 
     function simulateVaultOutcome(isPositive) {
       const amount = Number(document.getElementById("vaultAmountInput").value) || 5000;
       const asset = document.getElementById("vaultAssetSelect").value;
-      const refundPct = latestAssessment ? latestAssessment.res.dynamicRefundPct : 55;
+      const refundPct = latestAssessment ? latestAssessment.res.dynamicRefundPct : 58;
       const refundUsd = Math.round((amount * refundPct) / 100);
+      const step3 = Math.round(amount * 0.50);
 
-      const badge = document.getElementById("simStatusBadge");
       const box = document.getElementById("simResultText");
-
       if (isPositive) {
-        badge.textContent = "✅ Gebelik Onaylandı";
-        badge.className = "text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300";
-        box.textContent = `[NEAR Kontrat Onayı]: Gebelik sonucu pozitif. Kalan kasa bakiyesi anlaşmalı kliniğe aktarıldı.`;
+        box.textContent =
+          "Gebelik sonucunun pozitif olarak doğrulanması durumunda, emanet hesabında tutulan 3. aşama tutarı (" +
+          formatIntegerThousands(step3) +
+          " " +
+          asset +
+          ") tedavi merkezine aktarılır ve süreç tamamlanır.";
       } else {
-        badge.textContent = `🛡️ %${refundPct} Otomatik İade Edildi`;
-        badge.className = "text-xs font-bold px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300";
-        box.textContent = `[NEAR Intents Otomatik İade]: Gebelik negatif. Dinamik iade oranınız (%${refundPct}) gereği $${refundUsd.toLocaleString()} ${asset} doğrudan hasta cüzdanına iade edildi.`;
+        box.textContent =
+          "Gebelik oluşmaması durumunda, belirlenen %" +
+          refundPct +
+          " iade oranı doğrultusunda " +
+          formatIntegerThousands(refundUsd) +
+          " " +
+          asset +
+          " tutarındaki ödeme emanet hesabından doğrudan sizin hesabınıza iade edilir.";
       }
-    }
-
-    function openSettingsModal() {
-      document.getElementById("cfgEmail").value = contactConfig.email;
-      document.getElementById("cfgTelegramUser").value = contactConfig.telegramUser;
-      document.getElementById("cfgBotToken").value = contactConfig.botToken;
-      document.getElementById("cfgChatId").value = contactConfig.chatId;
-      document.getElementById("settingsModal").classList.remove("hidden");
-    }
-
-    function closeSettingsModal() {
-      document.getElementById("settingsModal").classList.add("hidden");
-    }
-
-    function saveSettings(e) {
-      e.preventDefault();
-      contactConfig.email = document.getElementById("cfgEmail").value.trim() || "info@cukka.org";
-      contactConfig.telegramUser = document.getElementById("cfgTelegramUser").value.trim().replace("@", "") || "criticalsilence";
-      contactConfig.botToken = document.getElementById("cfgBotToken").value.trim();
-      contactConfig.chatId = document.getElementById("cfgChatId").value.trim();
-
-      localStorage.setItem("eg_email", contactConfig.email);
-      localStorage.setItem("eg_tg_user", contactConfig.telegramUser);
-      localStorage.setItem("eg_bot_token", contactConfig.botToken);
-      localStorage.setItem("eg_chat_id", contactConfig.chatId);
-
-      updateForwardLinks("");
-      closeSettingsModal();
-    }
-
-    function toggleLang() {
-      currentLang = currentLang === "tr" ? "en" : "tr";
-      document.getElementById("headerSub").textContent =
-        currentLang === "tr"
-          ? "Uzman Embriyolog Danışmanlığı & İade Güvenceli IVF"
-          : "Clinical Embryologist Advisory & Dynamic Refund IVF Vault";
     }
 
     window.addEventListener("DOMContentLoaded", () => {
