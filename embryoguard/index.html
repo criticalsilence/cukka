@@ -499,14 +499,14 @@
               <button type="button" class="btn-primary" onclick="lockTestnetEscrow()" data-i18n="btn_lock_escrow">
                 1. Lock funds in NEAR Testnet escrow
               </button>
-              <button type="button" class="btn-secondary" onclick="releaseTestnetMilestones()" data-i18n="btn_release_m12">
-                2. Release Stage 1 (25% OPU) &amp; Stage 2 (25% Transfer)
+              <button type="button" id="btnReleaseM12" class="btn-secondary" onclick="releaseTestnetMilestones()">
+                2. Release Stage 1 (21% OPU) &amp; Stage 2 (21% Transfer)
               </button>
-              <button type="button" class="btn-secondary" onclick="settleTestnetOutcome(true)" data-i18n="btn_settle_pos">
-                3A. Positive outcome: Release final 50% to clinic
+              <button type="button" id="btnSettlePos" class="btn-secondary" onclick="settleTestnetOutcome(true)">
+                3A. Positive outcome: Release locked 58% to clinic
               </button>
-              <button type="button" class="btn-primary" onclick="settleTestnetOutcome(false)" data-i18n="btn_settle_neg">
-                3B. Negative outcome: Execute automated refund to patient
+              <button type="button" id="btnSettleNeg" class="btn-primary" onclick="settleTestnetOutcome(false)">
+                3B. Negative outcome: Refund locked 58% to patient
               </button>
             </div>
 
@@ -528,23 +528,23 @@
             </thead>
             <tbody>
               <tr>
-                <td data-i18n="st1_name">Stage 1 (25%)</td>
+                <td id="vStep1Label">Stage 1 (21%)</td>
                 <td data-i18n="st1_when">Treatment initiation and oocyte retrieval (OPU)</td>
-                <td id="vStep1Usd">1,250 USDC</td>
+                <td id="vStep1Usd">1,050 USDC</td>
               </tr>
               <tr>
-                <td data-i18n="st2_name">Stage 2 (25%)</td>
+                <td id="vStep2Label">Stage 2 (21%)</td>
                 <td data-i18n="st2_when">Embryo culture and transfer procedure</td>
-                <td id="vStep2Usd">1,250 USDC</td>
+                <td id="vStep2Usd">1,050 USDC</td>
               </tr>
               <tr>
-                <td data-i18n="st3_name">Stage 3 (50%)</td>
-                <td data-i18n="st3_when">Confirmation of clinical pregnancy outcome</td>
-                <td id="vStep3Usd">2,500 USDC</td>
+                <td id="vStep3Label">Stage 3 — Outcome lock (58%)</td>
+                <td data-i18n="st3_when">Held in escrow until clinical pregnancy outcome</td>
+                <td id="vStep3Usd">2,900 USDC</td>
               </tr>
               <tr class="refund-row">
                 <td><span data-i18n="st_ref_name">Refund if unsuccessful</span> (<span id="vRefundPctLabel" class="mono-num">58%</span>)</td>
-                <td data-i18n="st_ref_when">Returned from escrow to patient if pregnancy is negative</td>
+                <td data-i18n="st_ref_when">Returned from Stage 3 escrow to patient if pregnancy is negative</td>
                 <td id="vRefundUsd">2,900 USDC</td>
               </tr>
             </tbody>
@@ -1192,34 +1192,43 @@
       generateConciergeReply(topic, text);
     }
 
+    function getDynamicStageSplit(refundPct) {
+      const ref = Number(refundPct) || 58;
+      const procTotal = 100 - ref;
+      const stage1Pct = Math.floor(procTotal / 2);
+      const stage2Pct = procTotal - stage1Pct;
+      return { stage1Pct, stage2Pct, stage3Pct: ref, procTotalPct: procTotal };
+    }
+
     function generateConciergeReply(topic, rawText) {
       const est = latestAssessment ? latestAssessment.res.preliminaryEstimatePct : 67;
       const ref = latestAssessment ? latestAssessment.res.dynamicRefundPct : 58;
+      const split = getDynamicStageSplit(ref);
 
       let reply = "";
       if (currentLang === "tr") {
         if (topic === "contact") {
           reply = "Kıdemli Klinik Embriyolog Caner Karaoğul'a ulaşmak için sohbetin hemen altındaki kutuya adınızı ve iletişim bilginizi yazıp 'Telegram ile Embriyoloğa Gönder' veya 'E-posta ile Embriyoloğa Gönder' butonuna tıklayabilirsiniz. Ön değerlendirme verileriniz ve buraya yazdığınız mesajlar otomatik olarak eklenir (E-posta: canerkaraogul@gmail.com · Telegram: @criticalsilence).";
         } else if (topic === "how_app") {
-          reply = "EmbryoGuard 4 adımda çalışır: 1. adımda girdiğiniz temel bilgilerle 2. adımda nihai olmayan bir ön gösterge (%" + est + ") ve buna bağlı kişiye özel iade oranı (%" + ref + ") hesaplanır. 3. adımda verilerinizi Caner Karaoğul'a iletirsiniz. 4. adımda ise NEAR Testnet cüzdanınızla paket tutarını emanet kasasında kilitlersiniz.";
+          reply = "EmbryoGuard 4 adımda çalışır: 1. adımda girdiğiniz temel bilgilerle 2. adımda nihai olmayan bir ön gösterge (%" + est + ") ve buna bağlı kişiye özel dinamik iade oranı (%" + ref + ") hesaplanır. 3. adımda verilerinizi Caner Karaoğul'a iletirsiniz. 4. adımda ise NEAR Testnet cüzdanınızla paket tutarını bu dinamik oranlara göre emanet kasasında kilitlersiniz.";
         } else if (topic === "clinic") {
           reply = "Uygulama içinde herkese açık standart bir klinik listesi gösterilmez. Tıbbi durumunuz ve laboratuvar gereksinimleriniz Caner Karaoğul tarafından incelendikten sonra, size en uygun anlaşmalı merkez bizzat kendisi tarafından yönlendirilir.";
         } else if (topic === "escrow") {
-          reply = "4. adıma geçtiğinizde 'NEAR Testnet Cüzdanı Bağla' butonuyla cüzdanınızı bağlayıp paket tutarını embryoguard-vault.testnet kontratında kilitleyebilirsiniz. Ödemenin %25'i OPU'da, %25'i transferde serbest kalır; %50'si sonuç aşamasına kadar kilitli tutulur. Sonuç olumsuz olursa %" + ref + " iade oranınız otomatik olarak cüzdanınıza döner.";
+          reply = "4. adımda oranlar sabit değildir; sizin ön değerlendirmenize göre şekillenir: Ödemenin %" + split.stage1Pct + "'i 1. aşamada (OPU), %" + split.stage2Pct + "'i 2. aşamada (Transfer) kliniğe açılır; kalan %" + split.stage3Pct + " ise sonuç aşamasına kadar kasada kilitli tutulur. Gebelik olumsuz olursa kilitli tutulan %" + split.stage3Pct + " doğrudan cüzdanınıza iade edilir.";
         } else {
-          reply = "Mesajınız kaydedildi. Ben yalnızca uygulama işleyişi ve iletişim hakkında bilgi veren NEAR.AI asistanıyım; tıbbi veya embriyolojik detaylar konusunda yorum yapmıyorum. Bu sorunuzu ve ön değerlendirme özetinizi (Ön tahmin: %" + est + ", İade oranı: %" + ref + ") aşağıdaki Telegram veya E-posta butonuyla doğrudan Caner Karaoğul'a iletebilirsiniz.";
+          reply = "Mesajınız kaydedildi. Ben yalnızca uygulama işleyişi ve iletişim hakkında bilgi veren NEAR.AI asistanıyım; tıbbi veya embriyolojik detaylar konusunda yorum yapmıyorum. Bu sorunuzu ve ön değerlendirme özetinizi (Ön tahmin: %" + est + ", Dinamik iade oranı: %" + ref + ") aşağıdaki Telegram veya E-posta butonuyla doğrudan Caner Karaoğul'a iletebilirsiniz.";
         }
       } else {
         if (topic === "contact") {
           reply = "You can reach Senior Clinical Embryologist Caner Karaogul, M.Sc. directly by entering your name and contact details below this chat and clicking 'Send to Embryologist via Telegram' or 'Send to Embryologist via Email' (canerkaraogul@gmail.com · Telegram: @criticalsilence). Your preliminary parameters and chat messages are attached automatically.";
         } else if (topic === "how_app") {
-          reply = "EmbryoGuard operates in 4 steps: Step 1 collects four foundational parameters; Step 2 calculates a non-final preliminary indicator (" + est + "%) and an individualized refund ratio (" + ref + "%); Step 3 connects you with Caner Karaogul, M.Sc.; and Step 4 lets you lock your treatment funds in the NEAR Testnet escrow smart contract.";
+          reply = "EmbryoGuard operates in 4 steps: Step 1 collects four foundational parameters; Step 2 calculates a non-final preliminary indicator (" + est + "%) and an individualized dynamic refund ratio (" + ref + "%); Step 3 connects you with Caner Karaogul, M.Sc.; and Step 4 lets you lock your treatment funds in the NEAR Testnet escrow smart contract using your dynamic split.";
         } else if (topic === "clinic") {
           reply = "Partner clinics are not listed publicly on the form because laboratory requirements vary by patient. Caner Karaogul, M.Sc. personally reviews your diagnostic records during consultation and refers you to the most appropriate audited partner clinic.";
         } else if (topic === "escrow") {
-          reply = "In Step 4, click 'Connect NEAR Testnet Wallet' and then '1. Lock funds in NEAR Testnet escrow'. Your payment is held in embryoguard-vault.testnet: 25% releases at oocyte retrieval, 25% at embryo transfer, and 50% remains locked until pregnancy outcome. If negative, your " + ref + "% refund is automatically returned to your wallet.";
+          reply = "In Step 4, milestone ratios are dynamically linked to your profile rather than fixed: " + split.stage1Pct + "% releases at Stage 1 (oocyte retrieval), " + split.stage2Pct + "% releases at Stage 2 (embryo transfer), and your " + split.stage3Pct + "% refund ratio remains locked in escrow until the pregnancy outcome. If negative, that " + split.stage3Pct + "% is automatically returned to your wallet.";
         } else {
-          reply = "Your message has been logged. Please note that as the NEAR.AI concierge assistant, I only provide information about application workflow and how to contact our Lead Embryologist—I do not provide clinical or embryological details. Please use the Telegram or Email buttons below to forward your question and preliminary profile (Estimate: " + est + "%, Refund: " + ref + "%) directly to Caner Karaogul, M.Sc.";
+          reply = "Your message has been logged. Please note that as the NEAR.AI concierge assistant, I only provide information about application workflow and how to contact our Lead Embryologist—I do not provide clinical or embryological details. Please use the Telegram or Email buttons below to forward your question and preliminary profile (Estimate: " + est + "%, Dynamic Refund: " + ref + "%) directly to Caner Karaogul, M.Sc.";
         }
       }
 
@@ -1339,11 +1348,35 @@
       const amount = Number(document.getElementById("vaultAmountInput").value) || 5000;
       const asset = document.getElementById("vaultAssetSelect").value;
       const refundPct = latestAssessment ? latestAssessment.res.dynamicRefundPct : 58;
+      const split = getDynamicStageSplit(refundPct);
 
-      const step1 = Math.round(amount * 0.25);
-      const step2 = Math.round(amount * 0.25);
-      const step3 = Math.round(amount * 0.50);
-      const refundUsd = Math.round((amount * refundPct) / 100);
+      const refundUsd = Math.round((amount * split.stage3Pct) / 100);
+      const procTotalUsd = amount - refundUsd;
+      const step1 = Math.round((amount * split.stage1Pct) / 100);
+      const step2 = procTotalUsd - step1;
+      const step3 = refundUsd;
+
+      if (currentLang === "tr") {
+        document.getElementById("vStep1Label").textContent = "1. aşama (%" + split.stage1Pct + " OPU)";
+        document.getElementById("vStep2Label").textContent = "2. aşama (%" + split.stage2Pct + " Transfer)";
+        document.getElementById("vStep3Label").textContent = "3. aşama — Sonuç kilidi (%" + split.stage3Pct + ")";
+        document.getElementById("btnReleaseM12").textContent =
+          "2. 1. Aşama (%" + split.stage1Pct + " OPU) ve 2. Aşama (%" + split.stage2Pct + " Transfer) aktar";
+        document.getElementById("btnSettlePos").textContent =
+          "3A. Gebelik pozitif: Kilitli %" + split.stage3Pct + "'i kliniğe aktar";
+        document.getElementById("btnSettleNeg").textContent =
+          "3B. Gebelik negatif: Kilitli %" + split.stage3Pct + "'i hastaya iade et";
+      } else {
+        document.getElementById("vStep1Label").textContent = "Stage 1 (" + split.stage1Pct + "% OPU)";
+        document.getElementById("vStep2Label").textContent = "Stage 2 (" + split.stage2Pct + "% Transfer)";
+        document.getElementById("vStep3Label").textContent = "Stage 3 — Outcome lock (" + split.stage3Pct + "%)";
+        document.getElementById("btnReleaseM12").textContent =
+          "2. Release Stage 1 (" + split.stage1Pct + "% OPU) & Stage 2 (" + split.stage2Pct + "% Transfer)";
+        document.getElementById("btnSettlePos").textContent =
+          "3A. Positive outcome: Release locked " + split.stage3Pct + "% to clinic";
+        document.getElementById("btnSettleNeg").textContent =
+          "3B. Negative outcome: Refund locked " + split.stage3Pct + "% to patient";
+      }
 
       document.getElementById("vStep1Usd").textContent = formatIntegerThousands(step1) + " " + asset;
       document.getElementById("vStep2Usd").textContent = formatIntegerThousands(step2) + " " + asset;
@@ -1369,6 +1402,7 @@
       const amount = Number(document.getElementById("vaultAmountInput").value) || 5000;
       const asset = document.getElementById("vaultAssetSelect").value;
       const refundPct = latestAssessment ? latestAssessment.res.dynamicRefundPct : 58;
+      const split = getDynamicStageSplit(refundPct);
 
       nearState.caseId = "EG-TESTNET-" + Math.floor(1000 + Math.random() * 9000);
       nearState.stage = "LOCKED";
@@ -1377,7 +1411,7 @@
       nearState.refundedAmount = 0;
 
       document.getElementById("escrowStateLabel").textContent =
-        "Case " + nearState.caseId + " · 100% Locked in Escrow (" + refundPct + "% Refund Protected)";
+        "Case " + nearState.caseId + " · 100% Locked (" + split.stage1Pct + "% + " + split.stage2Pct + "% + " + split.stage3Pct + "% Dynamic Split)";
       renderEscrowMetrics(asset);
 
       appendTxLog(
@@ -1388,9 +1422,13 @@
           formatIntegerThousands(amount) +
           " " +
           asset +
-          " via NEAR Intents · Guaranteed Refund Ratio: " +
-          refundPct +
-          "% · Block #" +
+          " · Dynamic Split: Stage 1 (" +
+          split.stage1Pct +
+          "%) + Stage 2 (" +
+          split.stage2Pct +
+          "%) + Outcome Refund Pool (" +
+          split.stage3Pct +
+          "%) · Block #" +
           nearState.latestBlockHeight
       );
     }
@@ -1398,29 +1436,40 @@
     function releaseTestnetMilestones() {
       const amount = Number(document.getElementById("vaultAmountInput").value) || 5000;
       const asset = document.getElementById("vaultAssetSelect").value;
+      const refundPct = latestAssessment ? latestAssessment.res.dynamicRefundPct : 58;
+      const split = getDynamicStageSplit(refundPct);
+
       if (nearState.stage !== "LOCKED") {
         lockTestnetEscrow();
       }
 
-      const stage12 = Math.round(amount * 0.50);
-      nearState.lockedAmount = amount - stage12;
+      const refundUsd = Math.round((amount * split.stage3Pct) / 100);
+      const stage12 = amount - refundUsd;
+      nearState.lockedAmount = refundUsd;
       nearState.releasedAmount = stage12;
       nearState.stage = "MILESTONES_RELEASED";
 
       document.getElementById("escrowStateLabel").textContent =
-        "Case " + nearState.caseId + " · Stage 1 & 2 Released (50% Held for Outcome)";
+        "Case " + nearState.caseId + " · Stage 1 & 2 (" + split.procTotalPct + "%) Released · " + split.stage3Pct + "% Held for Outcome";
       renderEscrowMetrics(asset);
 
       appendTxLog(
         "CALL:confirm_milestones_1_2",
-        "Released Stage 1 (25% OPU) + Stage 2 (25% Transfer) = " +
+        "Released Stage 1 (" +
+          split.stage1Pct +
+          "% OPU) + Stage 2 (" +
+          split.stage2Pct +
+          "% Transfer) = " +
           formatIntegerThousands(stage12) +
           " " +
           asset +
-          " to partner clinic · Remaining locked for outcome: " +
+          " to partner clinic · Dynamic outcome pool locked: " +
           formatIntegerThousands(nearState.lockedAmount) +
           " " +
-          asset
+          asset +
+          " (" +
+          split.stage3Pct +
+          "%)"
       );
     }
 
@@ -1428,7 +1477,8 @@
       const amount = Number(document.getElementById("vaultAmountInput").value) || 5000;
       const asset = document.getElementById("vaultAssetSelect").value;
       const refundPct = latestAssessment ? latestAssessment.res.dynamicRefundPct : 58;
-      const refundUsd = Math.round((amount * refundPct) / 100);
+      const split = getDynamicStageSplit(refundPct);
+      const refundUsd = Math.round((amount * split.stage3Pct) / 100);
 
       if (nearState.stage === "IDLE" || nearState.stage === "SETTLED") {
         lockTestnetEscrow();
@@ -1440,12 +1490,18 @@
         nearState.refundedAmount = 0;
         nearState.stage = "SETTLED";
         document.getElementById("escrowStateLabel").textContent =
-          "Case " + nearState.caseId + " · Positive Pregnancy Confirmed (100% Settled)";
+          "Case " + nearState.caseId + " · Positive Pregnancy Confirmed (100% Settled to Clinic)";
         renderEscrowMetrics(asset);
 
         appendTxLog(
           "CALL:resolve_clinical_outcome(true)",
-          "Clinical pregnancy confirmed · Final escrow balance released to partner clinic · Total settled: " +
+          "Clinical pregnancy confirmed · Locked " +
+            split.stage3Pct +
+            "% outcome pool (" +
+            formatIntegerThousands(refundUsd) +
+            " " +
+            asset +
+            ") released to partner clinic · Total settled: " +
             formatIntegerThousands(amount) +
             " " +
             asset
@@ -1453,23 +1509,29 @@
       } else {
         nearState.lockedAmount = 0;
         nearState.refundedAmount = refundUsd;
-        nearState.releasedAmount = Math.max(0, amount - refundUsd);
+        nearState.releasedAmount = amount - refundUsd;
         nearState.stage = "SETTLED";
         document.getElementById("escrowStateLabel").textContent =
-          "Case " + nearState.caseId + " · Negative Outcome — " + refundPct + "% Refunded to " + nearState.accountId;
+          "Case " + nearState.caseId + " · Negative Outcome — " + split.stage3Pct + "% (" + formatIntegerThousands(refundUsd) + " " + asset + ") Refunded to " + nearState.accountId;
         renderEscrowMetrics(asset);
 
         appendTxLog(
           "CALL:resolve_clinical_outcome(false)",
-          "Negative pregnancy outcome · Automated " +
-            refundPct +
+          "Negative pregnancy outcome · Dynamic " +
+            split.stage3Pct +
             "% refund (" +
             formatIntegerThousands(refundUsd) +
             " " +
             asset +
             ") returned via NEAR Intents to " +
             nearState.accountId +
-            " · Protected by OutLayer & Trezu Escrow"
+            " · Clinic retained Stage 1 & 2 (" +
+            split.procTotalPct +
+            "% = " +
+            formatIntegerThousands(amount - refundUsd) +
+            " " +
+            asset +
+            ")"
         );
       }
     }
