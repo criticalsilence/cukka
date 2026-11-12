@@ -924,3 +924,215 @@ a:hover {
     scroll-behavior: auto !important;
   }
 }
+
+/* Step 3 — Clinical Chat Interface */
+.chat-window {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
+  height: 360px;
+  margin-bottom: 16px;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-msg {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.chat-msg-assistant {
+  align-self: flex-start;
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.chat-msg-user {
+  align-self: flex-end;
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
+  color: var(--surface);
+}
+
+.chat-sender-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--ink-muted);
+}
+
+.chat-msg-user .chat-sender-label {
+  color: var(--bg);
+}
+
+.chat-quick-bar {
+  padding: 8px 12px;
+  border-top: 1px solid var(--line);
+  background-color: var(--surface);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chat-chip {
+  min-height: 36px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.chat-chip:hover {
+  border-color: var(--primary);
+  background-color: var(--surface);
+}
+
+.chat-input-bar {
+  padding: 12px;
+  border-top: 1px solid var(--line);
+  background-color: var(--surface);
+  display: flex;
+  gap: 8px;
+}
+
+/* Step 4 — NEAR Testnet Wallet & Escrow Vault Controls */
+.wallet-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background-color: var(--bg);
+  margin-bottom: 24px;
+}
+
+.vault-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.vault-metric-card {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background-color: var(--bg);
+}
+
+.vault-metric-label {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+  margin-bottom: 4px;
+}
+
+.vault-metric-value {
+  font-family: "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.escrow-action-panel {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.escrow-buttons-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.tx-log-box {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background-color: var(--surface);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8125rem;
+  color: var(--ink);
+  max-height: 180px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tx-log-entry {
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tx-log-entry:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.tool-item {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background-color: var(--bg);
+}
+
+.tool-name {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--ink);
+}
+
+.tool-desc {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+  margin-top: 2px;
+}
+
+@media (min-width: 600px) {
+  .vault-metrics-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .escrow-buttons-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .tools-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
