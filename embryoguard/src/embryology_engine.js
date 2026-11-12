@@ -1,6 +1,6 @@
 /**
- * EmbryoGuard — Patient-Friendly Preliminary IVF Assessment & Dynamic NEAR Refund Engine
- * Authored for NEAR Hackathon 2026
+ * EmbryoGuard — Patient-Friendly Preliminary IVF Assessment & Outcome-Based Refund Engine
+ * Reference Standard: WHO Laboratory Manual for the Examination and Processing of Human Semen, 6th Edition (2021)
  */
 
 (function (root, factory) {
@@ -12,38 +12,38 @@
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
 
-  // Patient-friendly sperm count & motility categories (based on WHO spermiogram reference values)
+  // Sperm count & motility categories based on WHO 6th Edition (2021) lower reference limits
   const SPERM_CATEGORIES = {
     normal: {
-      labelTr: "Normal Değerler (Sayı: >15 Milyon/mL • Hareketlilik: >%40)",
-      labelEn: "Normal Values (Count: >15M/mL • Motility: >40%)",
+      labelTr: "Normal (Sayı: ≥16 milyon/mL · İleri hareketlilik: ≥%30 · Toplam hareketlilik: ≥%42)",
+      labelEn: "Normozoospermia (Concentration: ≥16 million/mL · Progressive motility: ≥30% · Total: ≥42%)",
       modifier: 0
     },
     mild_low: {
-      labelTr: "Hafif Düşük (Sayı: 5–15 Milyon/mL • Hareketlilik: %20–%40)",
-      labelEn: "Mildly Reduced (Count: 5–15M/mL • Motility: 20%–40%)",
+      labelTr: "Hafif düşük (Sayı: 5–15 milyon/mL · İleri hareketlilik: %15–%29)",
+      labelEn: "Mildly reduced (Concentration: 5–15 million/mL · Progressive motility: 15%–29%)",
       modifier: -4
     },
     severe_low: {
-      labelTr: "Belirgin Düşük (Sayı: <5 Milyon/mL • Hareketlilik: <%20)",
-      labelEn: "Significantly Reduced (Count: <5M/mL • Motility: <20%)",
+      labelTr: "Belirgin düşük (Sayı: <5 milyon/mL · İleri hareketlilik: <%15)",
+      labelEn: "Significantly reduced (Concentration: <5 million/mL · Progressive motility: <15%)",
       modifier: -9
     },
     azoospermia: {
-      labelTr: "Azospermi (Tahlilde sperm hücresi görülmedi)",
-      labelEn: "Azoospermia (No sperm seen in ejaculate)",
+      labelTr: "Azospermi (Menide sperm hücresi görülmedi)",
+      labelEn: "Azoospermia (No spermatozoa observed in the ejaculate)",
       modifier: -14
     },
     unknown: {
-      labelTr: "Henüz sperm tahlilimiz yok / Bilmiyorum",
-      labelEn: "Not tested yet / Unknown",
+      labelTr: "Tahlil yok / bilmiyorum",
+      labelEn: "Not tested yet / unknown",
       modifier: -2
     }
   };
 
   /**
-   * Calculates a preliminary, non-final assessment value and a dynamic refund percentage
-   * that scales directly with the patient's preliminary probability.
+   * Calculates a preliminary, non-final assessment value and an outcome-linked refund percentage
+   * that scales with the patient's preliminary indicator.
    */
   function calculatePreliminaryAssessment(input) {
     const age = Number(input.age) || 32;
@@ -79,8 +79,7 @@
     // Clamp preliminary estimate between 15% and 76%
     const preliminaryEstimatePct = Math.round(Math.max(15, Math.min(76, score)));
 
-    // Dynamic Refund Percentage: scales smoothly with the preliminary estimate (never static!)
-    // Range: 20% to 65% based on preliminary score
+    // Outcome-based refund percentage: scales between 20% and 65% based on preliminary indicator
     const dynamicRefundPct = Math.round(
       Math.max(20, Math.min(65, 12 + preliminaryEstimatePct * 0.68))
     );
@@ -92,13 +91,12 @@
       spermLabelTr: spermInfo.labelTr,
       spermLabelEn: spermInfo.labelEn,
       disclaimerTr:
-        "Bu oran yalnızca girdiğiniz ön bilgilere dayalı tahmini bir değerdir ve nihai değildir. Kesin tıbbi değerlendirme, başarı beklentisi ve size uygun klinik yönlendirmesi Uzman Embriyolog ile yapılacak görüşme sonrasında netleştirilir.",
+        "Bu sonuç, girdiğiniz dört bilgiye dayanan bir ön tahmindir; tıbbi görüş yerine geçmez. Kesin değerlendirme, embriyolog görüşmesinde tetkikleriniz incelendikten sonra yapılır.",
       disclaimerEn:
-        "This value is a preliminary estimate based solely on your inputs and is not final. Your definitive assessment and clinic referral are finalized after consulting with the Lead Clinical Embryologist."
+        "This result is a preliminary estimate based on the four parameters provided and does not constitute medical advice. A definitive evaluation is established after your diagnostic reports are reviewed during the embryologist consultation."
     };
   }
 
-  // Backward-compatible wrapper for automated test suite / server endpoints
   function calculateEmbryologyOutcome(input) {
     const res = calculatePreliminaryAssessment({
       age: input.age,
