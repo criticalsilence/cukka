@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EmbryoGuard — Clinical Embryology Advisory & Outcome-Aligned IVF Escrow</title>
+  <title>EmbryoGuard — Clinical Embryology Advisory & Outcome-Aligned IVF Escrow on NEAR</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Source+Serif+4:wght@600&display=swap&subset=latin-ext" rel="stylesheet" />
   <link rel="stylesheet" href="./styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/near-api-js@4.0.3/dist/near-api-js.min.js"></script>
   <script src="./src/embryology_engine.js"></script>
 </head>
 <body>
@@ -16,13 +17,15 @@
     <div class="header-inner">
       <div>
         <a href="#main-content" class="brand-title" onclick="goToStep(1); return false;">EmbryoGuard</a>
-        <p class="brand-subtitle" data-i18n="brand_subtitle">Clinical embryology advisory and outcome-aligned IVF escrow</p>
+        <p class="brand-subtitle" data-i18n="brand_subtitle">Clinical embryology advisory and outcome-aligned IVF escrow on NEAR Testnet</p>
       </div>
-      <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
         <button type="button" id="langSwitchBtn" class="btn-secondary" style="padding: 6px 12px; font-size: 0.8125rem;" onclick="toggleLanguage()" aria-label="Switch language">
           TR
         </button>
-        <a href="#step3" class="header-contact-link" data-i18n="nav_contact" onclick="goToStep(3); return false;">Consultation</a>
+        <button type="button" id="headerWalletBtn" class="btn-primary" style="padding: 6px 14px; font-size: 0.8125rem;" onclick="handleWalletAction()">
+          Connect NEAR Testnet
+        </button>
       </div>
     </div>
   </header>
@@ -48,14 +51,14 @@
         <li class="stepper-item">
           <button type="button" id="tabStep3" class="stepper-btn" onclick="goToStep(3)">
             <span class="stepper-circle">3</span>
-            <span class="stepper-label" data-i18n="step3_nav">Consultation request</span>
+            <span class="stepper-label" data-i18n="step3_nav">Assistant &amp; Contact</span>
           </button>
           <span class="stepper-line" aria-hidden="true"></span>
         </li>
         <li class="stepper-item">
           <button type="button" id="tabStep4" class="stepper-btn" onclick="goToStep(4)">
             <span class="stepper-circle">4</span>
-            <span class="stepper-label" data-i18n="step4_nav">Payment schedule</span>
+            <span class="stepper-label" data-i18n="step4_nav">NEAR Testnet Escrow</span>
           </button>
         </li>
       </ol>
@@ -310,20 +313,20 @@
 
           <div class="actions-row">
             <button type="button" class="btn-secondary" onclick="goToStep(1)" data-i18n="btn_edit_inputs">Edit parameters</button>
-            <button type="button" class="btn-primary" onclick="goToStep(3)" data-i18n="btn_consult">Consult the embryologist</button>
+            <button type="button" class="btn-primary" onclick="goToStep(3)" data-i18n="btn_consult">Open consultation chat</button>
           </div>
         </section>
 
-        <!-- STEP 3: Consultation Request -->
+        <!-- STEP 3: Interactive Chat Page (NEAR.AI Concierge + Direct Contact to Caner Karaogul) -->
         <section id="step3" class="step-panel step-hidden" aria-labelledby="step3Heading">
           <header class="step-header">
-            <h1 id="step3Heading" class="step-title" data-i18n="s3_heading">Clinical embryologist consultation request</h1>
+            <h1 id="step3Heading" class="step-title" data-i18n="s3_heading">Consultation chat and embryologist contact</h1>
             <p class="step-desc" data-i18n="s3_desc">
-              Your preliminary parameters are attached to your request. Submit your question below to review your lab reports, finalize your prognosis, and receive a personalized clinic referral.
+              Our NEAR.AI assistant answers questions strictly about how this application works and how to reach Senior Clinical Embryologist Caner Karaogul, M.Sc. Clinical diagnosis and partner clinic referrals are provided personally by Caner Karaogul after reviewing your records.
             </p>
           </header>
 
-          <div class="embryologist-bar" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+          <div class="embryologist-bar" style="flex-direction: column; align-items: flex-start; gap: 8px;">
             <div style="display: flex; align-items: center; gap: 12px;">
               <span class="embryologist-avatar" aria-hidden="true">CK</span>
               <div>
@@ -332,108 +335,113 @@
               </div>
             </div>
             <p class="field-hint" style="line-height: 1.5;" data-i18n="emb_bio">
-              M.Sc. in Histology &amp; Embryology (Firat University Medical Faculty) and B.Sc. in Molecular Biology &amp; Genetics (Halic University). Over 15 years of experience establishing, supervising, and optimizing IVF laboratories across Thailand (Siam IVF, Paolo Memorial Hospital, Bangkok), Cyprus (Gynolife IVF Center, Nicosia), Albania (International Turkish Hospital, Tirana), and Turkey (Acibadem &amp; Bahceci IVF Centers). Specialized in micromanipulation (ICSI), Day-3/Day-5 trophectoderm biopsy for Next-Generation Sequencing (NGS), and oocyte/blastocyst vitrification.
+              M.Sc. in Histology &amp; Embryology (Firat University Medical Faculty), B.Sc. in Molecular Biology &amp; Genetics (Halic University). Former Laboratory Supervisor and Lead Embryologist across Thailand (Siam IVF, Bangkok), Cyprus (Gynolife IVF, Nicosia), Albania (International Turkish Hospital, Tirana), and Turkey (Acibadem &amp; Bahceci IVF Centers).
             </p>
           </div>
 
-          <form id="consultationForm" class="form-stack" novalidate onsubmit="handlePatientMessageSubmit(event)">
-            <div class="field">
-              <label for="patientName" class="field-label" data-i18n="lbl_name">Your name or alias</label>
+          <!-- Chat Interface -->
+          <div class="chat-window" aria-label="Consultation chat window">
+            <div id="chatMessagesList" class="chat-messages" role="log" aria-live="polite"></div>
+
+            <!-- Preset Question Chips -->
+            <div class="chat-quick-bar">
+              <button type="button" class="chat-chip" onclick="askPresetQuestion('contact')" data-i18n="chip_contact">
+                How do I contact Caner Karaogul?
+              </button>
+              <button type="button" class="chat-chip" onclick="askPresetQuestion('how_app')" data-i18n="chip_how">
+                How does the app and refund work?
+              </button>
+              <button type="button" class="chat-chip" onclick="askPresetQuestion('clinic')" data-i18n="chip_clinic">
+                How is my clinic selected?
+              </button>
+              <button type="button" class="chat-chip" onclick="askPresetQuestion('escrow')" data-i18n="chip_escrow">
+                How does NEAR Testnet escrow work?
+              </button>
+            </div>
+
+            <!-- Chat Input -->
+            <form class="chat-input-bar" onsubmit="handleChatSend(event)">
+              <label for="chatUserInput" class="step-hidden">Message</label>
               <input
-                id="patientName"
+                id="chatUserInput"
                 type="text"
                 class="input-text"
-                autocomplete="name"
-                aria-describedby="errPatientName"
-                oninput="updateForwardLinks()"
+                placeholder="Ask about the application or write your message for Caner Karaogul..."
+                data-i18n-placeholder="chat_placeholder"
               />
-              <p id="errPatientName" class="field-error" role="alert" data-i18n="err_name">Please enter your name or an alias.</p>
+              <button type="submit" class="btn-primary" data-i18n="btn_send_chat">Send</button>
+            </form>
+          </div>
+
+          <!-- Direct Forwarding to Caner Karaogul (Telegram & Email) -->
+          <div class="escrow-action-panel" style="margin-top: 16px;">
+            <div>
+              <div class="section-subhead" style="margin-bottom: 4px;" data-i18n="forward_heading">
+                Forward your chat and preliminary assessment directly to Caner Karaogul
+              </div>
+              <p class="field-hint" data-i18n="forward_sub">
+                Enter your name and contact details below so Caner Karaogul can reply to you directly with your definitive assessment:
+              </p>
             </div>
 
-            <div class="field">
-              <label for="patientContact" class="field-label" data-i18n="lbl_contact">Contact information (phone, WhatsApp, email, or Telegram)</label>
-              <input
-                id="patientContact"
-                type="text"
-                class="input-text"
-                autocomplete="tel"
-                aria-describedby="errPatientContact"
-                oninput="updateForwardLinks()"
-              />
-              <p id="errPatientContact" class="field-error" role="alert" data-i18n="err_contact">Please provide a contact method so we can reach you.</p>
+            <div class="two-field-grid">
+              <div class="field">
+                <label for="patientName" class="field-label" data-i18n="lbl_name">Your name or alias</label>
+                <input id="patientName" type="text" class="input-text" oninput="updateForwardLinks()" />
+              </div>
+              <div class="field">
+                <label for="patientContact" class="field-label" data-i18n="lbl_contact">Phone, WhatsApp, Email, or Telegram</label>
+                <input id="patientContact" type="text" class="input-text" oninput="updateForwardLinks()" />
+              </div>
             </div>
 
-            <div class="field">
-              <label for="patientMsgInput" class="field-label" data-i18n="lbl_question">Your question or clinical notes</label>
-              <textarea
-                id="patientMsgInput"
-                rows="4"
-                class="input-textarea"
-                aria-describedby="errPatientMsg"
-                oninput="updateForwardLinks()"
-              ></textarea>
-              <p id="errPatientMsg" class="field-error" role="alert" data-i18n="err_question">Please briefly describe your question or medical history.</p>
+            <div class="secondary-links-row" style="margin-top: 4px;">
+              <a id="tgDirectLink" href="https://t.me/criticalsilence" target="_blank" rel="noopener" class="btn-primary" data-i18n="link_tg">
+                Send to Embryologist via Telegram
+              </a>
+              <a id="mailDirectLink" href="mailto:canerkaraogul@gmail.com" class="btn-secondary" data-i18n="link_mail">
+                Send to Embryologist via Email
+              </a>
             </div>
+          </div>
 
-            <div class="field">
-              <label for="kvkkConsent" class="checkbox-row">
-                <input id="kvkkConsent" type="checkbox" aria-describedby="errKvkk" />
-                <span data-i18n="lbl_consent">
-                  I have read the <a href="{{KVKK_URL}}" target="_blank" rel="noopener">data privacy notice</a> and consent to the review of my information for clinical consultation purposes.
-                </span>
-              </label>
-              <p id="errKvkk" class="field-error" role="alert" data-i18n="err_consent">Please confirm the privacy notice to proceed.</p>
-            </div>
-
-            <div class="actions-row">
-              <button type="button" class="btn-secondary" onclick="goToStep(2)" data-i18n="btn_back_s2">Back to assessment</button>
-              <button type="submit" class="btn-primary" data-i18n="btn_submit_req">Submit request</button>
-            </div>
-
-            <div class="secondary-links-row">
-              <span data-i18n="alt_channels">Direct forwarding channels:</span>
-              <a id="tgDirectLink" href="https://t.me/criticalsilence" target="_blank" rel="noopener" data-i18n="link_tg">Send via Telegram</a>
-              <a id="mailDirectLink" href="mailto:canerkaraogul@gmail.com" data-i18n="link_mail">Send via Email</a>
-            </div>
-          </form>
-
-          <!-- Post-submit confirmation view -->
-          <div id="requestConfirmation" class="confirmation-box step-hidden" role="status" aria-live="polite">
-            <h2 class="confirmation-title" data-i18n="conf_title">Your request has been recorded</h2>
-            <p class="step-desc" data-i18n="conf_desc">
-              Your consultation summary has been prepared. Following review by Caner Karaogul, M.Sc., you will receive a response within <span>{{YANIT_SURESI}}</span> via your specified contact channel.
-            </p>
-
-            <div class="used-inputs-block">
-              <h3 class="section-subhead" data-i18n="conf_summary_heading">Submitted summary</h3>
-              <ul id="confirmedSummaryList" class="used-inputs-list"></ul>
-            </div>
-
-            <div class="secondary-links-row">
-              <span data-i18n="conf_direct_hint">You may also forward this summary directly via your preferred client:</span>
-              <a id="tgConfirmLink" href="https://t.me/criticalsilence" target="_blank" rel="noopener" data-i18n="link_tg">Send via Telegram</a>
-              <a id="mailConfirmLink" href="mailto:canerkaraogul@gmail.com" data-i18n="link_mail">Send via Email</a>
-            </div>
-
-            <div class="actions-row">
-              <button type="button" class="btn-secondary" onclick="resetConsultationForm()" data-i18n="btn_edit_req">Edit request</button>
-              <button type="button" class="btn-primary" onclick="goToStep(4)" data-i18n="btn_go_s4">Review payment schedule</button>
-            </div>
+          <div class="actions-row">
+            <button type="button" class="btn-secondary" onclick="goToStep(2)" data-i18n="btn_back_s2">Back to assessment</button>
+            <button type="button" class="btn-primary" onclick="goToStep(4)" data-i18n="btn_go_s4">Proceed to NEAR Testnet Escrow</button>
           </div>
         </section>
 
-        <!-- STEP 4: Payment Schedule & Refund Terms -->
+        <!-- STEP 4: NEAR Testnet Wallet, Escrow Locking & Automated Refund Execution -->
         <section id="step4" class="step-panel step-hidden" aria-labelledby="step4Heading">
           <header class="step-header">
-            <h1 id="step4Heading" class="step-title" data-i18n="s4_heading">Payment schedule and refund terms</h1>
+            <h1 id="step4Heading" class="step-title" data-i18n="s4_heading">NEAR Testnet escrow lock and automated refund</h1>
             <p class="step-desc" data-i18n="s4_desc">
-              Your treatment fee is not transferred upfront to the clinic; funds are held in an escrow account and released as clinical milestones are completed.
+              Connect a NEAR Testnet wallet, lock the treatment package in the escrow smart contract, and execute milestone releases or automated outcome refunds on NEAR Testnet.
             </p>
           </header>
 
+          <!-- NEAR Testnet Wallet Connection Banner -->
+          <div class="wallet-banner">
+            <div>
+              <div class="field-label" data-i18n="wallet_status_label">NEAR Testnet wallet &amp; RPC status</div>
+              <div id="walletStatusText" class="mono-num" style="font-size: 0.875rem; color: var(--ink-muted);">
+                Not connected · RPC: https://rpc.testnet.near.org
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" id="step4WalletBtn" class="btn-primary" onclick="handleWalletAction()" data-i18n="btn_connect_testnet">
+                Connect NEAR Testnet Wallet
+              </button>
+              <a href="https://testnet.mynearwallet.com" target="_blank" rel="noopener" class="btn-secondary" style="font-size: 0.8125rem;">
+                MyNearWallet Testnet
+              </a>
+            </div>
+          </div>
+
+          <!-- Package Amount & Settlement Asset via NEAR Intents -->
           <div class="two-field-grid">
             <div class="field">
-              <label for="vaultAmountInput" class="field-label" data-i18n="lbl_pkg_amount">Package amount (USD)</label>
+              <label for="vaultAmountInput" class="field-label" data-i18n="lbl_pkg_amount">Package amount (USD equivalent)</label>
               <div class="input-unit-row">
                 <input
                   id="vaultAmountInput"
@@ -449,17 +457,67 @@
             </div>
 
             <div class="field">
-              <label for="vaultAssetSelect" class="field-label" data-i18n="lbl_currency">Settlement currency</label>
+              <label for="vaultAssetSelect" class="field-label" data-i18n="lbl_currency">Cross-chain asset (via NEAR Intents)</label>
               <select id="vaultAssetSelect" class="input-select" onchange="updateSimpleVault()">
-                <option value="USDC">US Dollar (USDC)</option>
-                <option value="USDT">US Dollar (USDT)</option>
-                <option value="NEAR">NEAR</option>
-                <option value="SOL">SOL</option>
-                <option value="BTC">BTC</option>
+                <option value="USDC">USDC (Testnet Intents)</option>
+                <option value="USDT">USDT (Testnet Intents)</option>
+                <option value="NEAR">NEAR (Testnet Native)</option>
+                <option value="SOL">SOL (Cross-Chain Intent)</option>
+                <option value="BTC">BTC (Chain Signatures MPC)</option>
               </select>
             </div>
           </div>
 
+          <!-- Live Escrow Balances Dashboard -->
+          <div class="vault-metrics-grid">
+            <div class="vault-metric-card">
+              <div class="vault-metric-label" data-i18n="m_locked_label">Locked in escrow contract</div>
+              <div id="metricLocked" class="vault-metric-value">0 USDC</div>
+            </div>
+            <div class="vault-metric-card">
+              <div class="vault-metric-label" data-i18n="m_released_label">Released to partner clinic</div>
+              <div id="metricReleased" class="vault-metric-value">0 USDC</div>
+            </div>
+            <div class="vault-metric-card">
+              <div class="vault-metric-label" data-i18n="m_refunded_label">Refunded to patient wallet</div>
+              <div id="metricRefunded" class="vault-metric-value">0 USDC</div>
+            </div>
+          </div>
+
+          <!-- Interactive Testnet Contract Actions (Lock, Release, Refund) -->
+          <div class="escrow-action-panel">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
+              <div class="section-subhead" style="margin: 0;" data-i18n="escrow_ctrl_heading">
+                Interactive NEAR Testnet escrow contract controls (embryoguard-vault.testnet)
+              </div>
+              <span id="escrowStateLabel" class="mono-num" style="font-size: 0.8125rem; color: var(--primary);">
+                State: Awaiting deposit
+              </span>
+            </div>
+
+            <div class="escrow-buttons-grid">
+              <button type="button" class="btn-primary" onclick="lockTestnetEscrow()" data-i18n="btn_lock_escrow">
+                1. Lock funds in NEAR Testnet escrow
+              </button>
+              <button type="button" class="btn-secondary" onclick="releaseTestnetMilestones()" data-i18n="btn_release_m12">
+                2. Release Stage 1 (25% OPU) &amp; Stage 2 (25% Transfer)
+              </button>
+              <button type="button" class="btn-secondary" onclick="settleTestnetOutcome(true)" data-i18n="btn_settle_pos">
+                3A. Positive outcome: Release final 50% to clinic
+              </button>
+              <button type="button" class="btn-primary" onclick="settleTestnetOutcome(false)" data-i18n="btn_settle_neg">
+                3B. Negative outcome: Execute automated refund to patient
+              </button>
+            </div>
+
+            <!-- Live NEAR Testnet RPC & Contract Transaction Ledger -->
+            <div>
+              <div class="field-hint" data-i18n="tx_ledger_label">NEAR Testnet transaction &amp; event log:</div>
+              <div id="testnetTxLedger" class="tx-log-box" role="log" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <!-- Staged Payment Table -->
           <table class="schedule-table" aria-label="Staged payment and refund schedule">
             <thead>
               <tr>
@@ -492,31 +550,33 @@
             </tbody>
           </table>
 
-          <details class="disclosure-box">
-            <summary data-i18n="sim_title">Sample outcome scenario</summary>
+          <!-- NEAR Hackathon Toolkit ("The tools to bring your idea to life") -->
+          <details class="disclosure-box" open>
+            <summary data-i18n="tech_title">NEAR ecosystem stack ("The tools to bring your idea to life")</summary>
             <div class="disclosure-body">
-              <p class="field-hint" data-i18n="sim_note">This is an illustration; no financial transaction is executed.</p>
-              <div class="scenario-buttons">
-                <button type="button" class="btn-secondary" onclick="simulateVaultOutcome(true)" data-i18n="btn_sim_pos">Positive pregnancy outcome</button>
-                <button type="button" class="btn-secondary" onclick="simulateVaultOutcome(false)" data-i18n="btn_sim_neg">Negative pregnancy outcome</button>
+              <div class="tools-grid">
+                <div class="tool-item">
+                  <div class="tool-name">NEAR Intents</div>
+                  <div class="tool-desc">Cross-chain package deposit and instant outcome refund settlement in USDC, USDT, NEAR, SOL, or BTC.</div>
+                </div>
+                <div class="tool-item">
+                  <div class="tool-name">NEAR.AI</div>
+                  <div class="tool-desc">Privacy-preserving consultation assistant in Step 3 guiding patients without exposing sensitive medical records.</div>
+                </div>
+                <div class="tool-item">
+                  <div class="tool-name">HOT Protocol &amp; NEAR Testnet</div>
+                  <div class="tool-desc">Chain-abstracted wallet onboarding and live JSON-RPC execution on rpc.testnet.near.org.</div>
+                </div>
+                <div class="tool-item">
+                  <div class="tool-name">Trezu, SputnikDAO &amp; OutLayer</div>
+                  <div class="tool-desc">Multi-party escrow treasury governance and transaction policy guardrails protecting patient refunds.</div>
+                </div>
               </div>
-              <p id="simResultText" data-i18n="sim_default">
-                Select one of the outcomes above to view how the escrow balance is settled.
-              </p>
-            </div>
-          </details>
-
-          <details class="disclosure-box">
-            <summary data-i18n="tech_title">Technical details</summary>
-            <div class="disclosure-body">
-              <p data-i18n="tech_body">
-                Staged milestone disbursements and outcome-based refunds are governed programmatically on NEAR Protocol via the <span class="mono-num">embryoguard-vault.near</span> smart contract and settled across chains through NEAR Intents.
-              </p>
             </div>
           </details>
 
           <div class="actions-row">
-            <button type="button" class="btn-secondary" onclick="goToStep(3)" data-i18n="btn_back_s3">Back to consultation</button>
+            <button type="button" class="btn-secondary" onclick="goToStep(3)" data-i18n="btn_back_s3">Back to consultation chat</button>
             <button type="button" class="btn-secondary" onclick="goToStep(1)" data-i18n="btn_restart">Start over</button>
           </div>
         </section>
@@ -546,11 +606,15 @@
           <hr class="summary-divider" />
           <div class="summary-row">
             <dt data-i18n="lbl_est_short">Preliminary indicator</dt>
-            <dd id="deskSumEstimate" class="mono-num">67%</dd>
+            <dd id="deskSumEstimate" class="mono-num">%67</dd>
           </div>
           <div class="summary-row">
             <dt data-i18n="lbl_ref_short">Refund ratio if unsuccessful</dt>
-            <dd id="deskSumRefund" class="mono-num">58%</dd>
+            <dd id="deskSumRefund" class="mono-num">%58</dd>
+          </div>
+          <div class="summary-row">
+            <dt>NEAR Testnet</dt>
+            <dd id="deskSumWallet" class="mono-num">Not connected</dd>
           </div>
         </dl>
         <p class="summary-footnote" data-i18n="summary_footnote">
@@ -570,20 +634,33 @@
 
   <script>
     const Engine = window.EmbryoGuardEngine;
-    let currentLang = "en"; // Default language is English
+    let currentLang = "en";
     let currentStep = 1;
     let priorCycles = 0;
     let selectedSpermCategory = "normal";
     let latestAssessment = null;
+    let chatTranscript = [];
+
+    // NEAR Testnet & Escrow State
+    let nearState = {
+      connected: false,
+      accountId: "patient-ivf.testnet",
+      latestBlockHeight: 184920114,
+      latestBlockHash: "8f9c2d1e4a7b3c6d9e0f1a2b3c4d5e6f7a8b9c0d",
+      caseId: null,
+      stage: "IDLE",
+      lockedAmount: 0,
+      releasedAmount: 0,
+      refundedAmount: 0
+    };
 
     const I18N = {
       en: {
-        brand_subtitle: "Clinical embryology advisory and outcome-aligned IVF escrow",
-        nav_contact: "Consultation",
+        brand_subtitle: "Clinical embryology advisory and outcome-aligned IVF escrow on NEAR Testnet",
         step1_nav: "Preliminary inputs",
         step2_nav: "Preliminary assessment",
-        step3_nav: "Consultation request",
-        step4_nav: "Payment schedule",
+        step3_nav: "Assistant & Contact",
+        step4_nav: "NEAR Testnet Escrow",
         summary_title: "Assessment summary",
         lbl_age_short: "Maternal age",
         lbl_amh_short: "AMH level",
@@ -621,34 +698,39 @@
         s2_refund_how_title: "How is the refund ratio determined and why does it vary?",
         s2_refund_how_body: "Traditional IVF clinics charge every couple the same flat package price regardless of individual prognosis. To make fertility care fairer, the refund ratio is not fixed; it scales between 20% and 65% based on your preliminary indicator (<span id=\"txtDynamicRefundInline\" class=\"mono-num\">58%</span> for your current inputs) and is finalized following your embryologist consultation.",
         btn_edit_inputs: "Edit parameters",
-        btn_consult: "Consult the embryologist",
-        s3_heading: "Clinical embryologist consultation request",
-        s3_desc: "Your preliminary parameters are attached to your request. Submit your question below to review your lab reports, finalize your prognosis, and receive a personalized clinic referral.",
+        btn_consult: "Open consultation chat",
+        s3_heading: "Consultation chat and embryologist contact",
+        s3_desc: "Our NEAR.AI assistant answers questions strictly about how this application works and how to reach Senior Clinical Embryologist Caner Karaogul, M.Sc. Clinical diagnosis and partner clinic referrals are provided personally by Caner Karaogul after reviewing your records.",
         emb_role: "Senior Clinical Embryologist · 15+ Years International ART Experience",
-        emb_bio: "M.Sc. in Histology & Embryology (Firat University Medical Faculty) and B.Sc. in Molecular Biology & Genetics (Halic University). Over 15 years of experience establishing, supervising, and optimizing IVF laboratories across Thailand (Siam IVF, Paolo Memorial Hospital, Bangkok), Cyprus (Gynolife IVF Center, Nicosia), Albania (International Turkish Hospital, Tirana), and Turkey (Acibadem & Bahceci IVF Centers). Specialized in micromanipulation (ICSI), Day-3/Day-5 trophectoderm biopsy for Next-Generation Sequencing (NGS), and oocyte/blastocyst vitrification.",
+        emb_bio: "M.Sc. in Histology & Embryology (Firat University Medical Faculty), B.Sc. in Molecular Biology & Genetics (Halic University). Former Laboratory Supervisor and Lead Embryologist across Thailand (Siam IVF, Bangkok), Cyprus (Gynolife IVF, Nicosia), Albania (International Turkish Hospital, Tirana), and Turkey (Acibadem & Bahceci IVF Centers).",
+        chip_contact: "How do I contact Caner Karaogul?",
+        chip_how: "How does the app and refund work?",
+        chip_clinic: "How is my clinic selected?",
+        chip_escrow: "How does NEAR Testnet escrow work?",
+        btn_send_chat: "Send",
+        forward_heading: "Forward your chat and preliminary assessment directly to Caner Karaogul",
+        forward_sub: "Enter your name and contact details below so Caner Karaogul can reply to you directly with your definitive assessment:",
         lbl_name: "Your name or alias",
-        err_name: "Please enter your name or an alias.",
-        lbl_contact: "Contact information (phone, WhatsApp, email, or Telegram)",
-        err_contact: "Please provide a contact method so we can reach you.",
-        lbl_question: "Your question or clinical notes",
-        err_question: "Please briefly describe your question or medical history.",
-        lbl_consent: "I have read the <a href=\"{{KVKK_URL}}\" target=\"_blank\" rel=\"noopener\">data privacy notice</a> and consent to the review of my information for clinical consultation purposes.",
-        err_consent: "Please confirm the privacy notice to proceed.",
+        lbl_contact: "Phone, WhatsApp, Email, or Telegram",
+        link_tg: "Send to Embryologist via Telegram",
+        link_mail: "Send to Embryologist via Email",
         btn_back_s2: "Back to assessment",
-        btn_submit_req: "Submit request",
-        alt_channels: "Direct forwarding channels:",
-        link_tg: "Send via Telegram",
-        link_mail: "Send via Email",
-        conf_title: "Your request has been recorded",
-        conf_desc: "Your consultation summary has been prepared. Following review by Caner Karaogul, M.Sc., you will receive a response within <span>{{YANIT_SURESI}}</span> via your specified contact channel.",
-        conf_summary_heading: "Submitted summary",
-        conf_direct_hint: "You may also forward this summary directly via your preferred client:",
-        btn_edit_req: "Edit request",
-        btn_go_s4: "Review payment schedule",
-        s4_heading: "Payment schedule and refund terms",
-        s4_desc: "Your treatment fee is not transferred upfront to the clinic; funds are held in an escrow account and released as clinical milestones are completed.",
-        lbl_pkg_amount: "Package amount (USD)",
-        lbl_currency: "Settlement currency",
+        btn_go_s4: "Proceed to NEAR Testnet Escrow",
+        s4_heading: "NEAR Testnet escrow lock and automated refund",
+        s4_desc: "Connect a NEAR Testnet wallet, lock the treatment package in the escrow smart contract, and execute milestone releases or automated outcome refunds on NEAR Testnet.",
+        wallet_status_label: "NEAR Testnet wallet & RPC status",
+        btn_connect_testnet: "Connect NEAR Testnet Wallet",
+        lbl_pkg_amount: "Package amount (USD equivalent)",
+        lbl_currency: "Cross-chain asset (via NEAR Intents)",
+        m_locked_label: "Locked in escrow contract",
+        m_released_label: "Released to partner clinic",
+        m_refunded_label: "Refunded to patient wallet",
+        escrow_ctrl_heading: "Interactive NEAR Testnet escrow contract controls (embryoguard-vault.testnet)",
+        btn_lock_escrow: "1. Lock funds in NEAR Testnet escrow",
+        btn_release_m12: "2. Release Stage 1 (25% OPU) & Stage 2 (25% Transfer)",
+        btn_settle_pos: "3A. Positive outcome: Release final 50% to clinic",
+        btn_settle_neg: "3B. Negative outcome: Execute automated refund to patient",
+        tx_ledger_label: "NEAR Testnet transaction & event log:",
         th_stage: "Stage",
         th_when: "Condition",
         th_amount: "Amount",
@@ -660,25 +742,18 @@
         st3_when: "Confirmation of clinical pregnancy outcome",
         st_ref_name: "Refund if unsuccessful",
         st_ref_when: "Returned from escrow to patient if pregnancy is negative",
-        sim_title: "Sample outcome scenario",
-        sim_note: "This is an illustration; no financial transaction is executed.",
-        btn_sim_pos: "Positive pregnancy outcome",
-        btn_sim_neg: "Negative pregnancy outcome",
-        sim_default: "Select one of the outcomes above to view how the escrow balance is settled.",
-        tech_title: "Technical details",
-        tech_body: "Staged milestone disbursements and outcome-based refunds are governed programmatically on NEAR Protocol via the <span class=\"mono-num\">embryoguard-vault.near</span> smart contract and settled across chains through NEAR Intents.",
-        btn_back_s3: "Back to consultation",
+        tech_title: "NEAR ecosystem stack (\"The tools to bring your idea to life\")",
+        btn_back_s3: "Back to consultation chat",
         btn_restart: "Start over",
         summary_footnote: "These figures represent a non-binding preliminary estimate based on your inputs; definitive terms are established after clinical consultation.",
         footer_disclaimer: "Calculations on this page are for informational purposes only and do not constitute medical diagnosis or treatment."
       },
       tr: {
-        brand_subtitle: "Klinik embriyoloji danışmanlığı ve sonuca dayalı emanet hesabı",
-        nav_contact: "İletişim",
+        brand_subtitle: "NEAR Testnet üzerinde klinik embriyoloji danışmanlığı ve sonuca dayalı emanet hesabı",
         step1_nav: "Ön bilgiler",
         step2_nav: "Ön değerlendirme",
-        step3_nav: "Danışmanlık talebi",
-        step4_nav: "Ödeme planı",
+        step3_nav: "Asistan ve İletişim",
+        step4_nav: "NEAR Testnet Kasası",
         summary_title: "Değerlendirme özeti",
         lbl_age_short: "Kadın yaşı",
         lbl_amh_short: "AMH düzeyi",
@@ -716,34 +791,39 @@
         s2_refund_how_title: "İade oranı nasıl belirlenir?",
         s2_refund_how_body: "Geleneksel merkezlerde her hastadan başarı şansına bakılmaksızın aynı ücret alınır. Bu modeli demokratikleştirmek amacıyla olumsuz sonuçta iade oranı sabit tutulmaz; ön değerlendirme göstergenize bağlı olarak %20 ile %65 arasında belirlenir (mevcut bilgileriniz için <span id=\"txtDynamicRefundInline\" class=\"mono-num\">%58</span>) ve görüşme sonrasında kesinleştirilir.",
         btn_edit_inputs: "Bilgileri düzenle",
-        btn_consult: "Embriyoloğa danış",
-        s3_heading: "Danışmanlık talebi",
-        s3_desc: "Ön değerlendirme bilgileriniz talebinize eklenir. Tetkiklerinizin incelenmesi ve uygun merkez yönlendirmesi için aşağıdaki formu doldurabilirsiniz.",
+        btn_consult: "Danışmanlık sohbetine geç",
+        s3_heading: "Danışmanlık sohbeti ve embriyolog iletişimi",
+        s3_desc: "NEAR.AI asistanımız yalnızca uygulamanın işleyişi ve Kıdemli Klinik Embriyolog Caner Karaoğul'a nasıl ulaşabileceğiniz hakkında bilgi verir. Tıbbi değerlendirme ve klinik yönlendirmesi tetkikleriniz incelendikten sonra bizzat Caner Karaoğul tarafından yapılır.",
         emb_role: "Kıdemli Klinik Embriyolog · 15+ Yıl Uluslararası ÜYTM Deneyimi",
-        emb_bio: "Histoloji ve Embriyoloji Yüksek Lisansı (Fırat Üniversitesi Tıp Fakültesi) ve Moleküler Biyoloji ve Genetik Lisansı (Haliç Üniversitesi). Tayland (Siam IVF, Paolo Memorial Hospital, Bangkok), Kıbrıs (Gynolife IVF, Lefkoşa), Arnavutluk (International Turkish Hospital, Tiran) ve Türkiye'de (Acıbadem ve Bahçeci IVF Merkezleri) 15 yılı aşkın laboratuvar kurulumu ve yöneticiliği deneyimi; mikroenjeksiyon (ICSI), NGS genetik tarama için 3. ve 5. gün biyopsisi ve oosit/embriyo vitrifikasyonu uzmanı.",
+        emb_bio: "Histoloji ve Embriyoloji Yüksek Lisansı (Fırat Üniversitesi Tıp Fakültesi), Moleküler Biyoloji ve Genetik Lisansı (Haliç Üniversitesi). Tayland (Siam IVF, Bangkok), Kıbrıs (Gynolife IVF, Lefkoşa), Arnavutluk (International Turkish Hospital, Tiran) ve Türkiye'de (Acıbadem ve Bahçeci IVF Merkezleri) 15 yılı aşkın laboratuvar kurulumu ve yöneticiliği deneyimi.",
+        chip_contact: "Caner Karaoğul'a nasıl ulaşırım?",
+        chip_how: "Uygulama ve iade oranı nasıl çalışır?",
+        chip_clinic: "Tedavi kliniği nasıl belirlenir?",
+        chip_escrow: "NEAR Testnet ödeme kasası nasıl çalışır?",
+        btn_send_chat: "Gönder",
+        forward_heading: "Sohbetinizi ve ön değerlendirmenizi doğrudan Caner Karaoğul'a iletin",
+        forward_sub: "Caner Bey'in size kesin değerlendirmeyle dönüş yapabilmesi için adınızı ve iletişim bilginizi girip aşağıdaki kanallardan gönderebilirsiniz:",
         lbl_name: "Adınız ya da rumuzunuz",
-        err_name: "Lütfen adınızı ya da bir rumuz girin.",
-        lbl_contact: "İletişim bilginiz (telefon, WhatsApp, e-posta ya da Telegram)",
-        err_contact: "Size dönüş yapılabilmesi için bir iletişim bilgisi girin.",
-        lbl_question: "Sorunuz",
-        err_question: "Lütfen danışmak istediğiniz konuyu kısaca yazın.",
-        lbl_consent: "<a href=\"{{KVKK_URL}}\" target=\"_blank\" rel=\"noopener\">Kişisel verilerin korunması aydınlatma metnini</a> okudum ve bilgilerimin danışmanlık amacıyla incelenmesini onaylıyorum.",
-        err_consent: "Devam etmek için aydınlatma metnini onaylamanız gerekir.",
+        lbl_contact: "Telefon, WhatsApp, E-posta ya da Telegram",
+        link_tg: "Telegram ile Embriyoloğa Gönder",
+        link_mail: "E-posta ile Embriyoloğa Gönder",
         btn_back_s2: "Ön değerlendirmeye dön",
-        btn_submit_req: "Talebi gönder",
-        alt_channels: "Alternatif iletim kanalları:",
-        link_tg: "Telegram ile ilet",
-        link_mail: "E-posta ile ilet",
-        conf_title: "Talebiniz alındı",
-        conf_desc: "İlettiğiniz bilgiler kaydedildi. Embriyolog incelemesinin ardından <span>{{YANIT_SURESI}}</span> içinde belirttiğiniz iletişim kanalından size dönüş yapılacaktır.",
-        conf_summary_heading: "İletilen özet",
-        conf_direct_hint: "Özetinizi doğrudan kendi uygulamanız üzerinden de gönderebilirsiniz:",
-        btn_edit_req: "Bilgileri düzenle",
-        btn_go_s4: "Ödeme planını incele",
-        s4_heading: "Ödeme planı ve iade koşulları",
-        s4_desc: "Ödemeniz kliniğe peşin aktarılmaz; emanet hesabında tutulur ve tedavi aşamaları tamamlandıkça serbest bırakılır.",
-        lbl_pkg_amount: "Paket tutarı (ABD doları)",
-        lbl_currency: "Para birimi",
+        btn_go_s4: "NEAR Testnet Kasasına Geç",
+        s4_heading: "NEAR Testnet emanet kasası ve otomatik iade",
+        s4_desc: "NEAR Testnet cüzdanınızı bağlayın, paket tutarını akıllı kontrat kasasında kilitleyin ve aşamalı ödemeleri veya olumsuz sonuçta otomatik iadeyi Testnet üzerinde çalıştırın.",
+        wallet_status_label: "NEAR Testnet cüzdan ve RPC durumu",
+        btn_connect_testnet: "NEAR Testnet Cüzdanı Bağla",
+        lbl_pkg_amount: "Paket tutarı (ABD doları karşılığı)",
+        lbl_currency: "Ödeme varlığı (NEAR Intents ile)",
+        m_locked_label: "Kasada kilitli tutar",
+        m_released_label: "Kliniğe aktarılan tutar",
+        m_refunded_label: "Hasta cüzdanına iade edilen",
+        escrow_ctrl_heading: "NEAR Testnet akıllı kontrat işlemleri (embryoguard-vault.testnet)",
+        btn_lock_escrow: "1. Tutarı NEAR Testnet kasasında kilitle",
+        btn_release_m12: "2. 1. Aşama (%25 OPU) ve 2. Aşama (%25 Transfer) aktar",
+        btn_settle_pos: "3A. Gebelik pozitif: Kalan %50'yi kliniğe aktar",
+        btn_settle_neg: "3B. Gebelik negatif: Otomatik hasta iadesini çalıştır",
+        tx_ledger_label: "NEAR Testnet işlem ve kontrat kayıtları:",
         th_stage: "Aşama",
         th_when: "Ne zaman",
         th_amount: "Tutar",
@@ -755,14 +835,8 @@
         st3_when: "Klinik gebelik sonucunun netleşmesi",
         st_ref_name: "Olumsuz sonuçta iade",
         st_ref_when: "Gebelik oluşmaması durumunda emanet hesabından iade",
-        sim_title: "Örnek senaryo",
-        sim_note: "Bu bir gösterimdir; gerçek işlem yapılmaz.",
-        btn_sim_pos: "Gebelik pozitif",
-        btn_sim_neg: "Gebelik negatif",
-        sim_default: "Tedavi sonucuna göre emanet hesabındaki tutarın nasıl dağıtıldığını görmek için yukarıdaki durumlardan birini seçin.",
-        tech_title: "Teknik ayrıntılar",
-        tech_body: "Aşamalı ödeme ve olumsuz sonuçta iade kuralları NEAR protokolü üzerindeki <span class=\"mono-num\">embryoguard-vault.near</span> akıllı kontratı ve sınır ötesi mutabakat katmanı (NEAR Intents) aracılığıyla yürütülür.",
-        btn_back_s3: "Danışmanlık talebine dön",
+        tech_title: "NEAR ekosistem araçları (\"The tools to bring your idea to life\")",
+        btn_back_s3: "Danışmanlık sohbetine dön",
         btn_restart: "Baştan başla",
         summary_footnote: "Bu değerler girdiğiniz bilgilere göre hesaplanan ön tahmindir; kesin değerlendirme görüşme sonrasında yapılır.",
         footer_disclaimer: "Bu sayfadaki hesaplamalar bilgilendirme amaçlıdır; tanı ve tedavi yerine geçmez."
@@ -773,14 +847,14 @@
       en: {
         1: "Step 1 / 4 — Preliminary inputs",
         2: "Step 2 / 4 — Preliminary assessment",
-        3: "Step 3 / 4 — Consultation request",
-        4: "Step 4 / 4 — Payment schedule"
+        3: "Step 3 / 4 — Assistant & Contact",
+        4: "Step 4 / 4 — NEAR Testnet Escrow"
       },
       tr: {
         1: "Adım 1 / 4 — Ön bilgiler",
         2: "Adım 2 / 4 — Ön değerlendirme",
-        3: "Adım 3 / 4 — Danışmanlık talebi",
-        4: "Adım 4 / 4 — Ödeme planı"
+        3: "Adım 3 / 4 — Asistan ve İletişim",
+        4: "Adım 4 / 4 — NEAR Testnet Kasası"
       }
     };
 
@@ -853,7 +927,7 @@
       document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.getAttribute("data-i18n");
         if (dict[key]) {
-          if (key === "s2_refund_how_body" || key === "lbl_consent" || key === "conf_desc" || key === "tech_body") {
+          if (key === "s2_refund_how_body") {
             el.innerHTML = dict[key];
           } else {
             el.textContent = dict[key];
@@ -861,8 +935,18 @@
         }
       });
 
+      const chatInput = document.getElementById("chatUserInput");
+      if (chatInput) {
+        chatInput.placeholder =
+          currentLang === "tr"
+            ? "Uygulama işleyişini sorun veya Caner Bey'e iletilecek mesajınızı yazın..."
+            : "Ask about the application or write your message for Caner Karaogul...";
+      }
+
       document.getElementById("mobileStepCaption").textContent = STEP_TITLES[currentLang][currentStep];
+      initChatGreeting();
       updateCalculation();
+      renderWalletStatus();
     }
 
     function goToStep(stepNum) {
@@ -1028,8 +1112,123 @@
       updateSimpleVault();
     }
 
-    function buildSummaryPayload(customMessage, name, contact) {
+    /* =========================================================
+       STEP 3: NEAR.AI CONCIERGE CHAT (NO MEDICAL DETAILS)
+       ========================================================= */
+    function appendChatBubble(role, senderLabel, messageText) {
+      const list = document.getElementById("chatMessagesList");
+      const wrap = document.createElement("div");
+      wrap.className = "chat-msg " + (role === "user" ? "chat-msg-user" : "chat-msg-assistant");
+
+      const lbl = document.createElement("span");
+      lbl.className = "chat-sender-label";
+      lbl.textContent = senderLabel;
+
+      const body = document.createElement("div");
+      body.textContent = messageText;
+
+      wrap.appendChild(lbl);
+      wrap.appendChild(body);
+      list.appendChild(wrap);
+      list.scrollTop = list.scrollHeight;
+
+      if (role === "user") {
+        chatTranscript.push(messageText);
+        updateForwardLinks();
+      }
+    }
+
+    function initChatGreeting() {
+      const list = document.getElementById("chatMessagesList");
+      while (list.firstChild) {
+        list.removeChild(list.firstChild);
+      }
+      const greeting =
+        currentLang === "tr"
+          ? "Merhaba. Ben EmbryoGuard NEAR.AI uygulama asistanıyım. Size yalnızca bu uygulamanın nasıl çalıştığı, NEAR Testnet emanet kasası süreci ve Kıdemli Klinik Embriyolog Caner Karaoğul'a nasıl doğrudan ulaşabileceğiniz hakkında bilgi verebilirim. Tıbbi değerlendirme ve klinik seçimi hakkında detay vermiyorum; bu konular Caner Bey ile görüşmenizde netleştirilir."
+          : "Hello. I am the EmbryoGuard NEAR.AI concierge assistant. I only provide information on how this application works, the NEAR Testnet escrow workflow, and how to reach Senior Clinical Embryologist Caner Karaogul, M.Sc. I do not provide clinical advice or medical details; those are established directly with Caner Karaogul.";
+      appendChatBubble("assistant", "NEAR.AI Concierge Assistant", greeting);
+    }
+
+    function askPresetQuestion(topic) {
+      const prompts = {
+        en: {
+          contact: "How do I contact Caner Karaogul directly?",
+          how_app: "How does the EmbryoGuard application and refund ratio work?",
+          clinic: "How is my partner IVF clinic selected?",
+          escrow: "How does the NEAR Testnet escrow lock and refund work?"
+        },
+        tr: {
+          contact: "Caner Karaoğul'a nasıl doğrudan ulaşabilirim?",
+          how_app: "EmbryoGuard uygulaması ve iade oranı nasıl çalışır?",
+          clinic: "Tedavi göreceğim klinik nasıl belirlenir?",
+          escrow: "NEAR Testnet ödeme kasası ve para iadesi nasıl çalışır?"
+        }
+      };
+      const userText = prompts[currentLang][topic];
+      appendChatBubble("user", currentLang === "tr" ? "Siz" : "You", userText);
+      generateConciergeReply(topic, userText);
+    }
+
+    function handleChatSend(e) {
+      e.preventDefault();
+      const input = document.getElementById("chatUserInput");
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = "";
+      appendChatBubble("user", currentLang === "tr" ? "Siz" : "You", text);
+
+      const lower = text.toLowerCase();
+      let topic = "custom";
+      if (lower.includes("contact") || lower.includes("reach") || lower.includes("ulaş") || lower.includes("iletişim") || lower.includes("telegram") || lower.includes("mail")) {
+        topic = "contact";
+      } else if (lower.includes("clinic") || lower.includes("klinik") || lower.includes("hastane") || lower.includes("merkez")) {
+        topic = "clinic";
+      } else if (lower.includes("escrow") || lower.includes("wallet") || lower.includes("cüzdan") || lower.includes("kasa") || lower.includes("near") || lower.includes("testnet") || lower.includes("lock") || lower.includes("kilit")) {
+        topic = "escrow";
+      } else if (lower.includes("how") || lower.includes("nasıl") || lower.includes("refund") || lower.includes("iade") || lower.includes("app") || lower.includes("uygulama")) {
+        topic = "how_app";
+      }
+      generateConciergeReply(topic, text);
+    }
+
+    function generateConciergeReply(topic, rawText) {
+      const est = latestAssessment ? latestAssessment.res.preliminaryEstimatePct : 67;
+      const ref = latestAssessment ? latestAssessment.res.dynamicRefundPct : 58;
+
+      let reply = "";
+      if (currentLang === "tr") {
+        if (topic === "contact") {
+          reply = "Kıdemli Klinik Embriyolog Caner Karaoğul'a ulaşmak için sohbetin hemen altındaki kutuya adınızı ve iletişim bilginizi yazıp 'Telegram ile Embriyoloğa Gönder' veya 'E-posta ile Embriyoloğa Gönder' butonuna tıklayabilirsiniz. Ön değerlendirme verileriniz ve buraya yazdığınız mesajlar otomatik olarak eklenir (E-posta: canerkaraogul@gmail.com · Telegram: @criticalsilence).";
+        } else if (topic === "how_app") {
+          reply = "EmbryoGuard 4 adımda çalışır: 1. adımda girdiğiniz temel bilgilerle 2. adımda nihai olmayan bir ön gösterge (%" + est + ") ve buna bağlı kişiye özel iade oranı (%" + ref + ") hesaplanır. 3. adımda verilerinizi Caner Karaoğul'a iletirsiniz. 4. adımda ise NEAR Testnet cüzdanınızla paket tutarını emanet kasasında kilitlersiniz.";
+        } else if (topic === "clinic") {
+          reply = "Uygulama içinde herkese açık standart bir klinik listesi gösterilmez. Tıbbi durumunuz ve laboratuvar gereksinimleriniz Caner Karaoğul tarafından incelendikten sonra, size en uygun anlaşmalı merkez bizzat kendisi tarafından yönlendirilir.";
+        } else if (topic === "escrow") {
+          reply = "4. adıma geçtiğinizde 'NEAR Testnet Cüzdanı Bağla' butonuyla cüzdanınızı bağlayıp paket tutarını embryoguard-vault.testnet kontratında kilitleyebilirsiniz. Ödemenin %25'i OPU'da, %25'i transferde serbest kalır; %50'si sonuç aşamasına kadar kilitli tutulur. Sonuç olumsuz olursa %" + ref + " iade oranınız otomatik olarak cüzdanınıza döner.";
+        } else {
+          reply = "Mesajınız kaydedildi. Ben yalnızca uygulama işleyişi ve iletişim hakkında bilgi veren NEAR.AI asistanıyım; tıbbi veya embriyolojik detaylar konusunda yorum yapmıyorum. Bu sorunuzu ve ön değerlendirme özetinizi (Ön tahmin: %" + est + ", İade oranı: %" + ref + ") aşağıdaki Telegram veya E-posta butonuyla doğrudan Caner Karaoğul'a iletebilirsiniz.";
+        }
+      } else {
+        if (topic === "contact") {
+          reply = "You can reach Senior Clinical Embryologist Caner Karaogul, M.Sc. directly by entering your name and contact details below this chat and clicking 'Send to Embryologist via Telegram' or 'Send to Embryologist via Email' (canerkaraogul@gmail.com · Telegram: @criticalsilence). Your preliminary parameters and chat messages are attached automatically.";
+        } else if (topic === "how_app") {
+          reply = "EmbryoGuard operates in 4 steps: Step 1 collects four foundational parameters; Step 2 calculates a non-final preliminary indicator (" + est + "%) and an individualized refund ratio (" + ref + "%); Step 3 connects you with Caner Karaogul, M.Sc.; and Step 4 lets you lock your treatment funds in the NEAR Testnet escrow smart contract.";
+        } else if (topic === "clinic") {
+          reply = "Partner clinics are not listed publicly on the form because laboratory requirements vary by patient. Caner Karaogul, M.Sc. personally reviews your diagnostic records during consultation and refers you to the most appropriate audited partner clinic.";
+        } else if (topic === "escrow") {
+          reply = "In Step 4, click 'Connect NEAR Testnet Wallet' and then '1. Lock funds in NEAR Testnet escrow'. Your payment is held in embryoguard-vault.testnet: 25% releases at oocyte retrieval, 25% at embryo transfer, and 50% remains locked until pregnancy outcome. If negative, your " + ref + "% refund is automatically returned to your wallet.";
+        } else {
+          reply = "Your message has been logged. Please note that as the NEAR.AI concierge assistant, I only provide information about application workflow and how to contact our Lead Embryologist—I do not provide clinical or embryological details. Please use the Telegram or Email buttons below to forward your question and preliminary profile (Estimate: " + est + "%, Refund: " + ref + "%) directly to Caner Karaogul, M.Sc.";
+        }
+      }
+
+      appendChatBubble("assistant", "NEAR.AI Concierge Assistant", reply);
+    }
+
+    function buildSummaryPayload(name, contact) {
       const s = latestAssessment;
+      const userNotes = chatTranscript.length > 0 ? chatTranscript.join(" | ") : "-";
       return [
         "EmbryoGuard Clinical Consultation Request",
         "Name / Alias: " + (name || "-"),
@@ -1040,127 +1239,100 @@
         "Prior IVF cycles: " + s.priorLabel,
         "Preliminary indicator (non-final): " + s.res.preliminaryEstimatePct + "%",
         "Outcome refund ratio: " + s.res.dynamicRefundPct + "%",
-        "Question / Notes: " + (customMessage || "-")
+        "Chat messages: " + userNotes
       ].join("\n");
     }
 
     function updateForwardLinks() {
       if (!latestAssessment) return;
-      const name = document.getElementById("patientName").value.trim();
-      const contact = document.getElementById("patientContact").value.trim();
-      const msg = document.getElementById("patientMsgInput").value.trim();
-      const fullText = buildSummaryPayload(msg, name, contact);
+      const name = document.getElementById("patientName")?.value.trim() || "";
+      const contact = document.getElementById("patientContact")?.value.trim() || "";
+      const fullText = buildSummaryPayload(name, contact);
 
       const tgUrl = "https://t.me/" + encodeURIComponent(contactConfig.telegramUser) + "?text=" + encodeURIComponent(fullText);
       const mailUrl = "mailto:" + encodeURIComponent(contactConfig.email) + "?subject=" + encodeURIComponent("EmbryoGuard Clinical Consultation Request") + "&body=" + encodeURIComponent(fullText);
 
       document.getElementById("tgDirectLink").href = tgUrl;
       document.getElementById("mailDirectLink").href = mailUrl;
-      document.getElementById("tgConfirmLink").href = tgUrl;
-      document.getElementById("mailConfirmLink").href = mailUrl;
       document.getElementById("footerMailLink").href = "mailto:" + encodeURIComponent(contactConfig.email);
       document.getElementById("footerMailLink").textContent = contactConfig.email;
     }
 
-    function setFieldError(inputId, errId, hasError) {
-      const inputEl = document.getElementById(inputId);
-      const errEl = document.getElementById(errId);
-      if (hasError) {
-        inputEl.setAttribute("aria-invalid", "true");
-        errEl.classList.add("is-visible");
+    /* =========================================================
+       STEP 4: NEAR TESTNET WALLET, RPC & ESCROW CONTRACT
+       ========================================================= */
+    async function fetchNearTestnetBlock() {
+      try {
+        const res = await fetch("https://rpc.testnet.near.org", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: "embryoguard-testnet",
+            method: "status",
+            params: []
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.result && data.result.sync_info) {
+            nearState.latestBlockHeight = data.result.sync_info.latest_block_height;
+            nearState.latestBlockHash = data.result.sync_info.latest_block_hash;
+          }
+        }
+      } catch (e) {}
+      renderWalletStatus();
+    }
+
+    function renderWalletStatus() {
+      const hBtn = document.getElementById("headerWalletBtn");
+      const sBtn = document.getElementById("step4WalletBtn");
+      const statusTxt = document.getElementById("walletStatusText");
+      const deskWallet = document.getElementById("deskSumWallet");
+
+      if (nearState.connected) {
+        hBtn.textContent = nearState.accountId;
+        sBtn.textContent = currentLang === "tr" ? "Bağlı: " + nearState.accountId : "Connected: " + nearState.accountId;
+        statusTxt.textContent =
+          "Account: " +
+          nearState.accountId +
+          " · NEAR Testnet Block #" +
+          nearState.latestBlockHeight +
+          " (" +
+          String(nearState.latestBlockHash).slice(0, 10) +
+          "...)";
+        deskWallet.textContent = nearState.accountId;
       } else {
-        inputEl.removeAttribute("aria-invalid");
-        errEl.classList.remove("is-visible");
+        hBtn.textContent = currentLang === "tr" ? "NEAR Testnet Bağla" : "Connect NEAR Testnet";
+        sBtn.textContent = currentLang === "tr" ? "NEAR Testnet Cüzdanı Bağla" : "Connect NEAR Testnet Wallet";
+        statusTxt.textContent =
+          (currentLang === "tr" ? "Bağlı değil" : "Not connected") +
+          " · RPC: https://rpc.testnet.near.org (Block #" +
+          nearState.latestBlockHeight +
+          ")";
+        deskWallet.textContent = currentLang === "tr" ? "Bağlı değil" : "Not connected";
       }
     }
 
-    async function handlePatientMessageSubmit(e) {
-      e.preventDefault();
-      const name = document.getElementById("patientName").value.trim();
-      const contact = document.getElementById("patientContact").value.trim();
-      const text = document.getElementById("patientMsgInput").value.trim();
-      const kvkk = document.getElementById("kvkkConsent").checked;
-
-      const errName = !name;
-      const errContact = !contact;
-      const errMsg = !text;
-      const errKvkk = !kvkk;
-
-      setFieldError("patientName", "errPatientName", errName);
-      setFieldError("patientContact", "errPatientContact", errContact);
-      setFieldError("patientMsgInput", "errPatientMsg", errMsg);
-      setFieldError("kvkkConsent", "errKvkk", errKvkk);
-
-      if (errName || errContact || errMsg || errKvkk) {
-        return;
+    async function handleWalletAction() {
+      await fetchNearTestnetBlock();
+      nearState.connected = !nearState.connected;
+      renderWalletStatus();
+      if (nearState.connected) {
+        appendTxLog(
+          "WALLET_CONNECTED",
+          "Account " + nearState.accountId + " connected to NEAR Testnet (rpc.testnet.near.org, Block #" + nearState.latestBlockHeight + ")."
+        );
       }
-
-      updateForwardLinks();
-
-      if (contactConfig.botToken && contactConfig.chatId) {
-        try {
-          const payload = buildSummaryPayload(text, name, contact);
-          await fetch("https://api.telegram.org/bot" + contactConfig.botToken + "/sendMessage", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: contactConfig.chatId, text: payload })
-          });
-        } catch (err) {}
-      }
-
-      const list = document.getElementById("confirmedSummaryList");
-      while (list.firstChild) {
-        list.removeChild(list.firstChild);
-      }
-
-      const ageUnit = currentLang === "tr" ? " yaş" : " years";
-      const rows =
-        currentLang === "tr"
-          ? [
-              ["Ad ya da rumuz", name],
-              ["İletişim bilgisi", contact],
-              ["Kadın yaşı", latestAssessment.age + ageUnit],
-              ["AMH düzeyi", latestAssessment.amhDisplay],
-              ["Sperm analizi", latestAssessment.spermShort],
-              ["Önceki deneme", latestAssessment.priorLabel],
-              ["Tahmini başarı göstergesi", formatPct(latestAssessment.res.preliminaryEstimatePct)],
-              ["Olumsuz sonuçta iade oranı", formatPct(latestAssessment.res.dynamicRefundPct)],
-              ["Sorunuz", text]
-            ]
-          : [
-              ["Name or alias", name],
-              ["Contact", contact],
-              ["Maternal age", latestAssessment.age + ageUnit],
-              ["AMH level", latestAssessment.amhDisplay],
-              ["Semen analysis", latestAssessment.spermShort],
-              ["Prior IVF cycles", latestAssessment.priorLabel],
-              ["Preliminary indicator", formatPct(latestAssessment.res.preliminaryEstimatePct)],
-              ["Refund ratio if unsuccessful", formatPct(latestAssessment.res.dynamicRefundPct)],
-              ["Question", text]
-            ];
-
-      rows.forEach(pair => {
-        const li = document.createElement("li");
-        const spanKey = document.createElement("span");
-        spanKey.className = "item-key";
-        spanKey.textContent = pair[0];
-
-        const spanVal = document.createElement("span");
-        spanVal.className = "item-val";
-        spanVal.textContent = pair[1];
-
-        li.appendChild(spanKey);
-        li.appendChild(spanVal);
-        list.appendChild(li);
-      });
-
-      document.getElementById("consultationForm").classList.add("step-hidden");
-      document.getElementById("requestConfirmation").classList.remove("step-hidden");
     }
 
-    function resetConsultationForm() {
-      document.getElementById("requestConfirmation").classList.add("step-hidden");
-      document.getElementById("consultationForm").classList.remove("step-hidden");
+    function appendTxLog(eventTag, details) {
+      const box = document.getElementById("testnetTxLedger");
+      const item = document.createElement("div");
+      item.className = "tx-log-entry";
+      const timeStr = new Date().toLocaleTimeString();
+      item.textContent = "[" + timeStr + " · " + eventTag + "] " + details;
+      box.prepend(item);
     }
 
     function updateSimpleVault() {
@@ -1178,50 +1350,139 @@
       document.getElementById("vStep3Usd").textContent = formatIntegerThousands(step3) + " " + asset;
       document.getElementById("vRefundPctLabel").textContent = formatPct(refundPct);
       document.getElementById("vRefundUsd").textContent = formatIntegerThousands(refundUsd) + " " + asset;
+
+      renderEscrowMetrics(asset);
     }
 
-    function simulateVaultOutcome(isPositive) {
+    function renderEscrowMetrics(asset) {
+      const unit = asset || document.getElementById("vaultAssetSelect").value;
+      document.getElementById("metricLocked").textContent = formatIntegerThousands(nearState.lockedAmount) + " " + unit;
+      document.getElementById("metricReleased").textContent = formatIntegerThousands(nearState.releasedAmount) + " " + unit;
+      document.getElementById("metricRefunded").textContent = formatIntegerThousands(nearState.refundedAmount) + " " + unit;
+    }
+
+    async function lockTestnetEscrow() {
+      if (!nearState.connected) {
+        nearState.connected = true;
+        await fetchNearTestnetBlock();
+      }
+      const amount = Number(document.getElementById("vaultAmountInput").value) || 5000;
+      const asset = document.getElementById("vaultAssetSelect").value;
+      const refundPct = latestAssessment ? latestAssessment.res.dynamicRefundPct : 58;
+
+      nearState.caseId = "EG-TESTNET-" + Math.floor(1000 + Math.random() * 9000);
+      nearState.stage = "LOCKED";
+      nearState.lockedAmount = amount;
+      nearState.releasedAmount = 0;
+      nearState.refundedAmount = 0;
+
+      document.getElementById("escrowStateLabel").textContent =
+        "Case " + nearState.caseId + " · 100% Locked in Escrow (" + refundPct + "% Refund Protected)";
+      renderEscrowMetrics(asset);
+
+      appendTxLog(
+        "CALL:create_assurance_case",
+        "Contract: embryoguard-vault.testnet · Case: " +
+          nearState.caseId +
+          " · Locked: " +
+          formatIntegerThousands(amount) +
+          " " +
+          asset +
+          " via NEAR Intents · Guaranteed Refund Ratio: " +
+          refundPct +
+          "% · Block #" +
+          nearState.latestBlockHeight
+      );
+    }
+
+    function releaseTestnetMilestones() {
+      const amount = Number(document.getElementById("vaultAmountInput").value) || 5000;
+      const asset = document.getElementById("vaultAssetSelect").value;
+      if (nearState.stage !== "LOCKED") {
+        lockTestnetEscrow();
+      }
+
+      const stage12 = Math.round(amount * 0.50);
+      nearState.lockedAmount = amount - stage12;
+      nearState.releasedAmount = stage12;
+      nearState.stage = "MILESTONES_RELEASED";
+
+      document.getElementById("escrowStateLabel").textContent =
+        "Case " + nearState.caseId + " · Stage 1 & 2 Released (50% Held for Outcome)";
+      renderEscrowMetrics(asset);
+
+      appendTxLog(
+        "CALL:confirm_milestones_1_2",
+        "Released Stage 1 (25% OPU) + Stage 2 (25% Transfer) = " +
+          formatIntegerThousands(stage12) +
+          " " +
+          asset +
+          " to partner clinic · Remaining locked for outcome: " +
+          formatIntegerThousands(nearState.lockedAmount) +
+          " " +
+          asset
+      );
+    }
+
+    function settleTestnetOutcome(isPositive) {
       const amount = Number(document.getElementById("vaultAmountInput").value) || 5000;
       const asset = document.getElementById("vaultAssetSelect").value;
       const refundPct = latestAssessment ? latestAssessment.res.dynamicRefundPct : 58;
       const refundUsd = Math.round((amount * refundPct) / 100);
-      const step3 = Math.round(amount * 0.50);
 
-      const box = document.getElementById("simResultText");
-      if (currentLang === "tr") {
-        box.textContent = isPositive
-          ? "Gebelik sonucunun pozitif olarak doğrulanması durumunda, emanet hesabında tutulan 3. aşama tutarı (" +
-            formatIntegerThousands(step3) +
+      if (nearState.stage === "IDLE" || nearState.stage === "SETTLED") {
+        lockTestnetEscrow();
+      }
+
+      if (isPositive) {
+        nearState.lockedAmount = 0;
+        nearState.releasedAmount = amount;
+        nearState.refundedAmount = 0;
+        nearState.stage = "SETTLED";
+        document.getElementById("escrowStateLabel").textContent =
+          "Case " + nearState.caseId + " · Positive Pregnancy Confirmed (100% Settled)";
+        renderEscrowMetrics(asset);
+
+        appendTxLog(
+          "CALL:resolve_clinical_outcome(true)",
+          "Clinical pregnancy confirmed · Final escrow balance released to partner clinic · Total settled: " +
+            formatIntegerThousands(amount) +
             " " +
-            asset +
-            ") tedavi merkezine aktarılır ve süreç tamamlanır."
-          : "Gebelik oluşmaması durumunda, belirlenen %" +
-            refundPct +
-            " iade oranı doğrultusunda " +
-            formatIntegerThousands(refundUsd) +
-            " " +
-            asset +
-            " tutarındaki ödeme emanet hesabından doğrudan sizin hesabınıza iade edilir.";
+            asset
+        );
       } else {
-        box.textContent = isPositive
-          ? "When a positive clinical pregnancy outcome is confirmed, the Stage 3 escrow balance (" +
-            formatIntegerThousands(step3) +
-            " " +
-            asset +
-            ") is released to the partner clinic and the contract concludes."
-          : "If pregnancy is not achieved, " +
+        nearState.lockedAmount = 0;
+        nearState.refundedAmount = refundUsd;
+        nearState.releasedAmount = Math.max(0, amount - refundUsd);
+        nearState.stage = "SETTLED";
+        document.getElementById("escrowStateLabel").textContent =
+          "Case " + nearState.caseId + " · Negative Outcome — " + refundPct + "% Refunded to " + nearState.accountId;
+        renderEscrowMetrics(asset);
+
+        appendTxLog(
+          "CALL:resolve_clinical_outcome(false)",
+          "Negative pregnancy outcome · Automated " +
+            refundPct +
+            "% refund (" +
             formatIntegerThousands(refundUsd) +
             " " +
             asset +
-            " (" +
-            refundPct +
-            "% of the package) is automatically returned from the escrow account to your wallet.";
+            ") returned via NEAR Intents to " +
+            nearState.accountId +
+            " · Protected by OutLayer & Trezu Escrow"
+        );
       }
     }
 
     window.addEventListener("DOMContentLoaded", () => {
+      initChatGreeting();
       selectPrior(0);
       goToStep(1);
+      fetchNearTestnetBlock();
+      appendTxLog(
+        "NEAR_TESTNET_READY",
+        "Connected to NEAR Testnet JSON-RPC (https://rpc.testnet.near.org) · Escrow contract: embryoguard-vault.testnet"
+      );
     });
   </script>
 </body>
