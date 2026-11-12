@@ -3,600 +3,858 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FeKitty 🐾 — Simple Community Money Pots (Sepolia Testnet)</title>
+  <title>FeKitty — community money pots (Sepolia testnet)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #F8FAFC;
-      --surface: #FFFFFF;
-      --border: #E2E8F0;
-      --text: #0F172A;
-      --muted: #64748B;
-      --primary: #EA580C;
-      --primary-hover: #C2410C;
-      --primary-soft: #FFF7ED;
-      --success: #16A34A;
-      --success-soft: #DCFCE7;
-      --refund: #2563EB;
-      --refund-soft: #DBEAFE;
-      --testnet: #7C3AED;
-      --testnet-soft: #F3E8FF;
-    }
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.45;
-    }
-    .app-shell {
-      max-width: 540px;
-      margin: 0 auto;
-      padding: 18px 16px 48px;
+      --paper: #F3EEE3;
+      --ink: #16130F;
+      --ink-muted: rgba(22, 19, 15, 0.68);
+      --accent: #FF4F1A;
+      --ok: #0E7A4B;
+      --refund: #2447D6;
+      --hazard: #FFD23F;
     }
 
-    /* Top Header */
+    * {
+      box-sizing: border-box;
+      border-radius: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    *:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    body {
+      margin: 0;
+      background-color: #E7E0D2;
+      color: var(--ink);
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+      padding: 20px 10px 56px;
+    }
+
+    .receipt-wrap {
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .zig-t {
+      height: 7px;
+      background: conic-gradient(from 135deg at 50% 0, var(--paper) 90deg, transparent 0) 0 0 / 14px 7px repeat-x;
+    }
+
+    .zig-b {
+      height: 7px;
+      background: conic-gradient(from -45deg at 50% 100%, var(--paper) 90deg, transparent 0) 0 0 / 14px 7px repeat-x;
+    }
+
+    .receipt {
+      background-color: var(--paper);
+      border-left: 1.5px solid var(--ink);
+      border-right: 1.5px solid var(--ink);
+      padding: 18px 18px 20px;
+    }
+
+    /* 1. Header Row */
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 12px;
+      gap: 8px;
+      padding-bottom: 14px;
     }
+
     .brand {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      font-size: 1.35rem;
+      font-family: 'Bricolage Grotesque', sans-serif;
       font-weight: 800;
-      letter-spacing: -0.02em;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      text-transform: lowercase;
     }
-    .network-tag {
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: var(--testnet-soft);
-      color: var(--testnet);
-      border: 1px solid #DDD6FE;
+
+    .brand svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--ink);
+      flex-shrink: 0;
     }
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .faucet-link {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--testnet);
-      text-decoration: none;
-      background: var(--testnet-soft);
-      padding: 8px 12px;
-      border-radius: 999px;
-    }
-    .faucet-link:hover {
-      text-decoration: underline;
-    }
+
     .connect-btn {
-      padding: 10px 15px;
-      border-radius: 999px;
-      border: none;
-      background: var(--text);
-      color: #FFFFFF;
-      font-weight: 700;
-      font-size: 0.86rem;
+      min-height: 44px;
+      padding: 8px 12px;
+      background: transparent;
+      color: var(--ink);
+      border: 1.5px solid var(--ink);
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 500;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
-    }
-    .connect-btn.connected {
-      background: var(--surface);
-      color: var(--text);
-      border: 1.5px solid var(--border);
-      box-shadow: none;
-    }
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--success);
-      display: inline-block;
     }
 
-    /* Category Pills — Wraps cleanly so everything fits on Desktop & Mobile! */
-    .pills-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-    .pill-tab {
-      flex: 1 1 auto;
-      text-align: center;
-      padding: 9px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .pill-tab:hover {
-      border-color: var(--primary);
-    }
-    .pill-tab.active {
-      background: var(--primary-soft);
-      border: 1.5px solid var(--primary);
-      color: var(--primary-hover);
-      font-weight: 700;
-    }
-    .pill-new {
-      flex: 1 1 auto;
-      text-align: center;
-      padding: 9px 12px;
-      border-radius: 12px;
-      border: 1.5px dashed var(--primary);
-      background: var(--surface);
-      color: var(--primary);
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
+    .connect-btn:hover {
+      background: rgba(22, 19, 15, 0.06);
     }
 
-    /* Main Card */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 22px 20px;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
-    }
-    .badge-row {
+    /* 2. Testnet Strip */
+    .hazard-strip {
+      margin: 0 -18px 14px;
+      padding: 7px 18px;
+      background-color: var(--hazard);
+      border-top: 1.5px solid var(--ink);
+      border-bottom: 1.5px solid var(--ink);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
-    }
-    .badge {
-      display: inline-block;
-      padding: 4px 11px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      background: #FEF3C7;
-      color: #92400E;
-    }
-    .badge.done {
-      background: var(--success-soft);
-      color: #166534;
-    }
-    .badge.refund {
-      background: var(--refund-soft);
-      color: #1E40AF;
-    }
-    .contributors-count {
-      font-size: 0.82rem;
-      color: var(--muted);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
       font-weight: 600;
-    }
-    .kitty-title {
-      margin: 0 0 6px;
-      font-size: 1.35rem;
-      line-height: 1.25;
-    }
-    .kitty-story {
-      margin: 0 0 16px;
-      color: var(--muted);
-      font-size: 0.92rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    /* Big Progress Block */
-    .progress-box {
-      background: #F8FAFC;
-      border-radius: 16px;
-      padding: 16px;
+    .hazard-strip a {
+      color: var(--ink);
+      text-decoration: underline;
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* 3. Underlined Text Tabs */
+    .tabs-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 18px;
+      gap: 2px;
+    }
+
+    .tab-item {
+      min-height: 44px;
+      padding: 8px 8px 6px;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink-muted);
+      cursor: pointer;
+      margin-bottom: -1.5px;
+    }
+
+    .tab-item.active {
+      color: var(--ink);
+      font-weight: 600;
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-new {
+      margin-left: auto;
+      min-height: 44px;
+      padding: 8px 8px 6px;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      margin-bottom: -1.5px;
+    }
+
+    /* 4. Title Block & Rotated Stamp */
+    .head-block {
+      position: relative;
+      padding-right: 108px;
       margin-bottom: 16px;
-    }
-    .amount-headline {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 8px;
-    }
-    .amount-big {
-      font-size: 1.5rem;
-      font-weight: 800;
-    }
-    .amount-goal {
-      font-size: 0.92rem;
-      color: var(--muted);
-      font-weight: 600;
-    }
-    .progress-bar {
-      height: 14px;
-      background: #E2E8F0;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-bottom: 8px;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #16A34A, #22C55E);
-      transition: width 0.3s ease;
-    }
-    .my-share {
-      font-size: 0.83rem;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
+      min-height: 76px;
     }
 
-    /* Recipient Lock Box */
-    .recipient-row {
+    .pot-serial {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kitty-title {
+      margin: 0 0 8px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 34px;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .kitty-story {
+      margin: 0;
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 14px;
+      color: var(--ink-muted);
+    }
+
+    .stamp {
+      position: absolute;
+      top: 2px;
+      right: 0;
+      transform: rotate(-8deg);
+      border: 2px solid var(--accent);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      font-size: 11px;
+      line-height: 1.15;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      color: var(--accent);
+      background: var(--paper);
+      font-variant-numeric: tabular-nums;
+      white-space: pre-line;
+    }
+
+    .stamp.ok {
+      border-color: var(--ok);
+      color: var(--ok);
+    }
+
+    .stamp.refund {
+      border-color: var(--refund);
+      color: var(--refund);
+    }
+
+    @keyframes stampPop {
+      0% {
+        transform: rotate(-8deg) scale(1.4);
+        opacity: 0;
+      }
+      100% {
+        transform: rotate(-8deg) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .stamp-animate {
+      animation: stampPop 180ms ease-out;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .stamp-animate {
+        animation: none;
+      }
+    }
+
+    /* 5. Big Mono Amount */
+    .amount-block {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
+      align-items: baseline;
       gap: 8px;
-      padding: 11px 14px;
-      border-radius: 12px;
-      background: #F1F5F9;
-      font-size: 0.84rem;
+      margin-bottom: 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .amount-raised {
+      font-size: 44px;
+      font-weight: 600;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .amount-goal {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-muted);
+    }
+
+    /* 6. 20-Cell Punch Card */
+    .punch-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 5px;
       margin-bottom: 18px;
     }
-    .recipient-row code {
-      background: #E2E8F0;
-      padding: 3px 7px;
-      border-radius: 6px;
-      font-size: 0.78rem;
+
+    .punch-cell {
+      height: 18px;
+      border: 1.5px solid var(--ink);
+      background: transparent;
     }
 
-    /* Quick Preset Buttons */
-    .presets {
+    .punch-cell.filled {
+      background-color: var(--ink);
+    }
+
+    .punch-cell.preview {
+      border-color: var(--accent);
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--accent) 0 2px,
+        transparent 2px 5px
+      );
+    }
+
+    /* 7. Dotted-Leader Receipt Rows */
+    .ledger {
+      border-top: 1.5px solid var(--ink);
+      border-bottom: 1.5px solid var(--ink);
+      padding: 10px 0;
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .ledger-row {
+      display: flex;
+      align-items: baseline;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .ledger-label {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      flex-shrink: 0;
+    }
+
+    .ledger-dots {
+      flex: 1;
+      border-bottom: 1.5px dotted var(--ink-muted);
+      margin: 0 8px;
+      height: 1px;
+    }
+
+    .ledger-val {
+      font-weight: 600;
+      color: var(--ink);
+      flex-shrink: 0;
+    }
+
+    /* 8. Action Area */
+    .segment-presets {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      border: 1.5px solid var(--ink);
       margin-bottom: 10px;
     }
-    .preset-btn {
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
-    .preset-btn.selected {
-      border: 2px solid var(--primary);
-      background: var(--primary-soft);
-      color: var(--primary-hover);
-    }
 
-    .input-group {
-      display: flex;
-      align-items: center;
-      border: 1.5px solid var(--border);
-      border-radius: 14px;
-      padding: 4px 12px;
-      margin-bottom: 12px;
-      background: #fff;
-    }
-    .input-group input {
-      border: none;
-      outline: none;
-      width: 100%;
-      font-size: 1.1rem;
-      font-weight: 700;
-      padding: 8px 0;
-    }
-    .input-group span {
-      font-weight: 700;
-      color: var(--muted);
-      font-size: 0.85rem;
-      white-space: nowrap;
-    }
-
-    /* Touch-Friendly Primary Action Buttons */
-    .btn-main {
-      width: 100%;
-      min-height: 52px;
-      border-radius: 14px;
-      border: none;
-      font-size: 1rem;
-      font-weight: 800;
-      cursor: pointer;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .btn-chip {
-      background: var(--primary);
-      color: #fff;
-    }
-    .btn-x402 {
-      background: var(--primary-soft);
-      color: var(--primary-hover);
-      border: 1.5px solid var(--primary);
+    .segment-btn {
       min-height: 44px;
-      font-size: 0.9rem;
-    }
-    .btn-release {
-      background: var(--success);
-      color: #fff;
-    }
-    .btn-refund {
-      background: var(--refund);
-      color: #fff;
-    }
-
-    .tx-banner {
-      display: none;
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      background: var(--success-soft);
-      color: #166534;
-      font-size: 0.82rem;
+      background: transparent;
+      color: var(--ink);
+      border: none;
+      border-right: 1.5px solid var(--ink);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
       font-weight: 600;
-      word-break: break-all;
-    }
-    .tx-banner a {
-      color: #15803D;
-      font-weight: 800;
-    }
-
-    /* Guarantee Footer Note */
-    .trust-note {
-      text-align: center;
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 10px;
-    }
-
-    /* Collapsible Developer / Judge Details */
-    details.fe-details {
-      margin-top: 16px;
-      background: #0F172A;
-      color: #E2E8F0;
-      border-radius: 14px;
-      padding: 12px 16px;
-      font-size: 0.8rem;
-    }
-    details.fe-details summary {
+      font-variant-numeric: tabular-nums;
       cursor: pointer;
-      font-weight: 700;
-      color: #FB923C;
     }
-    details.fe-details code {
+
+    .segment-btn:last-child {
+      border-right: none;
+    }
+
+    .segment-btn.selected {
+      background-color: var(--ink);
+      color: var(--paper);
+    }
+
+    .input-box {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid var(--ink);
+      padding: 0 12px;
+      min-height: 46px;
+      margin-bottom: 12px;
+      background: var(--paper);
+    }
+
+    .input-box input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 16px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
+      min-height: 44px;
+      outline: none;
+    }
+
+    .input-box span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+    }
+
+    .btn-primary {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 16px;
+      border: 1.5px solid var(--ink);
+      background-color: var(--accent);
+      color: var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 60ms ease, box-shadow 60ms ease;
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: translate(4px, 4px);
+      box-shadow: none;
+    }
+
+    .btn-primary.ok {
+      background-color: var(--ok);
+      color: var(--paper);
+    }
+
+    .btn-primary.refund {
+      background-color: var(--refund);
+      color: var(--paper);
+    }
+
+    .btn-primary.passive {
+      background: transparent;
+      color: var(--ink-muted);
+      box-shadow: none;
+      cursor: default;
+    }
+
+    .x402-row {
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    .x402-link {
+      background: none;
+      border: none;
+      padding: 8px 6px;
+      min-height: 44px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--ink);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* 9. Receipt Footer & Deterministic Barcode */
+    .receipt-footer {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1.5px dashed var(--ink);
+    }
+
+    .rule-line {
+      margin: 0 0 10px;
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+
+    .fe-line {
       display: block;
-      margin-top: 8px;
-      color: #38BDF8;
+      padding: 8px 10px;
+      border: 1.5px solid var(--ink);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
       word-break: break-all;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      margin-bottom: 10px;
+    }
+
+    .tx-line {
+      display: none;
+      padding: 8px 10px;
+      border: 1.5px solid var(--ink);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      margin-bottom: 10px;
+      word-break: break-all;
+    }
+
+    .tx-line a {
+      color: var(--ink);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    .barcode-box {
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .barcode-svg {
+      width: 100%;
+      height: 34px;
+      display: block;
+    }
+
+    .barcode-caption {
+      margin-top: 4px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .barcode-caption a {
+      color: var(--ink);
+      text-decoration: underline;
     }
 
     /* Modals */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.55);
+      background: rgba(22, 19, 15, 0.55);
       display: none;
       align-items: flex-end;
       justify-content: center;
       z-index: 100;
+      padding: 0;
     }
+
     @media (min-width: 520px) {
       .modal-backdrop {
         align-items: center;
+        padding: 16px;
       }
     }
+
     .modal-backdrop.open {
       display: flex;
     }
-    .modal-sheet {
-      background: #fff;
+
+    .modal-wrap {
       width: 100%;
-      max-width: 460px;
-      border-radius: 22px 22px 0 0;
-      padding: 22px 20px 28px;
+      max-width: 420px;
+      box-shadow: 4px 4px 0 var(--ink);
     }
-    @media (min-width: 520px) {
-      .modal-sheet {
-        border-radius: 22px;
-      }
+
+    .modal-sheet {
+      background: var(--paper);
+      border: 1.5px solid var(--ink);
+      border-top: none;
+      padding: 18px 18px 22px;
     }
-    .modal-sheet h3 {
-      margin: 0 0 6px;
-      font-size: 1.15rem;
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
     }
+
+    .modal-head h3 {
+      margin: 0;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: -0.03em;
+    }
+
+    .modal-close {
+      min-width: 44px;
+      min-height: 44px;
+      background: transparent;
+      border: 1.5px solid var(--ink);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
     .modal-sub {
       margin: 0 0 14px;
-      font-size: 0.83rem;
-      color: var(--muted);
+      font-size: 13px;
+      color: var(--ink-muted);
     }
+
     .wallet-option {
       width: 100%;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: #fff;
+      min-height: 52px;
+      padding: 10px 12px;
+      border: 1.5px solid var(--ink);
+      background: transparent;
+      color: var(--ink);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-weight: 700;
-      font-size: 0.95rem;
-      margin-bottom: 10px;
-      cursor: pointer;
+      gap: 10px;
       text-align: left;
+      cursor: pointer;
+      margin-bottom: 8px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
     }
+
     .wallet-option small {
       display: block;
-      font-weight: 500;
-      color: var(--muted);
-      font-size: 0.78rem;
+      font-weight: 400;
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin-top: 2px;
     }
-    .faucet-box {
-      background: var(--testnet-soft);
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 0.82rem;
-      color: #5B21B6;
-      margin-top: 6px;
+
+    .wallet-arrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
     }
-    .faucet-box a {
-      color: var(--testnet);
-      font-weight: 700;
-      margin-right: 10px;
+
+    .field-group {
+      margin-bottom: 14px;
     }
-    .form-input {
+
+    .field-group label {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 4px;
+    }
+
+    .field-input {
       width: 100%;
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      font-size: 0.95rem;
-      margin-bottom: 10px;
+      min-height: 44px;
+      padding: 8px 2px;
+      background: transparent;
+      border: none;
+      border-bottom: 1.5px solid var(--ink);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      color: var(--ink);
+      outline: none;
     }
   </style>
 </head>
 <body>
-  <div class="app-shell">
-    <!-- Top Bar with Sepolia Testnet Badge + Faucet + Connect Wallet -->
-    <header class="topbar">
-      <div class="brand">
-        🐾 FeKitty
-        <span class="network-tag">🧪 Sepolia Testnet</span>
-      </div>
-      <div class="top-actions">
-        <a class="faucet-link" href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia" target="_blank" rel="noopener">
-          💧 Free Test ETH
-        </a>
+  <div class="receipt-wrap">
+    <div class="zig-t" aria-hidden="true"></div>
+
+    <div class="receipt">
+      <!-- 1. Header Row -->
+      <header class="topbar">
+        <div class="brand">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="6.5" cy="8.5" r="2.2" />
+            <circle cx="10.2" cy="5.8" r="2.2" />
+            <circle cx="14.8" cy="5.8" r="2.2" />
+            <circle cx="18.2" cy="8.8" r="2.2" />
+            <path d="M12.3 10.5c-3.4 0-6.3 2.6-6.3 5.7 0 2.1 1.6 3.6 3.8 3.6 1.1 0 1.9-.4 2.5-.4s1.4.4 2.5.4c2.2 0 3.8-1.5 3.8-3.6 0-3.1-2.9-5.7-6.3-5.7z" />
+          </svg>
+          <span>fekitty</span>
+        </div>
         <button id="walletBtn" class="connect-btn" onclick="openWalletModal()">
-          🦊 Connect Wallet
+          Connect wallet
         </button>
-      </div>
-    </header>
+      </header>
 
-    <!-- Wrapping Category Pills (All visible on Desktop & Mobile!) -->
-    <nav class="pills-bar" id="pillsBar"></nav>
-
-    <!-- Single Ultra-Simple Card -->
-    <main class="card">
-      <div class="badge-row">
-        <span id="statusBadge" class="badge">⏳ Active</span>
-        <span id="contributorsText" class="contributors-count"></span>
+      <!-- 2. Testnet Strip -->
+      <div class="hazard-strip">
+        <span>TESTNET · SEPOLIA</span>
+        <a href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia" target="_blank" rel="noopener">GET TEST ETH ↗</a>
       </div>
 
-      <h1 id="kittyTitle" class="kitty-title"></h1>
-      <p id="kittyStory" class="kitty-story"></p>
+      <!-- 3. Underlined Text Tabs -->
+      <nav id="pillsBar" class="tabs-bar" aria-label="Community pots"></nav>
 
-      <!-- Big Clear Progress -->
-      <div class="progress-box">
-        <div class="amount-headline">
-          <span id="raisedText" class="amount-big">0.04 ETH</span>
-          <span id="goalText" class="amount-goal">of 0.05 ETH goal (80%)</span>
+      <!-- 4. Title Block + Stamp -->
+      <section class="head-block">
+        <div id="potSerial" class="pot-serial">POT NO. 0001</div>
+        <h1 id="kittyTitle" class="kitty-title"></h1>
+        <p id="kittyStory" class="kitty-story"></p>
+        <div id="statusBadge" class="stamp">80%&#10;FUNDED</div>
+      </section>
+
+      <!-- 5. Big Mono Amount -->
+      <div class="amount-block">
+        <span id="raisedText" class="amount-raised">0.040</span>
+        <span id="goalText" class="amount-goal">/ 0.050 ETH</span>
+      </div>
+
+      <!-- 6. 20-Cell Punch Card -->
+      <div id="punchCard" class="punch-grid" aria-label="Funding punch card"></div>
+
+      <!-- 7. Dotted-Leader Receipt Rows -->
+      <div class="ledger">
+        <div class="ledger-row">
+          <span class="ledger-label">RECIPIENT</span>
+          <span class="ledger-dots"></span>
+          <span id="recipientName" class="ledger-val"></span>
         </div>
-        <div class="progress-bar">
-          <div id="progressFill" class="progress-fill" style="width: 80%"></div>
+        <div class="ledger-row">
+          <span class="ledger-label">ADDRESS</span>
+          <span class="ledger-dots"></span>
+          <span id="recipientAddr" class="ledger-val"></span>
         </div>
-        <div class="my-share">
-          <span id="myShareText">Your share: 0.01 ETH</span>
-          <span id="deadlineText">5 days left</span>
+        <div class="ledger-row">
+          <span class="ledger-label">NEIGHBORS</span>
+          <span class="ledger-dots"></span>
+          <span id="contributorsText" class="ledger-val"></span>
+        </div>
+        <div class="ledger-row">
+          <span class="ledger-label">YOUR SHARE</span>
+          <span class="ledger-dots"></span>
+          <span id="myShareText" class="ledger-val"></span>
+        </div>
+        <div class="ledger-row">
+          <span class="ledger-label">CLOSES IN</span>
+          <span class="ledger-dots"></span>
+          <span id="deadlineText" class="ledger-val"></span>
         </div>
       </div>
 
-      <!-- Locked Recipient Row -->
-      <div class="recipient-row">
-        <span>🔒 <strong>Recipient:</strong> <span id="recipientName"></span></span>
-        <code id="recipientAddr"></code>
-      </div>
-
-      <!-- Context-Aware Primary Action Area -->
+      <!-- 8. Action Area -->
       <div id="actionArea"></div>
 
-      <!-- Real Sepolia Tx Banner -->
-      <div id="txBanner" class="tx-banner"></div>
+      <!-- 9. Receipt Footer & Barcode -->
+      <footer class="receipt-footer">
+        <p class="rule-line">Goal met → paid to recipient. Goal missed → 100% refund.</p>
+        <code id="feLog" class="fe-line">FeKitty::GetProgress {} -> (raised: 0.040 ETH, goal: 0.050 ETH, bps: 8000)</code>
+        <div id="txBanner" class="tx-line"></div>
 
-      <div class="trust-note">
-        Runs on <strong>Ethereum Sepolia Testnet</strong> (Never Mainnet) · Goal met → Recipient · Missed → 100% Refund
-      </div>
-    </main>
+        <div class="barcode-box">
+          <svg id="barcodeSvg" class="barcode-svg" aria-hidden="true" preserveAspectRatio="none"></svg>
+          <div id="barcodeCaption" class="barcode-caption">POT 0001 · 0x71BF…3F8D</div>
+        </div>
+      </footer>
+    </div>
 
-    <!-- Collapsible Fe 26.5 Contract Log for Judges -->
-    <details class="fe-details">
-      <summary>🦀 View Live Fe 26.5 Smart Contract Call</summary>
-      <code id="feLog">FeKitty::GetProgress {} -> (raised: 0.04 ETH, goal: 0.05 ETH, bps: 8000)</code>
-    </details>
+    <div class="zig-b" aria-hidden="true"></div>
   </div>
 
-  <!-- Wallet Connection Modal -->
+  <!-- Wallet Modal -->
   <div id="walletModal" class="modal-backdrop" onclick="if(event.target===this)closeWalletModal()">
-    <div class="modal-sheet">
-      <h3>Connect to Sepolia Testnet</h3>
-      <p class="modal-sub">Automatically switches your wallet to <strong>Ethereum Sepolia Testnet (Chain ID: 11155111)</strong> so you never spend real Mainnet ETH.</p>
-
-      <button class="wallet-option" onclick="connectInjectedWallet()">
-        <div>
-          🦊 Connect Wallet (Sepolia Testnet)
-          <small>MetaMask, Rabby, Trust, Coinbase Wallet</small>
+    <div class="modal-wrap">
+      <div class="zig-t" aria-hidden="true"></div>
+      <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="walletModalTitle">
+        <div class="modal-head">
+          <h3 id="walletModalTitle">Connect wallet</h3>
+          <button type="button" class="modal-close" onclick="closeWalletModal()" aria-label="Close">✕</button>
         </div>
-        <span>→</span>
-      </button>
+        <p class="modal-sub">Switches automatically to Ethereum Sepolia testnet (chain 11155111).</p>
 
-      <button class="wallet-option" onclick="openInMetaMaskMobile()">
-        <div>
-          📱 Open in MetaMask Mobile App
-          <small>Deep-link for iOS & Android mobile phones</small>
-        </div>
-        <span>↗</span>
-      </button>
+        <button type="button" class="wallet-option" onclick="connectInjectedWallet()">
+          <div>
+            Browser or mobile wallet
+            <small>MetaMask, Rabby, Trust, Coinbase Wallet</small>
+          </div>
+          <span class="wallet-arrow">→</span>
+        </button>
 
-      <button class="wallet-option" onclick="connectDemoWallet()">
-        <div>
-          ⚡ Instant Test Wallet (2.50 Sepolia ETH)
-          <small>Try immediately without installing a wallet</small>
-        </div>
-        <span>✓</span>
-      </button>
+        <button type="button" class="wallet-option" onclick="openInMetaMaskMobile()">
+          <div>
+            Open in MetaMask app
+            <small>Deep link for iOS and Android browsers</small>
+          </div>
+          <span class="wallet-arrow">↗</span>
+        </button>
 
-      <button id="disconnectBtn" class="wallet-option" style="display:none; color:#DC2626;" onclick="disconnectWallet()">
-        <div>Disconnect Wallet</div>
-        <span>✕</span>
-      </button>
+        <button type="button" class="wallet-option" onclick="connectDemoWallet()">
+          <div>
+            Instant test wallet
+            <small>Preloaded with 2.500 ETH for instant testing</small>
+          </div>
+          <span class="wallet-arrow">→</span>
+        </button>
 
-      <div class="faucet-box">
-        <strong>Need free Sepolia ETH?</strong><br/>
-        <a href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia" target="_blank" rel="noopener">Google Faucet ↗</a>
-        <a href="https://www.alchemy.com/faucets/ethereum-sepolia" target="_blank" rel="noopener">Alchemy Faucet ↗</a>
-        <a href="https://faucets.chain.link/sepolia" target="_blank" rel="noopener">Chainlink Faucet ↗</a>
+        <button id="disconnectBtn" type="button" class="wallet-option" style="display:none;" onclick="disconnectWallet()">
+          <div>
+            Disconnect wallet
+            <small>Clear active session</small>
+          </div>
+          <span class="wallet-arrow">→</span>
+        </button>
       </div>
     </div>
   </div>
 
   <!-- Create New Kitty Modal -->
   <div id="createModal" class="modal-backdrop" onclick="if(event.target===this)closeCreateModal()">
-    <form class="modal-sheet" onsubmit="createKitty(event)">
-      <h3>+ Start a New Kitty (Sepolia Testnet)</h3>
-      <input id="newTitle" class="form-input" placeholder="What is this for? (e.g., Street Cat Vet Bill)" required />
-      <input id="newRecipient" class="form-input" placeholder="Recipient Name (e.g., Moda Vet Clinic)" required />
-      <input id="newAddr" class="form-input" placeholder="Recipient Sepolia Wallet (0x...)" value="0x71BF2B94a47d88E3A1f7c9D24E6F1B0C9e4A3F8D" required />
-      <input id="newGoal" class="form-input" type="number" step="0.01" min="0.01" placeholder="Target Sepolia ETH (e.g., 0.05)" value="0.05" required />
-      <button type="submit" class="btn-main btn-chip">Create Kitty Pot</button>
-    </form>
+    <div class="modal-wrap">
+      <div class="zig-t" aria-hidden="true"></div>
+      <form class="modal-sheet" onsubmit="createKitty(event)" role="dialog" aria-modal="true" aria-labelledby="createModalTitle">
+        <div class="modal-head">
+          <h3 id="createModalTitle">New community pot</h3>
+          <button type="button" class="modal-close" onclick="closeCreateModal()" aria-label="Close">✕</button>
+        </div>
+
+        <div class="field-group">
+          <label for="newTitle">POT PURPOSE</label>
+          <input id="newTitle" class="field-input" required />
+        </div>
+
+        <div class="field-group">
+          <label for="newRecipient">RECIPIENT NAME</label>
+          <input id="newRecipient" class="field-input" required />
+        </div>
+
+        <div class="field-group">
+          <label for="newAddr">RECIPIENT WALLET ADDRESS</label>
+          <input id="newAddr" class="field-input" value="0x71BF2B94a47d88E3A1f7c9D24E6F1B0C9e4A3F8D" required />
+        </div>
+
+        <div class="field-group">
+          <label for="newGoal">TARGET AMOUNT (ETH)</label>
+          <input id="newGoal" class="field-input" type="number" step="0.005" min="0.005" value="0.050" required />
+        </div>
+
+        <button type="submit" class="btn-primary">
+          <span>Deploy pot clone</span>
+          <span>→</span>
+        </button>
+      </form>
+    </div>
   </div>
 
   <script>
-    // Sepolia Testnet Chain Configuration (Chain ID 11155111 = 0xaa36a7)
     const SEPOLIA_CHAIN_ID = '0xaa36a7';
     const SEPOLIA_PARAMS = {
       chainId: SEPOLIA_CHAIN_ID,
@@ -606,14 +864,15 @@
       blockExplorerUrls: ['https://sepolia.etherscan.io']
     };
 
-    // Testnet-friendly small ETH amounts (0.01 - 0.05 Sepolia ETH) so faucet ETH is plenty!
-    const kitties = [
+    const STORAGE_KEY = 'fekitty_receipt_state_v1';
+
+    const DEFAULT_KITTIES = [
       {
         id: 1,
         emoji: '🐾',
-        shortName: 'Street Cat Vet',
-        title: 'Pamuk the Street Cat — Vet Surgery',
-        story: 'Pooling with neighbors on Sepolia Testnet for Pamuk’s paw surgery at Moda Vet Clinic.',
+        shortName: 'Street cat',
+        title: 'Pamuk the street cat — vet surgery',
+        story: 'Pooling with neighbors on Moda Street for Pamuk’s broken paw surgery at Moda Vet Clinic.',
         recipientName: 'Moda Vet Clinic',
         recipientAddress: '0x71BF2B94a47d88E3A1f7c9D24E6F1B0C9e4A3F8D',
         goalEth: 0.05,
@@ -622,44 +881,49 @@
         deadlineLabel: '5 days left',
         expired: false,
         settled: false,
-        contributorsCount: 4
+        contributorsCount: 4,
+        lastTxHash: ''
       },
       {
         id: 2,
         emoji: '🏠',
-        shortName: 'Roof Repair',
-        title: 'Apartment #12 — Roof Leak Repair',
-        story: 'Shared building roof repair before winter rains. Target is 100% reached!',
+        shortName: 'Roof',
+        title: 'Apartment #12 — roof leak repair',
+        story: 'Shared building roof insulation repair before winter rains. Target is reached and ready for payout.',
         recipientName: 'Master Roofing Co.',
         recipientAddress: '0x94A2c8E1104B3f792D1a7A0019c85E2B411081C0',
         goalEth: 0.10,
         raisedEth: 0.10,
         myContributionEth: 0.02,
-        deadlineLabel: 'Goal Reached!',
+        deadlineLabel: 'Goal met',
         expired: false,
         settled: false,
-        contributorsCount: 5
+        contributorsCount: 5,
+        lastTxHash: ''
       },
       {
         id: 3,
         emoji: '🚲',
-        shortName: 'Cargo Bike (Refund)',
-        title: 'Shared Courtyard Cargo Bike',
-        story: 'Deadline passed before reaching the 0.08 ETH goal. Everyone can claim a 100% refund.',
+        shortName: 'Cargo bike',
+        title: 'Shared courtyard cargo bike',
+        story: 'Deadline passed before reaching the 0.080 ETH target. Every contributor can claim a full refund.',
         recipientName: 'GreenCycle Shop',
         recipientAddress: '0x38E1F09c72B4a5D6E8f1029384756AbcDeF099B4',
         goalEth: 0.08,
         raisedEth: 0.03,
         myContributionEth: 0.01,
-        deadlineLabel: 'Deadline Passed',
+        deadlineLabel: 'Expired',
         expired: true,
         settled: false,
-        contributorsCount: 3
+        contributorsCount: 3,
+        lastTxHash: ''
       }
     ];
 
+    let kitties = JSON.parse(JSON.stringify(DEFAULT_KITTIES));
     let selectedId = 1;
-    let chipAmount = '0.01';
+    let chipAmount = '0.010';
+    let lastStampState = '';
     let wallet = {
       connected: false,
       mode: 'none',
@@ -667,25 +931,63 @@
       balanceEth: 0
     };
 
+    function loadSavedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed.kitties) && parsed.kitties.length > 0) {
+          kitties = parsed.kitties;
+        }
+        if (parsed.selectedId) {
+          selectedId = parsed.selectedId;
+        }
+        if (parsed.wallet && typeof parsed.wallet === 'object') {
+          wallet = parsed.wallet;
+        }
+      } catch (_) {}
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({ kitties, selectedId, wallet })
+        );
+      } catch (_) {}
+    }
+
     function shortAddr(addr) {
       if (!addr || addr.length < 10) return addr;
-      return addr.slice(0, 6) + '...' + addr.slice(-4);
+      return addr.slice(0, 6) + '…' + addr.slice(-4);
+    }
+
+    function getActiveIndex() {
+      const idx = kitties.findIndex(k => k.id === selectedId);
+      return idx >= 0 ? idx : 0;
     }
 
     function getActive() {
-      return kitties.find(k => k.id === selectedId) || kitties[0];
+      return kitties[getActiveIndex()];
+    }
+
+    function padSerial(num, len) {
+      return String(num).padStart(len, '0');
     }
 
     function openWalletModal() {
       document.getElementById('disconnectBtn').style.display = wallet.connected ? 'flex' : 'none';
       document.getElementById('walletModal').classList.add('open');
     }
+
     function closeWalletModal() {
       document.getElementById('walletModal').classList.remove('open');
     }
+
     function openCreateModal() {
       document.getElementById('createModal').classList.add('open');
     }
+
     function closeCreateModal() {
       document.getElementById('createModal').classList.remove('open');
     }
@@ -716,19 +1018,14 @@
 
     async function connectInjectedWallet() {
       if (typeof window.ethereum === 'undefined') {
-        alert('No browser wallet detected. Tap "Open in MetaMask Mobile App" or choose "Instant Test Wallet"!');
+        alert('No browser wallet found. Choose "Instant test wallet" or "Open in MetaMask app".');
         return;
       }
       try {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         if (!accounts || accounts.length === 0) return;
 
-        // Enforce Sepolia Testnet (Never Mainnet!)
-        const switched = await switchToSepolia();
-        if (!switched) {
-          alert('Please approve switching to Ethereum Sepolia Testnet in your wallet so you do not use Mainnet.');
-        }
-
+        await switchToSepolia();
         const addr = accounts[0];
         let balEth = 0.0;
         try {
@@ -745,11 +1042,10 @@
           address: addr,
           balanceEth: balEth
         };
+        saveState();
         closeWalletModal();
         render();
-      } catch (err) {
-        alert('Wallet connection canceled.');
-      }
+      } catch (_) {}
     }
 
     function openInMetaMaskMobile() {
@@ -764,12 +1060,14 @@
         address: '0xCa9e8810b4c1E9402F',
         balanceEth: 2.50
       };
+      saveState();
       closeWalletModal();
       render();
     }
 
     function disconnectWallet() {
       wallet = { connected: false, mode: 'none', address: '', balanceEth: 0 };
+      saveState();
       closeWalletModal();
       render();
     }
@@ -779,110 +1077,216 @@
       render();
     }
 
+    function onAmountInput(val) {
+      chipAmount = val;
+      updatePunchCardAndButton();
+    }
+
+    function buildPunchCardHtml(k) {
+      const pct = Math.min(100, (k.raisedEth / k.goalEth) * 100);
+      const filledCount = Math.min(20, Math.floor((pct + 1e-6) / 5));
+      const amt = parseFloat(chipAmount);
+      const goalMet = k.raisedEth >= k.goalEth - 1e-6;
+      const isActive = !k.settled && !k.expired && !goalMet;
+
+      let previewCount = 0;
+      if (isActive && !isNaN(amt) && amt > 0 && k.goalEth > 0) {
+        const rawPreview = Math.max(1, Math.round((amt / k.goalEth) * 20));
+        previewCount = Math.min(20 - filledCount, rawPreview);
+      }
+
+      let cells = '';
+      for (let i = 0; i < 20; i++) {
+        let cls = 'punch-cell';
+        if (i < filledCount) {
+          cls += ' filled';
+        } else if (i < filledCount + previewCount) {
+          cls += ' preview';
+        }
+        cells += `<div class="${cls}"></div>`;
+      }
+      return cells;
+    }
+
+    function renderBarcode(k, idx) {
+      const svg = document.getElementById('barcodeSvg');
+      const caption = document.getElementById('barcodeCaption');
+      const cleanHex = (k.recipientAddress || '0x0').replace(/^0x/i, '').toLowerCase();
+      let x = 0;
+      let rects = '';
+
+      for (let i = 0; i < cleanHex.length; i++) {
+        const val = parseInt(cleanHex[i], 16) || 0;
+        const barW = 1 + (val % 3);
+        const gapW = 1 + (val >> 2);
+        rects += `<rect x="${x}" y="0" width="${barW}" height="34" fill="#16130F" />`;
+        x += barW + gapW;
+      }
+      svg.setAttribute('viewBox', `0 0 ${Math.max(1, x)} 34`);
+      svg.innerHTML = rects;
+
+      const potCode = `POT ${padSerial(idx + 1, 4)}`;
+      if (k.lastTxHash) {
+        caption.innerHTML = `${potCode} · <a href="https://sepolia.etherscan.io/tx/${k.lastTxHash}" target="_blank" rel="noopener">${shortAddr(k.lastTxHash)} ↗</a>`;
+      } else {
+        caption.textContent = `${potCode} · ${shortAddr(k.recipientAddress)}`;
+      }
+    }
+
+    function updatePunchCardAndButton() {
+      const k = getActive();
+      document.getElementById('punchCard').innerHTML = buildPunchCardHtml(k);
+      const chipLabel = document.getElementById('chipBtnLabel');
+      if (chipLabel) {
+        const parsed = parseFloat(chipAmount);
+        const formatted = !isNaN(parsed) && parsed > 0 ? parsed.toFixed(3) : '0.000';
+        chipLabel.textContent = `Chip in ${formatted} ETH`;
+      }
+    }
+
     function render() {
+      const idx = getActiveIndex();
       const k = getActive();
       const bps = Math.min(10000, Math.round((k.raisedEth / k.goalEth) * 10000));
       const pct = Math.round(bps / 100);
       const goalMet = k.raisedEth >= k.goalEth - 1e-6;
 
-      // Wallet button
+      // 1. Wallet button
       const wBtn = document.getElementById('walletBtn');
       if (wallet.connected) {
-        wBtn.className = 'connect-btn connected';
-        wBtn.innerHTML = `<span class="dot"></span> ${shortAddr(wallet.address)} · ${wallet.balanceEth.toFixed(3)} Sepolia ETH`;
+        wBtn.textContent = `${shortAddr(wallet.address)} · ${wallet.balanceEth.toFixed(3)} ETH`;
       } else {
-        wBtn.className = 'connect-btn';
-        wBtn.innerHTML = `🦊 Connect Wallet`;
+        wBtn.textContent = 'Connect wallet';
       }
 
-      // Wrapping Category Pills
-      document.getElementById('pillsBar').innerHTML = kitties.map(item => `
-        <button class="pill-tab ${item.id === k.id ? 'active' : ''}" onclick="selectKitty(${item.id})">
-          ${item.emoji} ${item.shortName}
-        </button>
-      `).join('') + `<button class="pill-new" onclick="openCreateModal()">+ New Kitty</button>`;
+      // 3. Tabs
+      document.getElementById('pillsBar').innerHTML =
+        kitties
+          .map((item, i) => {
+            const num = padSerial(i + 1, 2);
+            return `<button type="button" class="tab-item ${item.id === k.id ? 'active' : ''}" onclick="selectKitty(${item.id})">${num} ${item.shortName}</button>`;
+          })
+          .join('') +
+        `<button type="button" class="tab-new" onclick="openCreateModal()">+ New</button>`;
 
-      // Status badge
-      const badge = document.getElementById('statusBadge');
-      if (k.settled) {
-        badge.className = 'badge done';
-        badge.textContent = '✅ Paid to Recipient';
-      } else if (k.expired && !goalMet) {
-        badge.className = 'badge refund';
-        badge.textContent = '⏪ Missed Goal · Refunds Open';
-      } else if (goalMet) {
-        badge.className = 'badge done';
-        badge.textContent = '🎉 100% Goal Reached!';
-      } else {
-        badge.className = 'badge';
-        badge.textContent = `⏳ Active · ${pct}% Funded`;
-      }
-
-      document.getElementById('contributorsText').textContent = `${k.contributorsCount} neighbors`;
-      document.getElementById('kittyTitle').textContent = `${k.emoji} ${k.title}`;
+      // 4. Serial, Title, Story, Stamp
+      document.getElementById('potSerial').textContent = `POT NO. ${padSerial(idx + 1, 4)}`;
+      document.getElementById('kittyTitle').textContent = k.title;
       document.getElementById('kittyStory').textContent = k.story;
 
-      document.getElementById('raisedText').textContent = `${k.raisedEth.toFixed(2)} ETH`;
-      document.getElementById('goalText').textContent = `of ${k.goalEth.toFixed(2)} Sepolia ETH (${pct}%)`;
-      document.getElementById('progressFill').style.width = `${Math.min(100, pct)}%`;
-      document.getElementById('myShareText').textContent = `Your share: ${k.myContributionEth.toFixed(2)} ETH`;
-      document.getElementById('deadlineText').textContent = k.deadlineLabel;
+      const badge = document.getElementById('statusBadge');
+      let stampState = '';
+      let stampClass = 'stamp';
+      let stampText = '';
 
+      if (k.settled) {
+        stampState = 'paid';
+        stampClass = 'stamp ok';
+        stampText = 'PAID\nOUT';
+      } else if (k.expired && !goalMet) {
+        stampState = 'refund';
+        stampClass = 'stamp refund';
+        stampText = 'REFUND\nOPEN';
+      } else if (goalMet) {
+        stampState = 'goal';
+        stampClass = 'stamp ok';
+        stampText = 'GOAL\nMET';
+      } else {
+        stampState = `active-${pct}`;
+        stampClass = 'stamp';
+        stampText = `${pct}%\nFUNDED`;
+      }
+
+      badge.className = stampClass;
+      badge.textContent = stampText;
+      if (lastStampState !== `${k.id}-${stampState}`) {
+        lastStampState = `${k.id}-${stampState}`;
+        badge.classList.remove('stamp-animate');
+        void badge.offsetWidth;
+        badge.classList.add('stamp-animate');
+      }
+
+      // 5. Amounts
+      document.getElementById('raisedText').textContent = k.raisedEth.toFixed(3);
+      document.getElementById('goalText').textContent = `/ ${k.goalEth.toFixed(3)} ETH`;
+
+      // 6. Punch Card
+      document.getElementById('punchCard').innerHTML = buildPunchCardHtml(k);
+
+      // 7. Receipt Rows
       document.getElementById('recipientName').textContent = k.recipientName;
       document.getElementById('recipientAddr').textContent = shortAddr(k.recipientAddress);
+      document.getElementById('contributorsText').textContent = `${k.contributorsCount}`;
+      document.getElementById('myShareText').textContent = `${k.myContributionEth.toFixed(3)} ETH`;
+      document.getElementById('deadlineText').textContent = k.deadlineLabel;
 
-      // Context-aware simple action area
+      // 8. Action Area
       const area = document.getElementById('actionArea');
       if (k.settled) {
         area.innerHTML = `
-          <button class="btn-main btn-release" disabled>
-            ✅ ${k.raisedEth.toFixed(2)} Sepolia ETH Released to ${k.recipientName}
+          <button type="button" class="btn-primary passive" disabled>
+            <span>Released · ${k.raisedEth.toFixed(2)} ETH</span>
+            <span></span>
           </button>
         `;
       } else if (k.expired && !goalMet) {
         if (k.myContributionEth > 0) {
           area.innerHTML = `
-            <button class="btn-main btn-refund" onclick="claimRefund()">
-              ⏪ Claim 100% Refund (${k.myContributionEth.toFixed(2)} Sepolia ETH)
+            <button type="button" class="btn-primary refund" onclick="claimRefund()">
+              <span>Claim refund · ${k.myContributionEth.toFixed(2)} ETH</span>
+              <span>→</span>
             </button>
           `;
         } else {
           area.innerHTML = `
-            <button class="btn-main btn-refund" disabled>
-              ✅ Refund Claimed (0.00 ETH remaining)
+            <button type="button" class="btn-primary passive" disabled>
+              <span>Refund claimed</span>
+              <span></span>
             </button>
           `;
         }
       } else if (goalMet) {
         area.innerHTML = `
-          <button class="btn-main btn-release" onclick="releaseFunds()">
-            🎉 Release ${k.raisedEth.toFixed(2)} Sepolia ETH to ${k.recipientName}
+          <button type="button" class="btn-primary ok" onclick="releaseFunds()">
+            <span>Release ${k.raisedEth.toFixed(2)} ETH to ${k.recipientName}</span>
+            <span>→</span>
           </button>
         `;
       } else {
+        const parsed = parseFloat(chipAmount);
+        const formatted = !isNaN(parsed) && parsed > 0 ? parsed.toFixed(3) : '0.000';
         area.innerHTML = `
-          <div class="presets">
-            <button class="preset-btn ${chipAmount==='0.005'?'selected':''}" onclick="setPreset('0.005')">0.005 ETH</button>
-            <button class="preset-btn ${chipAmount==='0.01'?'selected':''}" onclick="setPreset('0.01')">0.01 ETH</button>
-            <button class="preset-btn ${chipAmount==='0.02'?'selected':''}" onclick="setPreset('0.02')">0.02 ETH</button>
+          <div class="segment-presets">
+            <button type="button" class="segment-btn ${ Number(chipAmount) === 0.005 ? 'selected' : '' }" onclick="setPreset('0.005')">0.005 ETH</button>
+            <button type="button" class="segment-btn ${ Number(chipAmount) === 0.01 ? 'selected' : '' }" onclick="setPreset('0.010')">0.010 ETH</button>
+            <button type="button" class="segment-btn ${ Number(chipAmount) === 0.02 ? 'selected' : '' }" onclick="setPreset('0.020')">0.020 ETH</button>
           </div>
-          <div class="input-group">
-            <input id="amountInput" type="number" step="0.005" min="0.001" value="${chipAmount}" oninput="chipAmount=this.value" />
-            <span>Sepolia ETH</span>
+          <div class="input-box">
+            <input id="amountInput" type="number" step="0.005" min="0.001" value="${chipAmount}" oninput="onAmountInput(this.value)" aria-label="Contribution amount in ETH" />
+            <span>ETH</span>
           </div>
-          <button class="btn-main btn-chip" onclick="chipIn(false)">
-            🐾 Chip In on Sepolia
+          <button type="button" class="btn-primary" onclick="chipIn(false)">
+            <span id="chipBtnLabel">Chip in ${formatted} ETH</span>
+            <span>→</span>
           </button>
-          <button class="btn-main btn-x402" onclick="chipIn(true)">
-            ⚡ 1-Tap Pay via x402
-          </button>
+          <div class="x402-row">
+            <button type="button" class="x402-link" onclick="chipIn(true)">or pay in one tap with x402</button>
+          </div>
         `;
       }
+
+      // 9. Barcode
+      renderBarcode(k, idx);
     }
 
     function selectKitty(id) {
       selectedId = id;
+      saveState();
       document.getElementById('txBanner').style.display = 'none';
+      const k = getActive();
+      const bps = Math.min(10000, Math.round((k.raisedEth / k.goalEth) * 10000));
+      document.getElementById('feLog').textContent =
+        `FeKitty::GetProgress {} -> (raised: ${k.raisedEth.toFixed(3)} ETH, goal: ${k.goalEth.toFixed(3)} ETH, bps: ${bps})`;
       render();
     }
 
@@ -920,24 +1324,28 @@
               value: weiHex
             }]
           });
+          k.lastTxHash = txHash;
           banner.style.display = 'block';
-          banner.innerHTML = `✅ Sepolia Testnet Tx Sent: <a href="https://sepolia.etherscan.io/tx/${txHash}" target="_blank" rel="noopener">View on Sepolia Etherscan ↗</a>`;
-        } catch (e) {
+          banner.innerHTML = `Tx sent: <a href="https://sepolia.etherscan.io/tx/${txHash}" target="_blank" rel="noopener">${shortAddr(txHash)} ↗</a>`;
+        } catch (_) {
           return;
         }
       } else {
         wallet.balanceEth = Math.max(0, Number((wallet.balanceEth - amt).toFixed(4)));
+        const mockHash = '0x402f' + Math.abs(k.id * 997 + Math.round(amt * 1e6)).toString(16).padStart(60, 'a');
+        k.lastTxHash = mockHash;
         banner.style.display = 'block';
-        banner.innerHTML = `✅ Contributed ${amt} Sepolia ETH (Demo Testnet Mode)`;
+        banner.innerHTML = `Receipt recorded: <a href="https://sepolia.etherscan.io/tx/${mockHash}" target="_blank" rel="noopener">${shortAddr(mockHash)} ↗</a>`;
       }
 
       k.raisedEth = Number((k.raisedEth + amt).toFixed(4));
       k.myContributionEth = Number((k.myContributionEth + amt).toFixed(4));
       k.contributorsCount += 1;
 
-      const tag = viaX402 ? '0x402a9f81c3 (x402)' : '0x0';
+      const tag = viaX402 ? '0x402a9f81c3' : '0x0';
       document.getElementById('feLog').textContent =
-        `FeKitty::Contribute { receipt_tag: ${tag} } [value: wei(${Math.round(amt * 1e18)})] -> new_total: ${k.raisedEth.toFixed(3)} Sepolia ETH`;
+        `FeKitty::Contribute { receipt_tag: ${tag} } [value: wei(${Math.round(amt * 1e18)})] -> new_total: ${k.raisedEth.toFixed(3)} ETH`;
+      saveState();
       render();
     }
 
@@ -945,8 +1353,11 @@
       if (!(await ensureWalletReady())) return;
       const k = getActive();
       k.settled = true;
+      const mockHash = '0x99e1' + Math.abs(k.id * 31337).toString(16).padStart(60, 'b');
+      k.lastTxHash = mockHash;
       document.getElementById('feLog').textContent =
         `FeKitty::Release {} -> call.send_value(addr: ${k.recipientAddress}, value: wei(${Math.round(k.raisedEth * 1e18)}))`;
+      saveState();
       render();
     }
 
@@ -959,8 +1370,11 @@
       if (wallet.mode === 'demo') {
         wallet.balanceEth = Number((wallet.balanceEth + refund).toFixed(4));
       }
+      const mockHash = '0x77c0' + Math.abs(k.id * 1777).toString(16).padStart(60, 'c');
+      k.lastTxHash = mockHash;
       document.getElementById('feLog').textContent =
         `FeKitty::ClaimRefund {} -> call.send_value(addr: ${wallet.address}, value: wei(${Math.round(refund * 1e18)}))`;
+      saveState();
       render();
     }
 
@@ -977,7 +1391,7 @@
         emoji: '🤝',
         shortName: title.slice(0, 14),
         title,
-        story: 'Community money pot deployed on Sepolia Testnet via Fe 26.5 clone.',
+        story: 'Community money pot deployed via Fe 26.5 minimal proxy clone.',
         recipientName,
         recipientAddress,
         goalEth,
@@ -986,14 +1400,19 @@
         deadlineLabel: '7 days left',
         expired: false,
         settled: false,
-        contributorsCount: 0
+        contributorsCount: 0,
+        lastTxHash: ''
       };
-      kitties.unshift(newPot);
+      kitties.push(newPot);
       selectedId = newPot.id;
+      document.getElementById('newTitle').value = '';
+      document.getElementById('newRecipient').value = '';
+      saveState();
       closeCreateModal();
       render();
     }
 
+    loadSavedState();
     render();
   </script>
 </body>
