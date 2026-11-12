@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EmbryoGuard — Klinik embriyoloji danışmanlığı ve ön değerlendirme</title>
+  <title>EmbryoGuard — Clinical Embryology Advisory & Outcome-Aligned IVF Escrow</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Source+Serif+4:wght@600&display=swap&subset=latin-ext" rel="stylesheet" />
@@ -16,79 +16,84 @@
     <div class="header-inner">
       <div>
         <a href="#main-content" class="brand-title" onclick="goToStep(1); return false;">EmbryoGuard</a>
-        <p class="brand-subtitle">Klinik embriyoloji danışmanlığı</p>
+        <p class="brand-subtitle" data-i18n="brand_subtitle">Clinical embryology advisory and outcome-aligned IVF escrow</p>
       </div>
-      <a href="#adim-3" class="header-contact-link" onclick="goToStep(3); return false;">İletişim</a>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button type="button" id="langSwitchBtn" class="btn-secondary" style="padding: 6px 12px; font-size: 0.8125rem;" onclick="toggleLanguage()" aria-label="Switch language">
+          TR
+        </button>
+        <a href="#step3" class="header-contact-link" data-i18n="nav_contact" onclick="goToStep(3); return false;">Consultation</a>
+      </div>
     </div>
   </header>
 
   <main id="main-content" class="main-container">
 
-    <nav class="stepper-nav" aria-label="Değerlendirme adımları">
+    <nav class="stepper-nav" aria-label="Assessment steps">
       <ol class="stepper">
         <li class="stepper-item">
           <button type="button" id="tabStep1" class="stepper-btn is-active" aria-current="step" onclick="goToStep(1)">
             <span class="stepper-circle">1</span>
-            <span class="stepper-label">Ön bilgiler</span>
+            <span class="stepper-label" data-i18n="step1_nav">Preliminary inputs</span>
           </button>
           <span class="stepper-line" aria-hidden="true"></span>
         </li>
         <li class="stepper-item">
           <button type="button" id="tabStep2" class="stepper-btn" onclick="goToStep(2)">
             <span class="stepper-circle">2</span>
-            <span class="stepper-label">Ön değerlendirme</span>
+            <span class="stepper-label" data-i18n="step2_nav">Preliminary assessment</span>
           </button>
           <span class="stepper-line" aria-hidden="true"></span>
         </li>
         <li class="stepper-item">
           <button type="button" id="tabStep3" class="stepper-btn" onclick="goToStep(3)">
             <span class="stepper-circle">3</span>
-            <span class="stepper-label">Danışmanlık talebi</span>
+            <span class="stepper-label" data-i18n="step3_nav">Consultation request</span>
           </button>
           <span class="stepper-line" aria-hidden="true"></span>
         </li>
         <li class="stepper-item">
           <button type="button" id="tabStep4" class="stepper-btn" onclick="goToStep(4)">
             <span class="stepper-circle">4</span>
-            <span class="stepper-label">Ödeme planı</span>
+            <span class="stepper-label" data-i18n="step4_nav">Payment schedule</span>
           </button>
         </li>
       </ol>
-      <p id="mobileStepCaption" class="stepper-mobile-caption">Adım 1 / 4 — Ön bilgiler</p>
+      <p id="mobileStepCaption" class="stepper-mobile-caption">Step 1 / 4 — Preliminary inputs</p>
     </nav>
 
-    <!-- Mobil açılır-kapanır özet satırı -->
+    <!-- Mobile collapsible summary -->
     <details class="summary-mobile">
       <summary>
-        <span>Değerlendirme özeti</span>
-        <span id="mobileSummaryShort" class="mono-num">Ön tahmin: %67 · İade: %58</span>
+        <span data-i18n="summary_title">Assessment summary</span>
+        <span id="mobileSummaryShort" class="mono-num">Estimate: 67% · Refund: 58%</span>
       </summary>
       <div class="summary-mobile-body">
         <dl class="summary-dl">
           <div class="summary-row">
-            <dt>Kadın yaşı</dt>
-            <dd id="mobSumAge" class="mono-num">32 yaş</dd>
+            <dt data-i18n="lbl_age_short">Maternal age</dt>
+            <dd id="mobSumAge" class="mono-num">32 years</dd>
           </div>
           <div class="summary-row">
-            <dt>AMH düzeyi</dt>
-            <dd id="mobSumAmh" class="mono-num">2,0 ng/mL</dd>
+            <dt data-i18n="lbl_amh_short">AMH level</dt>
+            <dd id="mobSumAmh" class="mono-num">2.0 ng/mL</dd>
           </div>
           <div class="summary-row">
-            <dt>Sperm analizi</dt>
+            <dt data-i18n="lbl_sperm_short">Semen analysis</dt>
             <dd id="mobSumSperm">Normal</dd>
           </div>
           <div class="summary-row">
-            <dt>Önceki deneme</dt>
-            <dd id="mobSumPrior">Yok</dd>
+            <dt data-i18n="lbl_prior_short">Prior IVF cycles</dt>
+            <dd id="mobSumPrior">None</dd>
           </div>
           <hr class="summary-divider" />
           <div class="summary-row">
-            <dt>Tahmini başarı göstergesi</dt>
-            <dd id="mobSumEstimate" class="mono-num">%67</dd>
+            <dt data-i18n="lbl_est_short">Preliminary indicator</dt>
+            <dd id="mobSumEstimate" class="mono-num">67%</dd>
           </div>
           <div class="summary-row">
-            <dt>Olumsuz sonuçta iade oranı</dt>
-            <dd id="mobSumRefund" class="mono-num">%58</dd>
+            <dt data-i18n="lbl_ref_short">Refund ratio if unsuccessful</dt>
+            <dd id="mobSumRefund" class="mono-num">58%</dd>
           </div>
         </dl>
       </div>
@@ -97,19 +102,19 @@
     <div class="workspace-grid">
       <div class="step-column">
 
-        <!-- ADIM 1: Ön bilgiler -->
+        <!-- STEP 1: Preliminary Inputs -->
         <section id="step1" class="step-panel" aria-labelledby="step1Heading">
           <header class="step-header">
-            <h1 id="step1Heading" class="step-title">Ön değerlendirme bilgileri</h1>
-            <p class="step-desc">
-              Dört temel bilgiyle bir ön değerlendirme hesaplanır. Bilgileriniz yalnızca danışmanlık talebinizle birlikte embriyoloğa iletilir.
+            <h1 id="step1Heading" class="step-title" data-i18n="s1_heading">Preliminary assessment parameters</h1>
+            <p class="step-desc" data-i18n="s1_desc">
+              In conventional IVF care, every patient is charged the same flat fee despite having vastly different biological probabilities of success. EmbryoGuard democratizes fertility financing by calculating a preliminary indicator and an individualized outcome-refund ratio from four core clinical parameters.
             </p>
           </header>
 
           <div class="form-stack">
-            <!-- Kadın yaşı -->
+            <!-- Maternal age -->
             <div class="field">
-              <label for="inpAgeNum" class="field-label">Kadın yaşı</label>
+              <label for="inpAgeNum" class="field-label" data-i18n="lbl_age">Maternal age</label>
               <div class="input-unit-row">
                 <input
                   id="inpAgeNum"
@@ -121,7 +126,7 @@
                   class="input-number"
                   oninput="syncAgeFromNumber()"
                 />
-                <span class="unit-text">yaş</span>
+                <span class="unit-text" data-i18n="unit_years">years</span>
               </div>
               <input
                 id="inpAge"
@@ -130,7 +135,7 @@
                 max="45"
                 step="1"
                 value="32"
-                aria-label="Kadın yaşı kaydırıcısı"
+                aria-label="Maternal age slider"
                 class="range-slider"
                 oninput="syncAgeFromSlider()"
               />
@@ -138,7 +143,7 @@
 
             <!-- AMH -->
             <div class="field">
-              <label for="inpAmhNum" class="field-label">AMH (yumurtalık rezervi göstergesi)</label>
+              <label for="inpAmhNum" class="field-label" data-i18n="lbl_amh">AMH (anti-Müllerian hormone, ovarian reserve marker)</label>
               <div class="input-unit-row">
                 <input
                   id="inpAmhNum"
@@ -159,68 +164,71 @@
                 max="5.5"
                 step="0.1"
                 value="2.0"
-                aria-label="AMH düzeyi kaydırıcısı"
+                aria-label="AMH level slider"
                 class="range-slider"
                 oninput="syncAmhFromSlider()"
               />
-              <p class="field-hint">Düşük &lt; 1,0 · Normal 1,0–3,5 · Yüksek &gt; 3,5</p>
+              <p class="field-hint" data-i18n="amh_ref_hint">Low &lt; 1.0 · Normal 1.0–3.5 · High &gt; 3.5</p>
               <label for="inpAmhUnknown" class="checkbox-row">
                 <input id="inpAmhUnknown" type="checkbox" onchange="toggleAmhUnknown()" />
-                <span>Değerimi bilmiyorum</span>
+                <span data-i18n="lbl_amh_unknown">I do not know my AMH value</span>
               </label>
             </div>
 
-            <!-- Sperm analizi -->
+            <!-- Semen analysis (WHO 2021 6th Edition) -->
             <fieldset class="fieldset-clean">
-              <legend class="fieldset-legend">Sperm analizi</legend>
+              <legend class="fieldset-legend" data-i18n="lbl_sperm">Semen analysis (sperm concentration and motility)</legend>
               <div class="radio-stack" id="spermRadioGroup">
                 <label class="radio-option is-active" for="sperm_normal">
                   <input id="sperm_normal" type="radio" name="spermCategory" value="normal" checked onchange="handleSpermChange(this.value)" />
                   <span>
-                    <span class="radio-title">Normal</span>
-                    <span class="radio-criteria">Sayı: 15 milyon/mL üzeri · Hareketlilik: %40 üzeri</span>
+                    <span class="radio-title" data-i18n="sp_norm_title">Normal (Normozoospermia)</span>
+                    <span class="radio-criteria" data-i18n="sp_norm_desc">Concentration: ≥16 million/mL · Progressive motility: ≥30% (Total motility: ≥42%)</span>
                   </span>
                 </label>
 
                 <label class="radio-option" for="sperm_mild_low">
                   <input id="sperm_mild_low" type="radio" name="spermCategory" value="mild_low" onchange="handleSpermChange(this.value)" />
                   <span>
-                    <span class="radio-title">Hafif düşük</span>
-                    <span class="radio-criteria">Sayı: 5–15 milyon/mL · Hareketlilik: %20–%40</span>
+                    <span class="radio-title" data-i18n="sp_mild_title">Mildly reduced</span>
+                    <span class="radio-criteria" data-i18n="sp_mild_desc">Concentration: 5–15 million/mL · Progressive motility: 15%–29%</span>
                   </span>
                 </label>
 
                 <label class="radio-option" for="sperm_severe_low">
                   <input id="sperm_severe_low" type="radio" name="spermCategory" value="severe_low" onchange="handleSpermChange(this.value)" />
                   <span>
-                    <span class="radio-title">Belirgin düşük</span>
-                    <span class="radio-criteria">Sayı: 5 milyon/mL altı · Hareketlilik: %20 altı</span>
+                    <span class="radio-title" data-i18n="sp_sev_title">Significantly reduced</span>
+                    <span class="radio-criteria" data-i18n="sp_sev_desc">Concentration: &lt;5 million/mL · Progressive motility: &lt;15%</span>
                   </span>
                 </label>
 
                 <label class="radio-option" for="sperm_azoospermia">
                   <input id="sperm_azoospermia" type="radio" name="spermCategory" value="azoospermia" onchange="handleSpermChange(this.value)" />
                   <span>
-                    <span class="radio-title">Azospermi</span>
-                    <span class="radio-criteria">Menide sperm hücresi görülmedi</span>
+                    <span class="radio-title" data-i18n="sp_azo_title">Azoospermia</span>
+                    <span class="radio-criteria" data-i18n="sp_azo_desc">No spermatozoa observed in the ejaculate</span>
                   </span>
                 </label>
 
                 <label class="radio-option" for="sperm_unknown">
                   <input id="sperm_unknown" type="radio" name="spermCategory" value="unknown" onchange="handleSpermChange(this.value)" />
                   <span>
-                    <span class="radio-title">Tahlil yok / bilmiyorum</span>
-                    <span class="radio-criteria">Henüz spermiogram değerlendirmesi yapılmadı</span>
+                    <span class="radio-title" data-i18n="sp_unk_title">Not tested / unknown</span>
+                    <span class="radio-criteria" data-i18n="sp_unk_desc">Semen analysis has not been performed yet</span>
                   </span>
                 </label>
               </div>
+              <p class="field-hint" style="margin-top: 8px;" data-i18n="who_source_note">
+                Reference standard: World Health Organization (WHO) Laboratory Manual for the Examination and Processing of Human Semen, 6th Edition (2021) — 5th percentile lower reference limits (≥16 million/mL concentration, ≥30% progressive motility, ≥42% total motility).
+              </p>
             </fieldset>
 
-            <!-- Önceki IVF denemesi -->
+            <!-- Prior IVF cycles -->
             <fieldset class="fieldset-clean">
-              <legend class="fieldset-legend">Önceki tüp bebek (IVF) denemesi</legend>
-              <div class="segmented-control" role="group" aria-label="Önceki tüp bebek denemesi sayısı">
-                <button type="button" id="btnPrior0" class="segmented-btn is-active" aria-pressed="true" onclick="selectPrior(0)">Yok</button>
+              <legend class="fieldset-legend" data-i18n="lbl_prior">Prior IVF cycles</legend>
+              <div class="segmented-control" role="group" aria-label="Prior IVF cycles">
+                <button type="button" id="btnPrior0" class="segmented-btn is-active" aria-pressed="true" onclick="selectPrior(0)" data-i18n="prior_none">None</button>
                 <button type="button" id="btnPrior1" class="segmented-btn" aria-pressed="false" onclick="selectPrior(1)">1</button>
                 <button type="button" id="btnPrior2" class="segmented-btn" aria-pressed="false" onclick="selectPrior(2)">2</button>
                 <button type="button" id="btnPrior3" class="segmented-btn" aria-pressed="false" onclick="selectPrior(3)">3+</button>
@@ -229,25 +237,25 @@
           </div>
 
           <div class="actions-row">
-            <button type="button" class="btn-primary btn-full" onclick="goToStep(2)">Değerlendirmeyi hesapla</button>
+            <button type="button" class="btn-primary btn-full" onclick="goToStep(2)" data-i18n="btn_calc">Calculate preliminary assessment</button>
           </div>
         </section>
 
-        <!-- ADIM 2: Ön değerlendirme sonucu -->
+        <!-- STEP 2: Preliminary Assessment Result -->
         <section id="step2" class="step-panel step-hidden" aria-labelledby="step2Heading">
           <header class="step-header">
-            <h1 id="step2Heading" class="step-title">Ön değerlendirme sonucu</h1>
+            <h1 id="step2Heading" class="step-title" data-i18n="s2_heading">Preliminary assessment result</h1>
           </header>
 
-          <table class="report-table" aria-label="Ön değerlendirme özet tablosu">
+          <table class="report-table" aria-label="Preliminary assessment report table">
             <tbody>
               <tr>
-                <th scope="row">Tahmini başarı göstergesi</th>
-                <td id="dispPreliminaryPct">%67</td>
+                <th scope="row" data-i18n="tbl_est_label">Preliminary success indicator</th>
+                <td id="dispPreliminaryPct">67%</td>
               </tr>
               <tr>
-                <th scope="row">Olumsuz sonuçta iade oranı</th>
-                <td id="dispDynamicRefundPct">%58</td>
+                <th scope="row" data-i18n="tbl_ref_label">Refund ratio if cycle is unsuccessful</th>
+                <td id="dispDynamicRefundPct">58%</td>
               </tr>
             </tbody>
           </table>
@@ -264,68 +272,73 @@
           </div>
 
           <div class="used-inputs-block">
-            <h2 class="section-subhead">Bu değerlendirmede kullanılan bilgiler</h2>
+            <h2 class="section-subhead" data-i18n="s2_used_heading">Parameters used in this assessment</h2>
             <ul class="used-inputs-list">
               <li>
-                <span class="item-key">Kadın yaşı</span>
-                <span id="usedAge" class="item-val mono-num">32 yaş</span>
+                <span class="item-key" data-i18n="lbl_age_short">Maternal age</span>
+                <span id="usedAge" class="item-val mono-num">32 years</span>
               </li>
               <li>
-                <span class="item-key">AMH düzeyi</span>
-                <span id="usedAmh" class="item-val mono-num">2,0 ng/mL</span>
+                <span class="item-key" data-i18n="lbl_amh_short">AMH level</span>
+                <span id="usedAmh" class="item-val mono-num">2.0 ng/mL</span>
               </li>
               <li>
-                <span class="item-key">Sperm analizi</span>
-                <span id="usedSperm" class="item-val">Normal (Sayı: 15 milyon/mL üzeri · Hareketlilik: %40 üzeri)</span>
+                <span class="item-key" data-i18n="lbl_sperm_short">Semen analysis</span>
+                <span id="usedSperm" class="item-val">Normal (≥16 million/mL · ≥30% progressive motility)</span>
               </li>
               <li>
-                <span class="item-key">Önceki tüp bebek denemesi</span>
-                <span id="usedPrior" class="item-val">Yok</span>
+                <span class="item-key" data-i18n="lbl_prior_short">Prior IVF cycles</span>
+                <span id="usedPrior" class="item-val">None</span>
               </li>
             </ul>
           </div>
 
           <div class="clinical-note" role="note">
-            <p>
-              Bu sonuç, girdiğiniz dört bilgiye dayanan bir ön tahmindir; tıbbi görüş yerine geçmez. Kesin değerlendirme, embriyolog görüşmesinde tetkikleriniz incelendikten sonra yapılır.
+            <p data-i18n="s2_disclaimer">
+              This result is a preliminary estimate based on the four parameters entered above and does not replace a clinical evaluation. Your definitive prognosis, treatment protocol, and partner clinic selection are finalized after your diagnostic records are reviewed by the Lead Clinical Embryologist.
             </p>
           </div>
 
           <details class="disclosure-box">
-            <summary>İade oranı nasıl belirlenir?</summary>
+            <summary data-i18n="s2_refund_how_title">How is the refund ratio determined and why does it vary?</summary>
             <div class="disclosure-body">
-              <p>
-                Olumsuz sonuçta iade oranı sabit değildir; girdiğiniz ön bilgilerle hesaplanan değerlendirme göstergesine bağlı olarak %20 ile %65 arasında belirlenir. Sizin bilgilerinizle hesaplanan oran <span id="txtDynamicRefundInline" class="mono-num">%58</span> düzeyindedir ve nihai oran embriyolog görüşmesi sonrasında kesinleştirilir.
+              <p data-i18n="s2_refund_how_body">
+                Traditional IVF clinics charge every couple the same flat package price regardless of individual prognosis. To make fertility care fairer, the refund ratio is not fixed; it scales between 20% and 65% based on your preliminary indicator (<span id="txtDynamicRefundInline" class="mono-num">58%</span> for your current inputs) and is finalized following your embryologist consultation.
               </p>
             </div>
           </details>
 
           <div class="actions-row">
-            <button type="button" class="btn-secondary" onclick="goToStep(1)">Bilgileri düzenle</button>
-            <button type="button" class="btn-primary" onclick="goToStep(3)">Embriyoloğa danış</button>
+            <button type="button" class="btn-secondary" onclick="goToStep(1)" data-i18n="btn_edit_inputs">Edit parameters</button>
+            <button type="button" class="btn-primary" onclick="goToStep(3)" data-i18n="btn_consult">Consult the embryologist</button>
           </div>
         </section>
 
-        <!-- ADIM 3: Danışmanlık talebi -->
+        <!-- STEP 3: Consultation Request -->
         <section id="step3" class="step-panel step-hidden" aria-labelledby="step3Heading">
           <header class="step-header">
-            <h1 id="step3Heading" class="step-title">Danışmanlık talebi</h1>
-            <p class="step-desc">
-              Ön değerlendirme bilgileriniz talebinize eklenir. Tetkiklerinizin incelenmesi ve uygun merkez yönlendirmesi için aşağıdaki formu doldurabilirsiniz.
+            <h1 id="step3Heading" class="step-title" data-i18n="s3_heading">Clinical embryologist consultation request</h1>
+            <p class="step-desc" data-i18n="s3_desc">
+              Your preliminary parameters are attached to your request. Submit your question below to review your lab reports, finalize your prognosis, and receive a personalized clinic referral.
             </p>
           </header>
 
-          <div class="embryologist-bar">
-            <span class="embryologist-avatar" aria-hidden="true">C</span>
-            <div>
-              <div class="embryologist-name">Caner</div>
-              <div class="embryologist-meta">{{UNVAN}} · {{KURUM}}</div>
+          <div class="embryologist-bar" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span class="embryologist-avatar" aria-hidden="true">CK</span>
+              <div>
+                <div class="embryologist-name">Caner Karaogul, M.Sc.</div>
+                <div class="embryologist-meta" data-i18n="emb_role">Senior Clinical Embryologist · 15+ Years International ART Experience</div>
+              </div>
             </div>
+            <p class="field-hint" style="line-height: 1.5;" data-i18n="emb_bio">
+              M.Sc. in Histology &amp; Embryology (Firat University Medical Faculty) and B.Sc. in Molecular Biology &amp; Genetics (Halic University). Over 15 years of experience establishing, supervising, and optimizing IVF laboratories across Thailand (Siam IVF, Paolo Memorial Hospital, Bangkok), Cyprus (Gynolife IVF Center, Nicosia), Albania (International Turkish Hospital, Tirana), and Turkey (Acibadem &amp; Bahceci IVF Centers). Specialized in micromanipulation (ICSI), Day-3/Day-5 trophectoderm biopsy for Next-Generation Sequencing (NGS), and oocyte/blastocyst vitrification.
+            </p>
           </div>
 
           <form id="consultationForm" class="form-stack" novalidate onsubmit="handlePatientMessageSubmit(event)">
             <div class="field">
-              <label for="patientName" class="field-label">Adınız ya da rumuzunuz</label>
+              <label for="patientName" class="field-label" data-i18n="lbl_name">Your name or alias</label>
               <input
                 id="patientName"
                 type="text"
@@ -334,11 +347,11 @@
                 aria-describedby="errPatientName"
                 oninput="updateForwardLinks()"
               />
-              <p id="errPatientName" class="field-error" role="alert">Lütfen adınızı ya da bir rumuz girin.</p>
+              <p id="errPatientName" class="field-error" role="alert" data-i18n="err_name">Please enter your name or an alias.</p>
             </div>
 
             <div class="field">
-              <label for="patientContact" class="field-label">İletişim bilginiz (telefon, e-posta ya da Telegram)</label>
+              <label for="patientContact" class="field-label" data-i18n="lbl_contact">Contact information (phone, WhatsApp, email, or Telegram)</label>
               <input
                 id="patientContact"
                 type="text"
@@ -347,11 +360,11 @@
                 aria-describedby="errPatientContact"
                 oninput="updateForwardLinks()"
               />
-              <p id="errPatientContact" class="field-error" role="alert">Size dönüş yapılabilmesi için bir iletişim bilgisi girin.</p>
+              <p id="errPatientContact" class="field-error" role="alert" data-i18n="err_contact">Please provide a contact method so we can reach you.</p>
             </div>
 
             <div class="field">
-              <label for="patientMsgInput" class="field-label">Sorunuz</label>
+              <label for="patientMsgInput" class="field-label" data-i18n="lbl_question">Your question or clinical notes</label>
               <textarea
                 id="patientMsgInput"
                 rows="4"
@@ -359,68 +372,68 @@
                 aria-describedby="errPatientMsg"
                 oninput="updateForwardLinks()"
               ></textarea>
-              <p id="errPatientMsg" class="field-error" role="alert">Lütfen danışmak istediğiniz konuyu kısaca yazın.</p>
+              <p id="errPatientMsg" class="field-error" role="alert" data-i18n="err_question">Please briefly describe your question or medical history.</p>
             </div>
 
             <div class="field">
               <label for="kvkkConsent" class="checkbox-row">
                 <input id="kvkkConsent" type="checkbox" aria-describedby="errKvkk" />
-                <span>
-                  <a href="{{KVKK_URL}}" target="_blank" rel="noopener">Kişisel verilerin korunması aydınlatma metnini</a> okudum ve bilgilerimin danışmanlık amacıyla incelenmesini onaylıyorum.
+                <span data-i18n="lbl_consent">
+                  I have read the <a href="{{KVKK_URL}}" target="_blank" rel="noopener">data privacy notice</a> and consent to the review of my information for clinical consultation purposes.
                 </span>
               </label>
-              <p id="errKvkk" class="field-error" role="alert">Devam etmek için aydınlatma metnini onaylamanız gerekir.</p>
+              <p id="errKvkk" class="field-error" role="alert" data-i18n="err_consent">Please confirm the privacy notice to proceed.</p>
             </div>
 
             <div class="actions-row">
-              <button type="button" class="btn-secondary" onclick="goToStep(2)">Ön değerlendirmeye dön</button>
-              <button type="submit" class="btn-primary">Talebi gönder</button>
+              <button type="button" class="btn-secondary" onclick="goToStep(2)" data-i18n="btn_back_s2">Back to assessment</button>
+              <button type="submit" class="btn-primary" data-i18n="btn_submit_req">Submit request</button>
             </div>
 
             <div class="secondary-links-row">
-              <span>Alternatif iletim kanalları:</span>
-              <a id="tgDirectLink" href="https://t.me/criticalsilence" target="_blank" rel="noopener">Telegram ile ilet</a>
-              <a id="mailDirectLink" href="mailto:info@cukka.org">E-posta ile ilet</a>
+              <span data-i18n="alt_channels">Direct forwarding channels:</span>
+              <a id="tgDirectLink" href="https://t.me/criticalsilence" target="_blank" rel="noopener" data-i18n="link_tg">Send via Telegram</a>
+              <a id="mailDirectLink" href="mailto:canerkaraogul@gmail.com" data-i18n="link_mail">Send via Email</a>
             </div>
           </form>
 
-          <!-- Gönderim sonrası onay durumu -->
+          <!-- Post-submit confirmation view -->
           <div id="requestConfirmation" class="confirmation-box step-hidden" role="status" aria-live="polite">
-            <h2 class="confirmation-title">Talebiniz alındı</h2>
-            <p class="step-desc">
-              İlettiğiniz bilgiler kaydedildi. Embriyolog incelemesinin ardından <span>{{YANIT_SURESI}}</span> içinde belirttiğiniz iletişim kanalından size dönüş yapılacaktır.
+            <h2 class="confirmation-title" data-i18n="conf_title">Your request has been recorded</h2>
+            <p class="step-desc" data-i18n="conf_desc">
+              Your consultation summary has been prepared. Following review by Caner Karaogul, M.Sc., you will receive a response within <span>{{YANIT_SURESI}}</span> via your specified contact channel.
             </p>
 
             <div class="used-inputs-block">
-              <h3 class="section-subhead">İletilen özet</h3>
+              <h3 class="section-subhead" data-i18n="conf_summary_heading">Submitted summary</h3>
               <ul id="confirmedSummaryList" class="used-inputs-list"></ul>
             </div>
 
             <div class="secondary-links-row">
-              <span>Özetinizi doğrudan kendi uygulamanız üzerinden de gönderebilirsiniz:</span>
-              <a id="tgConfirmLink" href="https://t.me/criticalsilence" target="_blank" rel="noopener">Telegram ile ilet</a>
-              <a id="mailConfirmLink" href="mailto:info@cukka.org">E-posta ile ilet</a>
+              <span data-i18n="conf_direct_hint">You may also forward this summary directly via your preferred client:</span>
+              <a id="tgConfirmLink" href="https://t.me/criticalsilence" target="_blank" rel="noopener" data-i18n="link_tg">Send via Telegram</a>
+              <a id="mailConfirmLink" href="mailto:canerkaraogul@gmail.com" data-i18n="link_mail">Send via Email</a>
             </div>
 
             <div class="actions-row">
-              <button type="button" class="btn-secondary" onclick="resetConsultationForm()">Bilgileri düzenle</button>
-              <button type="button" class="btn-primary" onclick="goToStep(4)">Ödeme planını incele</button>
+              <button type="button" class="btn-secondary" onclick="resetConsultationForm()" data-i18n="btn_edit_req">Edit request</button>
+              <button type="button" class="btn-primary" onclick="goToStep(4)" data-i18n="btn_go_s4">Review payment schedule</button>
             </div>
           </div>
         </section>
 
-        <!-- ADIM 4: Ödeme planı ve iade -->
+        <!-- STEP 4: Payment Schedule & Refund Terms -->
         <section id="step4" class="step-panel step-hidden" aria-labelledby="step4Heading">
           <header class="step-header">
-            <h1 id="step4Heading" class="step-title">Ödeme planı ve iade koşulları</h1>
-            <p class="step-desc">
-              Ödemeniz kliniğe peşin aktarılmaz; emanet hesabında tutulur ve tedavi aşamaları tamamlandıkça serbest bırakılır.
+            <h1 id="step4Heading" class="step-title" data-i18n="s4_heading">Payment schedule and refund terms</h1>
+            <p class="step-desc" data-i18n="s4_desc">
+              Your treatment fee is not transferred upfront to the clinic; funds are held in an escrow account and released as clinical milestones are completed.
             </p>
           </header>
 
           <div class="two-field-grid">
             <div class="field">
-              <label for="vaultAmountInput" class="field-label">Paket tutarı</label>
+              <label for="vaultAmountInput" class="field-label" data-i18n="lbl_pkg_amount">Package amount (USD)</label>
               <div class="input-unit-row">
                 <input
                   id="vaultAmountInput"
@@ -436,10 +449,10 @@
             </div>
 
             <div class="field">
-              <label for="vaultAssetSelect" class="field-label">Para birimi</label>
+              <label for="vaultAssetSelect" class="field-label" data-i18n="lbl_currency">Settlement currency</label>
               <select id="vaultAssetSelect" class="input-select" onchange="updateSimpleVault()">
-                <option value="USDC">ABD doları (USDC)</option>
-                <option value="USDT">ABD doları (USDT)</option>
+                <option value="USDC">US Dollar (USDC)</option>
+                <option value="USDT">US Dollar (USDT)</option>
                 <option value="NEAR">NEAR</option>
                 <option value="SOL">SOL</option>
                 <option value="BTC">BTC</option>
@@ -447,101 +460,101 @@
             </div>
           </div>
 
-          <table class="schedule-table" aria-label="Aşamalı ödeme ve iade tablosu">
+          <table class="schedule-table" aria-label="Staged payment and refund schedule">
             <thead>
               <tr>
-                <th scope="col">Aşama</th>
-                <th scope="col">Ne zaman</th>
-                <th scope="col">Tutar</th>
+                <th scope="col" data-i18n="th_stage">Stage</th>
+                <th scope="col" data-i18n="th_when">Condition</th>
+                <th scope="col" data-i18n="th_amount">Amount</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>1. aşama (%25)</td>
-                <td>Tedavi başlangıcı ve yumurta toplama işlemi</td>
-                <td id="vStep1Usd">1.250 USDC</td>
+                <td data-i18n="st1_name">Stage 1 (25%)</td>
+                <td data-i18n="st1_when">Treatment initiation and oocyte retrieval (OPU)</td>
+                <td id="vStep1Usd">1,250 USDC</td>
               </tr>
               <tr>
-                <td>2. aşama (%25)</td>
-                <td>Embriyo gelişimi ve transfer süreci</td>
-                <td id="vStep2Usd">1.250 USDC</td>
+                <td data-i18n="st2_name">Stage 2 (25%)</td>
+                <td data-i18n="st2_when">Embryo culture and transfer procedure</td>
+                <td id="vStep2Usd">1,250 USDC</td>
               </tr>
               <tr>
-                <td>3. aşama (%50)</td>
-                <td>Klinik gebelik sonucunun netleşmesi</td>
-                <td id="vStep3Usd">2.500 USDC</td>
+                <td data-i18n="st3_name">Stage 3 (50%)</td>
+                <td data-i18n="st3_when">Confirmation of clinical pregnancy outcome</td>
+                <td id="vStep3Usd">2,500 USDC</td>
               </tr>
               <tr class="refund-row">
-                <td>Olumsuz sonuçta iade (<span id="vRefundPctLabel" class="mono-num">%58</span>)</td>
-                <td>Gebelik oluşmaması durumunda emanet hesabından iade</td>
-                <td id="vRefundUsd">2.900 USDC</td>
+                <td><span data-i18n="st_ref_name">Refund if unsuccessful</span> (<span id="vRefundPctLabel" class="mono-num">58%</span>)</td>
+                <td data-i18n="st_ref_when">Returned from escrow to patient if pregnancy is negative</td>
+                <td id="vRefundUsd">2,900 USDC</td>
               </tr>
             </tbody>
           </table>
 
           <details class="disclosure-box">
-            <summary>Örnek senaryo</summary>
+            <summary data-i18n="sim_title">Sample outcome scenario</summary>
             <div class="disclosure-body">
-              <p class="field-hint">Bu bir gösterimdir; gerçek işlem yapılmaz.</p>
+              <p class="field-hint" data-i18n="sim_note">This is an illustration; no financial transaction is executed.</p>
               <div class="scenario-buttons">
-                <button type="button" class="btn-secondary" onclick="simulateVaultOutcome(true)">Gebelik pozitif</button>
-                <button type="button" class="btn-secondary" onclick="simulateVaultOutcome(false)">Gebelik negatif</button>
+                <button type="button" class="btn-secondary" onclick="simulateVaultOutcome(true)" data-i18n="btn_sim_pos">Positive pregnancy outcome</button>
+                <button type="button" class="btn-secondary" onclick="simulateVaultOutcome(false)" data-i18n="btn_sim_neg">Negative pregnancy outcome</button>
               </div>
-              <p id="simResultText">
-                Tedavi sonucuna göre emanet hesabındaki tutarın nasıl dağıtıldığını görmek için yukarıdaki durumlardan birini seçin.
+              <p id="simResultText" data-i18n="sim_default">
+                Select one of the outcomes above to view how the escrow balance is settled.
               </p>
             </div>
           </details>
 
           <details class="disclosure-box">
-            <summary>Teknik ayrıntılar</summary>
+            <summary data-i18n="tech_title">Technical details</summary>
             <div class="disclosure-body">
-              <p>
-                Aşamalı ödeme ve olumsuz sonuçta iade kuralları NEAR protokolü üzerindeki <span class="mono-num">embryoguard-vault.near</span> akıllı kontratı ve sınır ötesi mutabakat katmanı (NEAR Intents) aracılığıyla yürütülür.
+              <p data-i18n="tech_body">
+                Staged milestone disbursements and outcome-based refunds are governed programmatically on NEAR Protocol via the <span class="mono-num">embryoguard-vault.near</span> smart contract and settled across chains through NEAR Intents.
               </p>
             </div>
           </details>
 
           <div class="actions-row">
-            <button type="button" class="btn-secondary" onclick="goToStep(3)">Danışmanlık talebine dön</button>
-            <button type="button" class="btn-secondary" onclick="goToStep(1)">Baştan başla</button>
+            <button type="button" class="btn-secondary" onclick="goToStep(3)" data-i18n="btn_back_s3">Back to consultation</button>
+            <button type="button" class="btn-secondary" onclick="goToStep(1)" data-i18n="btn_restart">Start over</button>
           </div>
         </section>
 
       </div>
 
-      <!-- Masaüstü sağ yapışkan özet paneli -->
-      <aside class="summary-panel" aria-label="Değerlendirme özeti">
-        <h2 class="summary-title">Değerlendirme özeti</h2>
+      <!-- Desktop sticky summary panel -->
+      <aside class="summary-panel" aria-label="Assessment summary">
+        <h2 class="summary-title" data-i18n="summary_title">Assessment summary</h2>
         <dl class="summary-dl">
           <div class="summary-row">
-            <dt>Kadın yaşı</dt>
-            <dd id="deskSumAge" class="mono-num">32 yaş</dd>
+            <dt data-i18n="lbl_age_short">Maternal age</dt>
+            <dd id="deskSumAge" class="mono-num">32 years</dd>
           </div>
           <div class="summary-row">
-            <dt>AMH düzeyi</dt>
-            <dd id="deskSumAmh" class="mono-num">2,0 ng/mL</dd>
+            <dt data-i18n="lbl_amh_short">AMH level</dt>
+            <dd id="deskSumAmh" class="mono-num">2.0 ng/mL</dd>
           </div>
           <div class="summary-row">
-            <dt>Sperm analizi</dt>
+            <dt data-i18n="lbl_sperm_short">Semen analysis</dt>
             <dd id="deskSumSperm">Normal</dd>
           </div>
           <div class="summary-row">
-            <dt>Önceki deneme</dt>
-            <dd id="deskSumPrior">Yok</dd>
+            <dt data-i18n="lbl_prior_short">Prior IVF cycles</dt>
+            <dd id="deskSumPrior">None</dd>
           </div>
           <hr class="summary-divider" />
           <div class="summary-row">
-            <dt>Tahmini başarı göstergesi</dt>
-            <dd id="deskSumEstimate" class="mono-num">%67</dd>
+            <dt data-i18n="lbl_est_short">Preliminary indicator</dt>
+            <dd id="deskSumEstimate" class="mono-num">67%</dd>
           </div>
           <div class="summary-row">
-            <dt>Olumsuz sonuçta iade oranı</dt>
-            <dd id="deskSumRefund" class="mono-num">%58</dd>
+            <dt data-i18n="lbl_ref_short">Refund ratio if unsuccessful</dt>
+            <dd id="deskSumRefund" class="mono-num">58%</dd>
           </div>
         </dl>
-        <p class="summary-footnote">
-          Bu değerler girdiğiniz bilgilere göre hesaplanan ön tahmindir; kesin değerlendirme görüşme sonrasında yapılır.
+        <p class="summary-footnote" data-i18n="summary_footnote">
+          These figures represent a non-binding preliminary estimate based on your inputs; definitive terms are established after clinical consultation.
         </p>
       </aside>
     </div>
@@ -550,61 +563,306 @@
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <span>Bu sayfadaki hesaplamalar bilgilendirme amaçlıdır; tanı ve tedavi yerine geçmez.</span>
-      <span>İletişim: <a id="footerMailLink" href="mailto:info@cukka.org">info@cukka.org</a></span>
+      <span data-i18n="footer_disclaimer">Calculations on this page are for informational purposes only and do not constitute medical diagnosis or treatment.</span>
+      <span>Caner Karaogul, M.Sc. · <a id="footerMailLink" href="mailto:canerkaraogul@gmail.com">canerkaraogul@gmail.com</a></span>
     </div>
   </footer>
 
   <script>
     const Engine = window.EmbryoGuardEngine;
+    let currentLang = "en"; // Default language is English
     let currentStep = 1;
     let priorCycles = 0;
     let selectedSpermCategory = "normal";
     let latestAssessment = null;
 
+    const I18N = {
+      en: {
+        brand_subtitle: "Clinical embryology advisory and outcome-aligned IVF escrow",
+        nav_contact: "Consultation",
+        step1_nav: "Preliminary inputs",
+        step2_nav: "Preliminary assessment",
+        step3_nav: "Consultation request",
+        step4_nav: "Payment schedule",
+        summary_title: "Assessment summary",
+        lbl_age_short: "Maternal age",
+        lbl_amh_short: "AMH level",
+        lbl_sperm_short: "Semen analysis",
+        lbl_prior_short: "Prior IVF cycles",
+        lbl_est_short: "Preliminary indicator",
+        lbl_ref_short: "Refund ratio if unsuccessful",
+        s1_heading: "Preliminary assessment parameters",
+        s1_desc: "In conventional IVF care, every patient is charged the same flat fee despite having vastly different biological probabilities of success. EmbryoGuard democratizes fertility financing by calculating a preliminary indicator and an individualized outcome-refund ratio from four core clinical parameters.",
+        lbl_age: "Maternal age",
+        unit_years: "years",
+        lbl_amh: "AMH (anti-Müllerian hormone, ovarian reserve marker)",
+        amh_ref_hint: "Low < 1.0 · Normal 1.0–3.5 · High > 3.5",
+        lbl_amh_unknown: "I do not know my AMH value",
+        lbl_sperm: "Semen analysis (sperm concentration and motility)",
+        sp_norm_title: "Normal (Normozoospermia)",
+        sp_norm_desc: "Concentration: ≥16 million/mL · Progressive motility: ≥30% (Total motility: ≥42%)",
+        sp_mild_title: "Mildly reduced",
+        sp_mild_desc: "Concentration: 5–15 million/mL · Progressive motility: 15%–29%",
+        sp_sev_title: "Significantly reduced",
+        sp_sev_desc: "Concentration: <5 million/mL · Progressive motility: <15%",
+        sp_azo_title: "Azoospermia",
+        sp_azo_desc: "No spermatozoa observed in the ejaculate",
+        sp_unk_title: "Not tested / unknown",
+        sp_unk_desc: "Semen analysis has not been performed yet",
+        who_source_note: "Reference standard: World Health Organization (WHO) Laboratory Manual for the Examination and Processing of Human Semen, 6th Edition (2021) — 5th percentile lower reference limits (≥16 million/mL concentration, ≥30% progressive motility, ≥42% total motility).",
+        lbl_prior: "Prior IVF cycles",
+        prior_none: "None",
+        btn_calc: "Calculate preliminary assessment",
+        s2_heading: "Preliminary assessment result",
+        tbl_est_label: "Preliminary success indicator",
+        tbl_ref_label: "Refund ratio if cycle is unsuccessful",
+        s2_used_heading: "Parameters used in this assessment",
+        s2_disclaimer: "This result is a preliminary estimate based on the four parameters entered above and does not replace a clinical evaluation. Your definitive prognosis, treatment protocol, and partner clinic selection are finalized after your diagnostic records are reviewed by the Lead Clinical Embryologist.",
+        s2_refund_how_title: "How is the refund ratio determined and why does it vary?",
+        s2_refund_how_body: "Traditional IVF clinics charge every couple the same flat package price regardless of individual prognosis. To make fertility care fairer, the refund ratio is not fixed; it scales between 20% and 65% based on your preliminary indicator (<span id=\"txtDynamicRefundInline\" class=\"mono-num\">58%</span> for your current inputs) and is finalized following your embryologist consultation.",
+        btn_edit_inputs: "Edit parameters",
+        btn_consult: "Consult the embryologist",
+        s3_heading: "Clinical embryologist consultation request",
+        s3_desc: "Your preliminary parameters are attached to your request. Submit your question below to review your lab reports, finalize your prognosis, and receive a personalized clinic referral.",
+        emb_role: "Senior Clinical Embryologist · 15+ Years International ART Experience",
+        emb_bio: "M.Sc. in Histology & Embryology (Firat University Medical Faculty) and B.Sc. in Molecular Biology & Genetics (Halic University). Over 15 years of experience establishing, supervising, and optimizing IVF laboratories across Thailand (Siam IVF, Paolo Memorial Hospital, Bangkok), Cyprus (Gynolife IVF Center, Nicosia), Albania (International Turkish Hospital, Tirana), and Turkey (Acibadem & Bahceci IVF Centers). Specialized in micromanipulation (ICSI), Day-3/Day-5 trophectoderm biopsy for Next-Generation Sequencing (NGS), and oocyte/blastocyst vitrification.",
+        lbl_name: "Your name or alias",
+        err_name: "Please enter your name or an alias.",
+        lbl_contact: "Contact information (phone, WhatsApp, email, or Telegram)",
+        err_contact: "Please provide a contact method so we can reach you.",
+        lbl_question: "Your question or clinical notes",
+        err_question: "Please briefly describe your question or medical history.",
+        lbl_consent: "I have read the <a href=\"{{KVKK_URL}}\" target=\"_blank\" rel=\"noopener\">data privacy notice</a> and consent to the review of my information for clinical consultation purposes.",
+        err_consent: "Please confirm the privacy notice to proceed.",
+        btn_back_s2: "Back to assessment",
+        btn_submit_req: "Submit request",
+        alt_channels: "Direct forwarding channels:",
+        link_tg: "Send via Telegram",
+        link_mail: "Send via Email",
+        conf_title: "Your request has been recorded",
+        conf_desc: "Your consultation summary has been prepared. Following review by Caner Karaogul, M.Sc., you will receive a response within <span>{{YANIT_SURESI}}</span> via your specified contact channel.",
+        conf_summary_heading: "Submitted summary",
+        conf_direct_hint: "You may also forward this summary directly via your preferred client:",
+        btn_edit_req: "Edit request",
+        btn_go_s4: "Review payment schedule",
+        s4_heading: "Payment schedule and refund terms",
+        s4_desc: "Your treatment fee is not transferred upfront to the clinic; funds are held in an escrow account and released as clinical milestones are completed.",
+        lbl_pkg_amount: "Package amount (USD)",
+        lbl_currency: "Settlement currency",
+        th_stage: "Stage",
+        th_when: "Condition",
+        th_amount: "Amount",
+        st1_name: "Stage 1 (25%)",
+        st1_when: "Treatment initiation and oocyte retrieval (OPU)",
+        st2_name: "Stage 2 (25%)",
+        st2_when: "Embryo culture and transfer procedure",
+        st3_name: "Stage 3 (50%)",
+        st3_when: "Confirmation of clinical pregnancy outcome",
+        st_ref_name: "Refund if unsuccessful",
+        st_ref_when: "Returned from escrow to patient if pregnancy is negative",
+        sim_title: "Sample outcome scenario",
+        sim_note: "This is an illustration; no financial transaction is executed.",
+        btn_sim_pos: "Positive pregnancy outcome",
+        btn_sim_neg: "Negative pregnancy outcome",
+        sim_default: "Select one of the outcomes above to view how the escrow balance is settled.",
+        tech_title: "Technical details",
+        tech_body: "Staged milestone disbursements and outcome-based refunds are governed programmatically on NEAR Protocol via the <span class=\"mono-num\">embryoguard-vault.near</span> smart contract and settled across chains through NEAR Intents.",
+        btn_back_s3: "Back to consultation",
+        btn_restart: "Start over",
+        summary_footnote: "These figures represent a non-binding preliminary estimate based on your inputs; definitive terms are established after clinical consultation.",
+        footer_disclaimer: "Calculations on this page are for informational purposes only and do not constitute medical diagnosis or treatment."
+      },
+      tr: {
+        brand_subtitle: "Klinik embriyoloji danışmanlığı ve sonuca dayalı emanet hesabı",
+        nav_contact: "İletişim",
+        step1_nav: "Ön bilgiler",
+        step2_nav: "Ön değerlendirme",
+        step3_nav: "Danışmanlık talebi",
+        step4_nav: "Ödeme planı",
+        summary_title: "Değerlendirme özeti",
+        lbl_age_short: "Kadın yaşı",
+        lbl_amh_short: "AMH düzeyi",
+        lbl_sperm_short: "Sperm analizi",
+        lbl_prior_short: "Önceki deneme",
+        lbl_est_short: "Tahmini başarı göstergesi",
+        lbl_ref_short: "Olumsuz sonuçta iade oranı",
+        s1_heading: "Ön değerlendirme bilgileri",
+        s1_desc: "Standart tüp bebek tedavilerinde her hastanın başarı şansı farklı olmasına rağmen aynı sabit ücretler talep edilir. EmbryoGuard, dört temel klinik bilgiyle bir ön değerlendirme ve kişiye özel iade oranı hesaplayarak tedavi maliyetini adil hale getirmeyi amaçlar.",
+        lbl_age: "Kadın yaşı",
+        unit_years: "yaş",
+        lbl_amh: "AMH (yumurtalık rezervi göstergesi)",
+        amh_ref_hint: "Düşük < 1,0 · Normal 1,0–3,5 · Yüksek > 3,5",
+        lbl_amh_unknown: "Değerimi bilmiyorum",
+        lbl_sperm: "Sperm analizi (sayı ve hareketlilik)",
+        sp_norm_title: "Normal (Normozoospermi)",
+        sp_norm_desc: "Sayı: ≥16 milyon/mL · İleri hareketlilik: ≥%30 (Toplam hareketlilik: ≥%42)",
+        sp_mild_title: "Hafif düşük",
+        sp_mild_desc: "Sayı: 5–15 milyon/mL · İleri hareketlilik: %15–%29",
+        sp_sev_title: "Belirgin düşük",
+        sp_sev_desc: "Sayı: <5 milyon/mL · İleri hareketlilik: <%15",
+        sp_azo_title: "Azospermi",
+        sp_azo_desc: "Menide sperm hücresi görülmedi",
+        sp_unk_title: "Tahlil yok / bilmiyorum",
+        sp_unk_desc: "Henüz spermiogram değerlendirmesi yapılmadı",
+        who_source_note: "Kaynak: Dünya Sağlık Örgütü (WHO) İnsan Semeninin İncelenmesi ve İşlenmesi Laboratuvar El Kitabı, 6. Baskı (2021) — 5. persentil alt referans sınırları (konsantrasyon ≥16 milyon/mL, ileri hareketlilik ≥%30, toplam hareketlilik ≥%42).",
+        lbl_prior: "Önceki tüp bebek (IVF) denemesi",
+        prior_none: "Yok",
+        btn_calc: "Değerlendirmeyi hesapla",
+        s2_heading: "Ön değerlendirme sonucu",
+        tbl_est_label: "Tahmini başarı göstergesi",
+        tbl_ref_label: "Olumsuz sonuçta iade oranı",
+        s2_used_heading: "Bu değerlendirmede kullanılan bilgiler",
+        s2_disclaimer: "Bu sonuç, girdiğiniz dört bilgiye dayanan bir ön tahmindir; tıbbi görüş yerine geçmez. Kesin değerlendirme, embriyolog görüşmesinde tetkikleriniz incelendikten sonra yapılır.",
+        s2_refund_how_title: "İade oranı nasıl belirlenir?",
+        s2_refund_how_body: "Geleneksel merkezlerde her hastadan başarı şansına bakılmaksızın aynı ücret alınır. Bu modeli demokratikleştirmek amacıyla olumsuz sonuçta iade oranı sabit tutulmaz; ön değerlendirme göstergenize bağlı olarak %20 ile %65 arasında belirlenir (mevcut bilgileriniz için <span id=\"txtDynamicRefundInline\" class=\"mono-num\">%58</span>) ve görüşme sonrasında kesinleştirilir.",
+        btn_edit_inputs: "Bilgileri düzenle",
+        btn_consult: "Embriyoloğa danış",
+        s3_heading: "Danışmanlık talebi",
+        s3_desc: "Ön değerlendirme bilgileriniz talebinize eklenir. Tetkiklerinizin incelenmesi ve uygun merkez yönlendirmesi için aşağıdaki formu doldurabilirsiniz.",
+        emb_role: "Kıdemli Klinik Embriyolog · 15+ Yıl Uluslararası ÜYTM Deneyimi",
+        emb_bio: "Histoloji ve Embriyoloji Yüksek Lisansı (Fırat Üniversitesi Tıp Fakültesi) ve Moleküler Biyoloji ve Genetik Lisansı (Haliç Üniversitesi). Tayland (Siam IVF, Paolo Memorial Hospital, Bangkok), Kıbrıs (Gynolife IVF, Lefkoşa), Arnavutluk (International Turkish Hospital, Tiran) ve Türkiye'de (Acıbadem ve Bahçeci IVF Merkezleri) 15 yılı aşkın laboratuvar kurulumu ve yöneticiliği deneyimi; mikroenjeksiyon (ICSI), NGS genetik tarama için 3. ve 5. gün biyopsisi ve oosit/embriyo vitrifikasyonu uzmanı.",
+        lbl_name: "Adınız ya da rumuzunuz",
+        err_name: "Lütfen adınızı ya da bir rumuz girin.",
+        lbl_contact: "İletişim bilginiz (telefon, WhatsApp, e-posta ya da Telegram)",
+        err_contact: "Size dönüş yapılabilmesi için bir iletişim bilgisi girin.",
+        lbl_question: "Sorunuz",
+        err_question: "Lütfen danışmak istediğiniz konuyu kısaca yazın.",
+        lbl_consent: "<a href=\"{{KVKK_URL}}\" target=\"_blank\" rel=\"noopener\">Kişisel verilerin korunması aydınlatma metnini</a> okudum ve bilgilerimin danışmanlık amacıyla incelenmesini onaylıyorum.",
+        err_consent: "Devam etmek için aydınlatma metnini onaylamanız gerekir.",
+        btn_back_s2: "Ön değerlendirmeye dön",
+        btn_submit_req: "Talebi gönder",
+        alt_channels: "Alternatif iletim kanalları:",
+        link_tg: "Telegram ile ilet",
+        link_mail: "E-posta ile ilet",
+        conf_title: "Talebiniz alındı",
+        conf_desc: "İlettiğiniz bilgiler kaydedildi. Embriyolog incelemesinin ardından <span>{{YANIT_SURESI}}</span> içinde belirttiğiniz iletişim kanalından size dönüş yapılacaktır.",
+        conf_summary_heading: "İletilen özet",
+        conf_direct_hint: "Özetinizi doğrudan kendi uygulamanız üzerinden de gönderebilirsiniz:",
+        btn_edit_req: "Bilgileri düzenle",
+        btn_go_s4: "Ödeme planını incele",
+        s4_heading: "Ödeme planı ve iade koşulları",
+        s4_desc: "Ödemeniz kliniğe peşin aktarılmaz; emanet hesabında tutulur ve tedavi aşamaları tamamlandıkça serbest bırakılır.",
+        lbl_pkg_amount: "Paket tutarı (ABD doları)",
+        lbl_currency: "Para birimi",
+        th_stage: "Aşama",
+        th_when: "Ne zaman",
+        th_amount: "Tutar",
+        st1_name: "1. aşama (%25)",
+        st1_when: "Tedavi başlangıcı ve yumurta toplama işlemi",
+        st2_name: "2. aşama (%25)",
+        st2_when: "Embriyo gelişimi ve transfer süreci",
+        st3_name: "3. aşama (%50)",
+        st3_when: "Klinik gebelik sonucunun netleşmesi",
+        st_ref_name: "Olumsuz sonuçta iade",
+        st_ref_when: "Gebelik oluşmaması durumunda emanet hesabından iade",
+        sim_title: "Örnek senaryo",
+        sim_note: "Bu bir gösterimdir; gerçek işlem yapılmaz.",
+        btn_sim_pos: "Gebelik pozitif",
+        btn_sim_neg: "Gebelik negatif",
+        sim_default: "Tedavi sonucuna göre emanet hesabındaki tutarın nasıl dağıtıldığını görmek için yukarıdaki durumlardan birini seçin.",
+        tech_title: "Teknik ayrıntılar",
+        tech_body: "Aşamalı ödeme ve olumsuz sonuçta iade kuralları NEAR protokolü üzerindeki <span class=\"mono-num\">embryoguard-vault.near</span> akıllı kontratı ve sınır ötesi mutabakat katmanı (NEAR Intents) aracılığıyla yürütülür.",
+        btn_back_s3: "Danışmanlık talebine dön",
+        btn_restart: "Baştan başla",
+        summary_footnote: "Bu değerler girdiğiniz bilgilere göre hesaplanan ön tahmindir; kesin değerlendirme görüşme sonrasında yapılır.",
+        footer_disclaimer: "Bu sayfadaki hesaplamalar bilgilendirme amaçlıdır; tanı ve tedavi yerine geçmez."
+      }
+    };
+
     const STEP_TITLES = {
-      1: "Adım 1 / 4 — Ön bilgiler",
-      2: "Adım 2 / 4 — Ön değerlendirme",
-      3: "Adım 3 / 4 — Danışmanlık talebi",
-      4: "Adım 4 / 4 — Ödeme planı"
+      en: {
+        1: "Step 1 / 4 — Preliminary inputs",
+        2: "Step 2 / 4 — Preliminary assessment",
+        3: "Step 3 / 4 — Consultation request",
+        4: "Step 4 / 4 — Payment schedule"
+      },
+      tr: {
+        1: "Adım 1 / 4 — Ön bilgiler",
+        2: "Adım 2 / 4 — Ön değerlendirme",
+        3: "Adım 3 / 4 — Danışmanlık talebi",
+        4: "Adım 4 / 4 — Ödeme planı"
+      }
     };
 
     const SPERM_SHORT_LABELS = {
-      normal: "Normal",
-      mild_low: "Hafif düşük",
-      severe_low: "Belirgin düşük",
-      azoospermia: "Azospermi",
-      unknown: "Tahlil yok / bilmiyorum"
+      en: {
+        normal: "Normal",
+        mild_low: "Mildly reduced",
+        severe_low: "Significantly reduced",
+        azoospermia: "Azoospermia",
+        unknown: "Not tested / unknown"
+      },
+      tr: {
+        normal: "Normal",
+        mild_low: "Hafif düşük",
+        severe_low: "Belirgin düşük",
+        azoospermia: "Azospermi",
+        unknown: "Tahlil yok / bilmiyorum"
+      }
     };
 
     const SPERM_FULL_LABELS = {
-      normal: "Normal (Sayı: 15 milyon/mL üzeri · Hareketlilik: %40 üzeri)",
-      mild_low: "Hafif düşük (Sayı: 5–15 milyon/mL · Hareketlilik: %20–%40)",
-      severe_low: "Belirgin düşük (Sayı: 5 milyon/mL altı · Hareketlilik: %20 altı)",
-      azoospermia: "Azospermi (Menide sperm hücresi görülmedi)",
-      unknown: "Tahlil yok / bilmiyorum"
+      en: {
+        normal: "Normal (≥16 million/mL · ≥30% progressive motility · ≥42% total motility, WHO 2021)",
+        mild_low: "Mildly reduced (5–15 million/mL · 15%–29% progressive motility)",
+        severe_low: "Significantly reduced (<5 million/mL · <15% progressive motility)",
+        azoospermia: "Azoospermia (No spermatozoa observed in the ejaculate)",
+        unknown: "Not tested / unknown"
+      },
+      tr: {
+        normal: "Normal (≥16 milyon/mL · ≥%30 ileri hareketlilik · ≥%42 toplam hareketlilik, WHO 2021)",
+        mild_low: "Hafif düşük (5–15 milyon/mL · %15–%29 ileri hareketlilik)",
+        severe_low: "Belirgin düşük (<5 milyon/mL · <%15 ileri hareketlilik)",
+        azoospermia: "Azospermi (Menide sperm hücresi görülmedi)",
+        unknown: "Tahlil yok / bilmiyorum"
+      }
     };
 
     const PRIOR_LABELS = {
-      0: "Yok",
-      1: "1",
-      2: "2",
-      3: "3+"
+      en: { 0: "None", 1: "1", 2: "2", 3: "3+" },
+      tr: { 0: "Yok", 1: "1", 2: "2", 3: "3+" }
     };
 
     const contactConfig = {
-      email: localStorage.getItem("eg_email") || "info@cukka.org",
+      email: localStorage.getItem("eg_email") || "canerkaraogul@gmail.com",
       telegramUser: localStorage.getItem("eg_tg_user") || "criticalsilence",
       botToken: localStorage.getItem("eg_bot_token") || "",
       chatId: localStorage.getItem("eg_chat_id") || ""
     };
 
-    function formatTurkishDecimal(num) {
-      return Number(num).toFixed(1).replace(".", ",");
+    function formatPct(num) {
+      return currentLang === "tr" ? "%" + num : num + "%";
+    }
+
+    function formatDecimal(num) {
+      const fixed = Number(num).toFixed(1);
+      return currentLang === "tr" ? fixed.replace(".", ",") : fixed;
     }
 
     function formatIntegerThousands(num) {
-      return Math.round(Number(num)).toLocaleString("tr-TR");
+      const locale = currentLang === "tr" ? "tr-TR" : "en-US";
+      return Math.round(Number(num)).toLocaleString(locale);
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === "en" ? "tr" : "en";
+      document.documentElement.lang = currentLang;
+      document.getElementById("langSwitchBtn").textContent = currentLang === "en" ? "TR" : "EN";
+
+      const dict = I18N[currentLang];
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) {
+          if (key === "s2_refund_how_body" || key === "lbl_consent" || key === "conf_desc" || key === "tech_body") {
+            el.innerHTML = dict[key];
+          } else {
+            el.textContent = dict[key];
+          }
+        }
+      });
+
+      document.getElementById("mobileStepCaption").textContent = STEP_TITLES[currentLang][currentStep];
+      updateCalculation();
     }
 
     function goToStep(stepNum) {
@@ -626,7 +884,7 @@
           }
         }
       }
-      document.getElementById("mobileStepCaption").textContent = STEP_TITLES[stepNum];
+      document.getElementById("mobileStepCaption").textContent = STEP_TITLES[currentLang][stepNum];
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -715,10 +973,12 @@
         spermCategory: selectedSpermCategory
       });
 
-      const amhDisplay = amhKnown ? formatTurkishDecimal(amh) + " ng/mL" : "Bilinmiyor";
-      const spermShort = SPERM_SHORT_LABELS[selectedSpermCategory] || "Normal";
-      const spermFull = SPERM_FULL_LABELS[selectedSpermCategory] || SPERM_FULL_LABELS.normal;
-      const priorLabel = PRIOR_LABELS[priorCycles] || "Yok";
+      const unknownLabel = currentLang === "tr" ? "Bilinmiyor" : "Unknown";
+      const ageUnit = currentLang === "tr" ? " yaş" : " years";
+      const amhDisplay = amhKnown ? formatDecimal(amh) + " ng/mL" : unknownLabel;
+      const spermShort = SPERM_SHORT_LABELS[currentLang][selectedSpermCategory] || "Normal";
+      const spermFull = SPERM_FULL_LABELS[currentLang][selectedSpermCategory];
+      const priorLabel = PRIOR_LABELS[currentLang][priorCycles];
 
       latestAssessment = {
         age,
@@ -732,36 +992,37 @@
         res
       };
 
-      const estStr = "%" + res.preliminaryEstimatePct;
-      const refStr = "%" + res.dynamicRefundPct;
+      const estStr = formatPct(res.preliminaryEstimatePct);
+      const refStr = formatPct(res.dynamicRefundPct);
 
-      // Step 2 updates
       document.getElementById("dispPreliminaryPct").textContent = estStr;
       document.getElementById("dispDynamicRefundPct").textContent = refStr;
-      document.getElementById("txtDynamicRefundInline").textContent = refStr;
+      const inlineEl = document.getElementById("txtDynamicRefundInline");
+      if (inlineEl) inlineEl.textContent = refStr;
       document.getElementById("scaleMarker").style.left = res.preliminaryEstimatePct + "%";
 
-      document.getElementById("usedAge").textContent = age + " yaş";
+      document.getElementById("usedAge").textContent = age + ageUnit;
       document.getElementById("usedAmh").textContent = amhDisplay;
       document.getElementById("usedSperm").textContent = spermFull;
       document.getElementById("usedPrior").textContent = priorLabel;
 
-      // Desktop & Mobile Summary updates
-      document.getElementById("deskSumAge").textContent = age + " yaş";
+      document.getElementById("deskSumAge").textContent = age + ageUnit;
       document.getElementById("deskSumAmh").textContent = amhDisplay;
       document.getElementById("deskSumSperm").textContent = spermShort;
       document.getElementById("deskSumPrior").textContent = priorLabel;
       document.getElementById("deskSumEstimate").textContent = estStr;
       document.getElementById("deskSumRefund").textContent = refStr;
 
-      document.getElementById("mobSumAge").textContent = age + " yaş";
+      document.getElementById("mobSumAge").textContent = age + ageUnit;
       document.getElementById("mobSumAmh").textContent = amhDisplay;
       document.getElementById("mobSumSperm").textContent = spermShort;
       document.getElementById("mobSumPrior").textContent = priorLabel;
       document.getElementById("mobSumEstimate").textContent = estStr;
       document.getElementById("mobSumRefund").textContent = refStr;
       document.getElementById("mobileSummaryShort").textContent =
-        "Ön tahmin: " + estStr + " · İade: " + refStr;
+        currentLang === "tr"
+          ? "Ön tahmin: " + estStr + " · İade: " + refStr
+          : "Estimate: " + estStr + " · Refund: " + refStr;
 
       updateForwardLinks();
       updateSimpleVault();
@@ -770,16 +1031,16 @@
     function buildSummaryPayload(customMessage, name, contact) {
       const s = latestAssessment;
       return [
-        "EmbryoGuard klinik danismanlik talebi",
-        "Ad / Rumuz: " + (name || "-"),
-        "Iletisim: " + (contact || "-"),
-        "Kadin yasi: " + s.age + " yas",
-        "AMH duzeyi: " + s.amhDisplay,
-        "Sperm analizi: " + s.spermFull,
-        "Onceki deneme: " + s.priorLabel,
-        "Tahmini basari gostergesi (on tahmin): %" + s.res.preliminaryEstimatePct,
-        "Olumsuz sonucta iade orani: %" + s.res.dynamicRefundPct,
-        "Soru / Not: " + (customMessage || "-")
+        "EmbryoGuard Clinical Consultation Request",
+        "Name / Alias: " + (name || "-"),
+        "Contact: " + (contact || "-"),
+        "Maternal age: " + s.age,
+        "AMH level: " + s.amhDisplay,
+        "Semen analysis (WHO 2021): " + s.spermFull,
+        "Prior IVF cycles: " + s.priorLabel,
+        "Preliminary indicator (non-final): " + s.res.preliminaryEstimatePct + "%",
+        "Outcome refund ratio: " + s.res.dynamicRefundPct + "%",
+        "Question / Notes: " + (customMessage || "-")
       ].join("\n");
     }
 
@@ -791,7 +1052,7 @@
       const fullText = buildSummaryPayload(msg, name, contact);
 
       const tgUrl = "https://t.me/" + encodeURIComponent(contactConfig.telegramUser) + "?text=" + encodeURIComponent(fullText);
-      const mailUrl = "mailto:" + encodeURIComponent(contactConfig.email) + "?subject=" + encodeURIComponent("EmbryoGuard klinik danismanlik talebi") + "&body=" + encodeURIComponent(fullText);
+      const mailUrl = "mailto:" + encodeURIComponent(contactConfig.email) + "?subject=" + encodeURIComponent("EmbryoGuard Clinical Consultation Request") + "&body=" + encodeURIComponent(fullText);
 
       document.getElementById("tgDirectLink").href = tgUrl;
       document.getElementById("mailDirectLink").href = mailUrl;
@@ -847,23 +1108,36 @@
         } catch (err) {}
       }
 
-      // Build confirmation summary safely using createElement and textContent (no innerHTML)
       const list = document.getElementById("confirmedSummaryList");
       while (list.firstChild) {
         list.removeChild(list.firstChild);
       }
 
-      const rows = [
-        ["Ad ya da rumuz", name],
-        ["İletişim bilgisi", contact],
-        ["Kadın yaşı", latestAssessment.age + " yaş"],
-        ["AMH düzeyi", latestAssessment.amhDisplay],
-        ["Sperm analizi", latestAssessment.spermShort],
-        ["Önceki deneme", latestAssessment.priorLabel],
-        ["Tahmini başarı göstergesi", "%" + latestAssessment.res.preliminaryEstimatePct],
-        ["Olumsuz sonuçta iade oranı", "%" + latestAssessment.res.dynamicRefundPct],
-        ["Sorunuz", text]
-      ];
+      const ageUnit = currentLang === "tr" ? " yaş" : " years";
+      const rows =
+        currentLang === "tr"
+          ? [
+              ["Ad ya da rumuz", name],
+              ["İletişim bilgisi", contact],
+              ["Kadın yaşı", latestAssessment.age + ageUnit],
+              ["AMH düzeyi", latestAssessment.amhDisplay],
+              ["Sperm analizi", latestAssessment.spermShort],
+              ["Önceki deneme", latestAssessment.priorLabel],
+              ["Tahmini başarı göstergesi", formatPct(latestAssessment.res.preliminaryEstimatePct)],
+              ["Olumsuz sonuçta iade oranı", formatPct(latestAssessment.res.dynamicRefundPct)],
+              ["Sorunuz", text]
+            ]
+          : [
+              ["Name or alias", name],
+              ["Contact", contact],
+              ["Maternal age", latestAssessment.age + ageUnit],
+              ["AMH level", latestAssessment.amhDisplay],
+              ["Semen analysis", latestAssessment.spermShort],
+              ["Prior IVF cycles", latestAssessment.priorLabel],
+              ["Preliminary indicator", formatPct(latestAssessment.res.preliminaryEstimatePct)],
+              ["Refund ratio if unsuccessful", formatPct(latestAssessment.res.dynamicRefundPct)],
+              ["Question", text]
+            ];
 
       rows.forEach(pair => {
         const li = document.createElement("li");
@@ -902,7 +1176,7 @@
       document.getElementById("vStep1Usd").textContent = formatIntegerThousands(step1) + " " + asset;
       document.getElementById("vStep2Usd").textContent = formatIntegerThousands(step2) + " " + asset;
       document.getElementById("vStep3Usd").textContent = formatIntegerThousands(step3) + " " + asset;
-      document.getElementById("vRefundPctLabel").textContent = "%" + refundPct;
+      document.getElementById("vRefundPctLabel").textContent = formatPct(refundPct);
       document.getElementById("vRefundUsd").textContent = formatIntegerThousands(refundUsd) + " " + asset;
     }
 
@@ -914,22 +1188,34 @@
       const step3 = Math.round(amount * 0.50);
 
       const box = document.getElementById("simResultText");
-      if (isPositive) {
-        box.textContent =
-          "Gebelik sonucunun pozitif olarak doğrulanması durumunda, emanet hesabında tutulan 3. aşama tutarı (" +
-          formatIntegerThousands(step3) +
-          " " +
-          asset +
-          ") tedavi merkezine aktarılır ve süreç tamamlanır.";
+      if (currentLang === "tr") {
+        box.textContent = isPositive
+          ? "Gebelik sonucunun pozitif olarak doğrulanması durumunda, emanet hesabında tutulan 3. aşama tutarı (" +
+            formatIntegerThousands(step3) +
+            " " +
+            asset +
+            ") tedavi merkezine aktarılır ve süreç tamamlanır."
+          : "Gebelik oluşmaması durumunda, belirlenen %" +
+            refundPct +
+            " iade oranı doğrultusunda " +
+            formatIntegerThousands(refundUsd) +
+            " " +
+            asset +
+            " tutarındaki ödeme emanet hesabından doğrudan sizin hesabınıza iade edilir.";
       } else {
-        box.textContent =
-          "Gebelik oluşmaması durumunda, belirlenen %" +
-          refundPct +
-          " iade oranı doğrultusunda " +
-          formatIntegerThousands(refundUsd) +
-          " " +
-          asset +
-          " tutarındaki ödeme emanet hesabından doğrudan sizin hesabınıza iade edilir.";
+        box.textContent = isPositive
+          ? "When a positive clinical pregnancy outcome is confirmed, the Stage 3 escrow balance (" +
+            formatIntegerThousands(step3) +
+            " " +
+            asset +
+            ") is released to the partner clinic and the contract concludes."
+          : "If pregnancy is not achieved, " +
+            formatIntegerThousands(refundUsd) +
+            " " +
+            asset +
+            " (" +
+            refundPct +
+            "% of the package) is automatically returned from the escrow account to your wallet.";
       }
     }
 
