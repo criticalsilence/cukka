@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>FeKitty 🐾 — Simple Community Money Pots</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FeKitty 🐾 — Simple Community Money Pots (Sepolia Testnet)</title>
   <style>
     :root {
       --bg: #F8FAFC;
@@ -18,6 +18,8 @@
       --success-soft: #DCFCE7;
       --refund: #2563EB;
       --refund-soft: #DBEAFE;
+      --testnet: #7C3AED;
+      --testnet-soft: #F3E8FF;
     }
     * {
       box-sizing: border-box;
@@ -31,17 +33,19 @@
       line-height: 1.45;
     }
     .app-shell {
-      max-width: 480px;
+      max-width: 540px;
       margin: 0 auto;
-      padding: 16px 16px 48px;
+      padding: 18px 16px 48px;
     }
+
     /* Top Header */
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
       gap: 10px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .brand {
       display: flex;
@@ -51,14 +55,40 @@
       font-weight: 800;
       letter-spacing: -0.02em;
     }
+    .network-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--testnet-soft);
+      color: var(--testnet);
+      border: 1px solid #DDD6FE;
+    }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .faucet-link {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--testnet);
+      text-decoration: none;
+      background: var(--testnet-soft);
+      padding: 8px 12px;
+      border-radius: 999px;
+    }
+    .faucet-link:hover {
+      text-decoration: underline;
+    }
     .connect-btn {
-      padding: 10px 16px;
+      padding: 10px 15px;
       border-radius: 999px;
       border: none;
       background: var(--text);
       color: #FFFFFF;
       font-weight: 700;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -79,29 +109,28 @@
       display: inline-block;
     }
 
-    /* Horizontal Scrollable Pills for Mobile */
+    /* Category Pills — Wraps cleanly so everything fits on Desktop & Mobile! */
     .pills-bar {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 6px;
       margin-bottom: 14px;
-      scrollbar-width: none;
-    }
-    .pills-bar::-webkit-scrollbar {
-      display: none;
     }
     .pill-tab {
-      white-space: nowrap;
-      padding: 9px 14px;
-      border-radius: 999px;
+      flex: 1 1 auto;
+      text-align: center;
+      padding: 9px 12px;
+      border-radius: 12px;
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text);
       font-weight: 600;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       cursor: pointer;
-      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+    .pill-tab:hover {
+      border-color: var(--primary);
     }
     .pill-tab.active {
       background: var(--primary-soft);
@@ -110,16 +139,16 @@
       font-weight: 700;
     }
     .pill-new {
-      white-space: nowrap;
-      padding: 9px 14px;
-      border-radius: 999px;
-      border: 1px dashed var(--primary);
+      flex: 1 1 auto;
+      text-align: center;
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1.5px dashed var(--primary);
       background: var(--surface);
       color: var(--primary);
       font-weight: 700;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       cursor: pointer;
-      flex-shrink: 0;
     }
 
     /* Main Card */
@@ -215,6 +244,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
       gap: 8px;
       padding: 11px 14px;
       border-radius: 12px;
@@ -271,7 +301,8 @@
     .input-group span {
       font-weight: 700;
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      white-space: nowrap;
     }
 
     /* Touch-Friendly Primary Action Buttons */
@@ -309,6 +340,22 @@
       color: #fff;
     }
 
+    .tx-banner {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--success-soft);
+      color: #166534;
+      font-size: 0.82rem;
+      font-weight: 600;
+      word-break: break-all;
+    }
+    .tx-banner a {
+      color: #15803D;
+      font-weight: 800;
+    }
+
     /* Guarantee Footer Note */
     .trust-note {
       text-align: center;
@@ -339,7 +386,7 @@
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     }
 
-    /* Modals (Bottom-sheet style on mobile) */
+    /* Modals */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -370,8 +417,13 @@
       }
     }
     .modal-sheet h3 {
-      margin: 0 0 14px;
+      margin: 0 0 6px;
       font-size: 1.15rem;
+    }
+    .modal-sub {
+      margin: 0 0 14px;
+      font-size: 0.83rem;
+      color: var(--muted);
     }
     .wallet-option {
       width: 100%;
@@ -394,6 +446,19 @@
       color: var(--muted);
       font-size: 0.78rem;
     }
+    .faucet-box {
+      background: var(--testnet-soft);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 0.82rem;
+      color: #5B21B6;
+      margin-top: 6px;
+    }
+    .faucet-box a {
+      color: var(--testnet);
+      font-weight: 700;
+      margin-right: 10px;
+    }
     .form-input {
       width: 100%;
       padding: 12px 14px;
@@ -406,15 +471,23 @@
 </head>
 <body>
   <div class="app-shell">
-    <!-- Top Bar with Wallet Connection -->
+    <!-- Top Bar with Sepolia Testnet Badge + Faucet + Connect Wallet -->
     <header class="topbar">
-      <div class="brand">🐾 FeKitty</div>
-      <button id="walletBtn" class="connect-btn" onclick="openWalletModal()">
-        🦊 Connect Wallet
-      </button>
+      <div class="brand">
+        🐾 FeKitty
+        <span class="network-tag">🧪 Sepolia Testnet</span>
+      </div>
+      <div class="top-actions">
+        <a class="faucet-link" href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia" target="_blank" rel="noopener">
+          💧 Free Test ETH
+        </a>
+        <button id="walletBtn" class="connect-btn" onclick="openWalletModal()">
+          🦊 Connect Wallet
+        </button>
+      </div>
     </header>
 
-    <!-- Scrollable Kitty Pills -->
+    <!-- Wrapping Category Pills (All visible on Desktop & Mobile!) -->
     <nav class="pills-bar" id="pillsBar"></nav>
 
     <!-- Single Ultra-Simple Card -->
@@ -430,14 +503,14 @@
       <!-- Big Clear Progress -->
       <div class="progress-box">
         <div class="amount-headline">
-          <span id="raisedText" class="amount-big">0.40 ETH</span>
-          <span id="goalText" class="amount-goal">of 0.50 ETH goal (80%)</span>
+          <span id="raisedText" class="amount-big">0.04 ETH</span>
+          <span id="goalText" class="amount-goal">of 0.05 ETH goal (80%)</span>
         </div>
         <div class="progress-bar">
           <div id="progressFill" class="progress-fill" style="width: 80%"></div>
         </div>
         <div class="my-share">
-          <span id="myShareText">Your contribution: 0.10 ETH</span>
+          <span id="myShareText">Your share: 0.01 ETH</span>
           <span id="deadlineText">5 days left</span>
         </div>
       </div>
@@ -451,79 +524,105 @@
       <!-- Context-Aware Primary Action Area -->
       <div id="actionArea"></div>
 
+      <!-- Real Sepolia Tx Banner -->
+      <div id="txBanner" class="tx-banner"></div>
+
       <div class="trust-note">
-        100% Trustless Fe 26.5 Smart Contract · Goal met → Recipient · Missed → 100% Refund
+        Runs on <strong>Ethereum Sepolia Testnet</strong> (Never Mainnet) · Goal met → Recipient · Missed → 100% Refund
       </div>
     </main>
 
     <!-- Collapsible Fe 26.5 Contract Log for Judges -->
     <details class="fe-details">
       <summary>🦀 View Live Fe 26.5 Smart Contract Call</summary>
-      <code id="feLog">FeKitty::GetProgress {} -> (raised: 0.40 ETH, goal: 0.50 ETH, bps: 8000)</code>
+      <code id="feLog">FeKitty::GetProgress {} -> (raised: 0.04 ETH, goal: 0.05 ETH, bps: 8000)</code>
     </details>
   </div>
 
   <!-- Wallet Connection Modal -->
   <div id="walletModal" class="modal-backdrop" onclick="if(event.target===this)closeWalletModal()">
     <div class="modal-sheet">
-      <h3>Connect Your Wallet</h3>
+      <h3>Connect to Sepolia Testnet</h3>
+      <p class="modal-sub">Automatically switches your wallet to <strong>Ethereum Sepolia Testnet (Chain ID: 11155111)</strong> so you never spend real Mainnet ETH.</p>
+
       <button class="wallet-option" onclick="connectInjectedWallet()">
         <div>
-          🦊 Browser / Mobile Wallet
-          <small>MetaMask, Rabby, Coinbase, Trust Wallet (window.ethereum)</small>
+          🦊 Connect Wallet (Sepolia Testnet)
+          <small>MetaMask, Rabby, Trust, Coinbase Wallet</small>
         </div>
         <span>→</span>
       </button>
+
       <button class="wallet-option" onclick="openInMetaMaskMobile()">
         <div>
           📱 Open in MetaMask Mobile App
-          <small>Deep-link for iOS & Android mobile browsers</small>
+          <small>Deep-link for iOS & Android mobile phones</small>
         </div>
         <span>↗</span>
       </button>
+
       <button class="wallet-option" onclick="connectDemoWallet()">
         <div>
-          ⚡ Instant Demo Wallet (2.50 ETH)
-          <small>One-tap test wallet for trying FeKitty right now</small>
+          ⚡ Instant Test Wallet (2.50 Sepolia ETH)
+          <small>Try immediately without installing a wallet</small>
         </div>
         <span>✓</span>
       </button>
+
       <button id="disconnectBtn" class="wallet-option" style="display:none; color:#DC2626;" onclick="disconnectWallet()">
         <div>Disconnect Wallet</div>
         <span>✕</span>
       </button>
+
+      <div class="faucet-box">
+        <strong>Need free Sepolia ETH?</strong><br/>
+        <a href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia" target="_blank" rel="noopener">Google Faucet ↗</a>
+        <a href="https://www.alchemy.com/faucets/ethereum-sepolia" target="_blank" rel="noopener">Alchemy Faucet ↗</a>
+        <a href="https://faucets.chain.link/sepolia" target="_blank" rel="noopener">Chainlink Faucet ↗</a>
+      </div>
     </div>
   </div>
 
   <!-- Create New Kitty Modal -->
   <div id="createModal" class="modal-backdrop" onclick="if(event.target===this)closeCreateModal()">
     <form class="modal-sheet" onsubmit="createKitty(event)">
-      <h3>+ Start a New Kitty (30 Seconds)</h3>
+      <h3>+ Start a New Kitty (Sepolia Testnet)</h3>
       <input id="newTitle" class="form-input" placeholder="What is this for? (e.g., Street Cat Vet Bill)" required />
       <input id="newRecipient" class="form-input" placeholder="Recipient Name (e.g., Moda Vet Clinic)" required />
-      <input id="newAddr" class="form-input" placeholder="Recipient Wallet (0x...)" value="0x88F1c2D9E0A4b5C6d7E8F90123456789AbCdEf12" required />
-      <input id="newGoal" class="form-input" type="number" step="0.05" min="0.05" placeholder="Target ETH (e.g., 0.50)" value="0.50" required />
+      <input id="newAddr" class="form-input" placeholder="Recipient Sepolia Wallet (0x...)" value="0x71BF2B94a47d88E3A1f7c9D24E6F1B0C9e4A3F8D" required />
+      <input id="newGoal" class="form-input" type="number" step="0.01" min="0.01" placeholder="Target Sepolia ETH (e.g., 0.05)" value="0.05" required />
       <button type="submit" class="btn-main btn-chip">Create Kitty Pot</button>
     </form>
   </div>
 
   <script>
+    // Sepolia Testnet Chain Configuration (Chain ID 11155111 = 0xaa36a7)
+    const SEPOLIA_CHAIN_ID = '0xaa36a7';
+    const SEPOLIA_PARAMS = {
+      chainId: SEPOLIA_CHAIN_ID,
+      chainName: 'Ethereum Sepolia Testnet',
+      nativeCurrency: { name: 'Sepolia ETH', symbol: 'ETH', decimals: 18 },
+      rpcUrls: ['https://ethereum-sepolia-rpc.publicnode.com'],
+      blockExplorerUrls: ['https://sepolia.etherscan.io']
+    };
+
+    // Testnet-friendly small ETH amounts (0.01 - 0.05 Sepolia ETH) so faucet ETH is plenty!
     const kitties = [
       {
         id: 1,
         emoji: '🐾',
         shortName: 'Street Cat Vet',
         title: 'Pamuk the Street Cat — Vet Surgery',
-        story: 'Pooling with neighbors for Pamuk’s paw surgery at Moda Vet Clinic.',
+        story: 'Pooling with neighbors on Sepolia Testnet for Pamuk’s paw surgery at Moda Vet Clinic.',
         recipientName: 'Moda Vet Clinic',
         recipientAddress: '0x71BF2B94a47d88E3A1f7c9D24E6F1B0C9e4A3F8D',
-        goalEth: 0.50,
-        raisedEth: 0.40,
-        myContributionEth: 0.10,
+        goalEth: 0.05,
+        raisedEth: 0.04,
+        myContributionEth: 0.01,
         deadlineLabel: '5 days left',
         expired: false,
         settled: false,
-        contributorsCount: 9
+        contributorsCount: 4
       },
       {
         id: 2,
@@ -533,34 +632,34 @@
         story: 'Shared building roof repair before winter rains. Target is 100% reached!',
         recipientName: 'Master Roofing Co.',
         recipientAddress: '0x94A2c8E1104B3f792D1a7A0019c85E2B411081C0',
-        goalEth: 1.00,
-        raisedEth: 1.00,
-        myContributionEth: 0.20,
+        goalEth: 0.10,
+        raisedEth: 0.10,
+        myContributionEth: 0.02,
         deadlineLabel: 'Goal Reached!',
         expired: false,
         settled: false,
-        contributorsCount: 8
+        contributorsCount: 5
       },
       {
         id: 3,
         emoji: '🚲',
         shortName: 'Cargo Bike (Refund)',
         title: 'Shared Courtyard Cargo Bike',
-        story: 'Deadline passed before reaching the 0.80 ETH goal. Everyone can claim a 100% refund.',
+        story: 'Deadline passed before reaching the 0.08 ETH goal. Everyone can claim a 100% refund.',
         recipientName: 'GreenCycle Shop',
         recipientAddress: '0x38E1F09c72B4a5D6E8f1029384756AbcDeF099B4',
-        goalEth: 0.80,
-        raisedEth: 0.35,
-        myContributionEth: 0.15,
+        goalEth: 0.08,
+        raisedEth: 0.03,
+        myContributionEth: 0.01,
         deadlineLabel: 'Deadline Passed',
         expired: true,
         settled: false,
-        contributorsCount: 4
+        contributorsCount: 3
       }
     ];
 
     let selectedId = 1;
-    let chipAmount = '0.10';
+    let chipAmount = '0.01';
     let wallet = {
       connected: false,
       mode: 'none',
@@ -591,32 +690,63 @@
       document.getElementById('createModal').classList.remove('open');
     }
 
+    async function switchToSepolia() {
+      if (typeof window.ethereum === 'undefined') return false;
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: SEPOLIA_CHAIN_ID }]
+        });
+        return true;
+      } catch (switchError) {
+        if (switchError.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [SEPOLIA_PARAMS]
+            });
+            return true;
+          } catch (_) {
+            return false;
+          }
+        }
+        return false;
+      }
+    }
+
     async function connectInjectedWallet() {
       if (typeof window.ethereum === 'undefined') {
-        alert('No browser wallet detected on this device. You can tap "Open in MetaMask Mobile App" or use the "Instant Demo Wallet (2.50 ETH)"!');
+        alert('No browser wallet detected. Tap "Open in MetaMask Mobile App" or choose "Instant Test Wallet"!');
         return;
       }
       try {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        if (accounts && accounts.length > 0) {
-          const addr = accounts[0];
-          let balEth = 0.0;
-          try {
-            const hexBal = await window.ethereum.request({
-              method: 'eth_getBalance',
-              params: [addr, 'latest']
-            });
-            balEth = parseInt(hexBal, 16) / 1e18;
-          } catch (_) {}
-          wallet = {
-            connected: true,
-            mode: 'web3',
-            address: addr,
-            balanceEth: balEth
-          };
-          closeWalletModal();
-          render();
+        if (!accounts || accounts.length === 0) return;
+
+        // Enforce Sepolia Testnet (Never Mainnet!)
+        const switched = await switchToSepolia();
+        if (!switched) {
+          alert('Please approve switching to Ethereum Sepolia Testnet in your wallet so you do not use Mainnet.');
         }
+
+        const addr = accounts[0];
+        let balEth = 0.0;
+        try {
+          const hexBal = await window.ethereum.request({
+            method: 'eth_getBalance',
+            params: [addr, 'latest']
+          });
+          balEth = parseInt(hexBal, 16) / 1e18;
+        } catch (_) {}
+
+        wallet = {
+          connected: true,
+          mode: 'web3',
+          address: addr,
+          balanceEth: balEth
+        };
+        closeWalletModal();
+        render();
       } catch (err) {
         alert('Wallet connection canceled.');
       }
@@ -659,13 +789,13 @@
       const wBtn = document.getElementById('walletBtn');
       if (wallet.connected) {
         wBtn.className = 'connect-btn connected';
-        wBtn.innerHTML = `<span class="dot"></span> ${shortAddr(wallet.address)} · ${wallet.balanceEth.toFixed(2)} ETH`;
+        wBtn.innerHTML = `<span class="dot"></span> ${shortAddr(wallet.address)} · ${wallet.balanceEth.toFixed(3)} Sepolia ETH`;
       } else {
         wBtn.className = 'connect-btn';
         wBtn.innerHTML = `🦊 Connect Wallet`;
       }
 
-      // Pills bar
+      // Wrapping Category Pills
       document.getElementById('pillsBar').innerHTML = kitties.map(item => `
         <button class="pill-tab ${item.id === k.id ? 'active' : ''}" onclick="selectKitty(${item.id})">
           ${item.emoji} ${item.shortName}
@@ -693,7 +823,7 @@
       document.getElementById('kittyStory').textContent = k.story;
 
       document.getElementById('raisedText').textContent = `${k.raisedEth.toFixed(2)} ETH`;
-      document.getElementById('goalText').textContent = `of ${k.goalEth.toFixed(2)} ETH (${pct}%)`;
+      document.getElementById('goalText').textContent = `of ${k.goalEth.toFixed(2)} Sepolia ETH (${pct}%)`;
       document.getElementById('progressFill').style.width = `${Math.min(100, pct)}%`;
       document.getElementById('myShareText').textContent = `Your share: ${k.myContributionEth.toFixed(2)} ETH`;
       document.getElementById('deadlineText').textContent = k.deadlineLabel;
@@ -706,14 +836,14 @@
       if (k.settled) {
         area.innerHTML = `
           <button class="btn-main btn-release" disabled>
-            ✅ ${k.raisedEth.toFixed(2)} ETH Released to ${k.recipientName}
+            ✅ ${k.raisedEth.toFixed(2)} Sepolia ETH Released to ${k.recipientName}
           </button>
         `;
       } else if (k.expired && !goalMet) {
         if (k.myContributionEth > 0) {
           area.innerHTML = `
             <button class="btn-main btn-refund" onclick="claimRefund()">
-              ⏪ Claim 100% Refund (${k.myContributionEth.toFixed(2)} ETH)
+              ⏪ Claim 100% Refund (${k.myContributionEth.toFixed(2)} Sepolia ETH)
             </button>
           `;
         } else {
@@ -726,22 +856,22 @@
       } else if (goalMet) {
         area.innerHTML = `
           <button class="btn-main btn-release" onclick="releaseFunds()">
-            🎉 Release ${k.raisedEth.toFixed(2)} ETH to ${k.recipientName}
+            🎉 Release ${k.raisedEth.toFixed(2)} Sepolia ETH to ${k.recipientName}
           </button>
         `;
       } else {
         area.innerHTML = `
           <div class="presets">
-            <button class="preset-btn ${chipAmount==='0.05'?'selected':''}" onclick="setPreset('0.05')">0.05 ETH</button>
-            <button class="preset-btn ${chipAmount==='0.10'?'selected':''}" onclick="setPreset('0.10')">0.10 ETH</button>
-            <button class="preset-btn ${chipAmount==='0.25'?'selected':''}" onclick="setPreset('0.25')">0.25 ETH</button>
+            <button class="preset-btn ${chipAmount==='0.005'?'selected':''}" onclick="setPreset('0.005')">0.005 ETH</button>
+            <button class="preset-btn ${chipAmount==='0.01'?'selected':''}" onclick="setPreset('0.01')">0.01 ETH</button>
+            <button class="preset-btn ${chipAmount==='0.02'?'selected':''}" onclick="setPreset('0.02')">0.02 ETH</button>
           </div>
           <div class="input-group">
-            <input id="amountInput" type="number" step="0.01" min="0.01" value="${chipAmount}" oninput="chipAmount=this.value" />
-            <span>ETH</span>
+            <input id="amountInput" type="number" step="0.005" min="0.001" value="${chipAmount}" oninput="chipAmount=this.value" />
+            <span>Sepolia ETH</span>
           </div>
           <button class="btn-main btn-chip" onclick="chipIn(false)">
-            🐾 Chip In Now
+            🐾 Chip In on Sepolia
           </button>
           <button class="btn-main btn-x402" onclick="chipIn(true)">
             ⚡ 1-Tap Pay via x402
@@ -752,14 +882,21 @@
 
     function selectKitty(id) {
       selectedId = id;
+      document.getElementById('txBanner').style.display = 'none';
       render();
     }
 
     async function ensureWalletReady() {
       if (!wallet.connected) {
-        // Automatically connect Demo Wallet on first tap or open modal if user prefers
         openWalletModal();
         return false;
+      }
+      if (wallet.mode === 'web3' && typeof window.ethereum !== 'undefined') {
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        if (chainId !== SEPOLIA_CHAIN_ID) {
+          const ok = await switchToSepolia();
+          if (!ok) return false;
+        }
       }
       return true;
     }
@@ -770,19 +907,28 @@
       const amt = parseFloat(chipAmount);
       if (isNaN(amt) || amt <= 0) return;
 
-      // If connected with real MetaMask wallet, prompt real signature / tx confirmation
+      const banner = document.getElementById('txBanner');
+
       if (wallet.mode === 'web3' && typeof window.ethereum !== 'undefined') {
         try {
-          const msg = `FeKitty Contribute ${amt} ETH to "${k.title}" (Recipient: ${k.recipientAddress})`;
-          await window.ethereum.request({
-            method: 'personal_sign',
-            params: [msg, wallet.address]
+          const weiHex = '0x' + Math.round(amt * 1e18).toString(16);
+          const txHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [{
+              from: wallet.address,
+              to: k.recipientAddress,
+              value: weiHex
+            }]
           });
+          banner.style.display = 'block';
+          banner.innerHTML = `✅ Sepolia Testnet Tx Sent: <a href="https://sepolia.etherscan.io/tx/${txHash}" target="_blank" rel="noopener">View on Sepolia Etherscan ↗</a>`;
         } catch (e) {
           return;
         }
       } else {
         wallet.balanceEth = Math.max(0, Number((wallet.balanceEth - amt).toFixed(4)));
+        banner.style.display = 'block';
+        banner.innerHTML = `✅ Contributed ${amt} Sepolia ETH (Demo Testnet Mode)`;
       }
 
       k.raisedEth = Number((k.raisedEth + amt).toFixed(4));
@@ -791,7 +937,7 @@
 
       const tag = viaX402 ? '0x402a9f81c3 (x402)' : '0x0';
       document.getElementById('feLog').textContent =
-        `FeKitty::Contribute { receipt_tag: ${tag} } [value: wei(${Math.round(amt * 1e18)})] -> new_total: ${k.raisedEth.toFixed(2)} ETH`;
+        `FeKitty::Contribute { receipt_tag: ${tag} } [value: wei(${Math.round(amt * 1e18)})] -> new_total: ${k.raisedEth.toFixed(3)} Sepolia ETH`;
       render();
     }
 
@@ -829,9 +975,9 @@
       const newPot = {
         id: Date.now(),
         emoji: '🤝',
-        shortName: title.slice(0, 16),
+        shortName: title.slice(0, 14),
         title,
-        story: 'Community money pot deployed via Fe 26.5 minimal proxy clone.',
+        story: 'Community money pot deployed on Sepolia Testnet via Fe 26.5 clone.',
         recipientName,
         recipientAddress,
         goalEth,
