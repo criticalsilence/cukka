@@ -1,1227 +1,717 @@
 <!DOCTYPE html>
-<html lang="tr" class="scroll-smooth">
+<html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EmbryoGuard | Transparent IVF Outcome Assurance Vault & Embryologist Advisory on NEAR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>EmbryoGuard | Uzman Embriyolog Danışmanlığı & Güvenceli IVF Kasası</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="./src/embryology_engine.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
-          colors: {
-            near: {
-              green: '#00EC97',
-              dark: '#0B0F17',
-              card: '#111827',
-              border: '#1F2937'
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: #070B12;
-      color: #F3F4F6;
+      font-family: 'Inter', sans-serif;
+      background-color: #0B111E;
+      color: #F8FAFC;
     }
-    .glass-card {
-      background: rgba(17, 24, 39, 0.82);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-    }
-    .near-glow {
-      box-shadow: 0 0 30px rgba(0, 236, 151, 0.15);
+    .step-card {
+      background: #131C2E;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
     }
     input[type="range"] {
       accent-color: #00EC97;
     }
+    .step-hidden {
+      display: none !important;
+    }
   </style>
 </head>
-<body class="min-h-screen antialiased selection:bg-[#00EC97] selection:text-slate-950">
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-[#00EC97] selection:text-slate-950">
 
-  <!-- Top Navigation -->
-  <header class="sticky top-0 z-50 border-b border-slate-800/80 bg-[#070B12]/90 backdrop-blur-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00EC97] to-teal-500 flex items-center justify-center text-slate-950 font-extrabold text-xl shadow-lg shadow-[#00EC97]/20">
+  <!-- Minimal Mobile-First Top Bar -->
+  <header class="border-b border-slate-800/80 bg-[#0B111E]/95 sticky top-0 z-40 backdrop-blur-md">
+    <div class="max-w-2xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-[#00EC97] text-slate-950 flex items-center justify-center font-extrabold text-lg shadow-md shadow-[#00EC97]/20">
           🧬
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-lg tracking-tight text-white">EmbryoGuard</span>
-            <span class="text-[11px] font-mono uppercase px-2 py-0.5 rounded-full bg-[#00EC97]/15 text-[#00EC97] border border-[#00EC97]/30">
-              NEAR Intents + Private AI
-            </span>
+          <div class="font-bold text-base text-white leading-tight flex items-center gap-2">
+            <span>EmbryoGuard</span>
+            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#00EC97]/15 text-[#00EC97]">NEAR</span>
           </div>
-          <p class="text-xs text-slate-400" data-i18n="subtitle">
-            Embriyolog Liderliğinde Şeffaf IVF & Sonuç Garantili (Pay-for-Outcome) Akıllı Kasa
-          </p>
+          <p class="text-[11px] text-slate-400" id="headerSub">Uzman Embriyolog Danışmanlığı & İade Güvenceli IVF</p>
         </div>
       </div>
 
-      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
-        <a href="#calculator" class="hover:text-[#00EC97] transition" data-i18n="nav_calc">Şeffaf Başarı & Huni</a>
-        <a href="#chat" class="hover:text-[#00EC97] transition" data-i18n="nav_chat">Embriyolog Danışmanlığı</a>
-        <a href="#clinics" class="hover:text-[#00EC97] transition" data-i18n="nav_clinics">Anlaşmalı Klinikler</a>
-        <a href="#vault" class="hover:text-[#00EC97] transition" data-i18n="nav_vault">NEAR İade Kasası (Canlı)</a>
-      </nav>
-
-      <div class="flex items-center gap-2.5">
-        <!-- Language Toggle -->
-        <button id="langToggleBtn" onclick="toggleLanguage()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
-          🇹🇷 TR / 🇬🇧 EN
+      <div class="flex items-center gap-2">
+        <button onclick="toggleLang()" id="langBtn" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700">
+          TR / EN
         </button>
-
-        <!-- Wallet Connect Button -->
-        <button id="walletBtn" onclick="toggleWallet()" class="px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-[#00EC97] hover:bg-[#00d486] text-slate-950 transition shadow-md shadow-[#00EC97]/20">
-          ● patient-ivf.near
+        <button onclick="openSettingsModal()" title="Embriyolog İletişim Ayarları" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs">
+          ⚙️
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="relative overflow-hidden py-10 lg:py-14 border-b border-slate-800/70">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid lg:grid-cols-12 gap-8 items-center">
-        <div class="lg:col-span-7 space-y-5">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-950/80 border border-teal-500/30 text-teal-300 text-xs font-medium">
-            <span>🔬</span>
-            <span data-i18n="hero_badge">Uzman Klinik Embriyolog Tarafından Tasarlandı • NEAR Hackathon 2026</span>
-          </div>
-          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
-            <span data-i18n="hero_title_1">Tüp Bebek (IVF) Tedavisinde</span>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#00EC97] to-cyan-400" data-i18n="hero_title_2">
-              %100 Laboratuvar Şeffaflığı ve Otomatik İade Garantisi
-            </span>
-          </h1>
-          <p class="text-slate-300 text-base sm:text-lg leading-relaxed" data-i18n="hero_desc">
-            Medikal turizmde hastalar en mahrem tahlillerini güvensiz kanallardan paylaşıyor ve "tedavi tutmazsa tüm birikimim yanar" korkusu yaşıyor. EmbryoGuard; uzman embriyolog danışmanlığını, şeffaf 5. gün blastokist doğrulamasını ve başarısız siklusta aracı olmadan anında %50–%55 geri ödeme yapan <strong>NEAR Outcome Assurance Vault</strong> kontratını birleştirir.
-          </p>
-          <div class="flex flex-wrap gap-3 pt-1">
-            <a href="#calculator" class="px-5 py-3 rounded-xl font-semibold text-sm bg-[#00EC97] text-slate-950 hover:bg-[#00d486] transition shadow-lg shadow-[#00EC97]/20">
-              🧬 <span data-i18n="cta_analyze">Embriyoloji Hunimi & İade Paketimi Hesapla</span>
-            </a>
-            <a href="#chat" class="px-5 py-3 rounded-xl font-semibold text-sm bg-slate-800/90 text-white hover:bg-slate-700 border border-slate-700 transition">
-              💬 <span data-i18n="cta_consult">Embriyolog + Private AI Danışmanına Sor</span>
-            </a>
-          </div>
-        </div>
+  <!-- Main Wizard Container (Centered, Clean, Mobile-First) -->
+  <main class="flex-1 max-w-2xl w-full mx-auto px-4 py-6 sm:py-10">
 
-        <!-- Right Hero Summary Card -->
-        <div class="lg:col-span-5 glass-card rounded-2xl p-6 near-glow space-y-4">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-            <div>
-              <span class="text-xs font-mono text-[#00EC97] uppercase">NEAR Protocol Stack</span>
-              <h3 class="text-base font-bold text-white" data-i18n="stack_title">Neden Blokzincir + Embriyoloji?</h3>
-            </div>
-            <span class="px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 font-mono text-xs border border-emerald-500/20">
-              LIVE MVP
-            </span>
-          </div>
-
-          <div class="space-y-3 text-sm">
-            <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-start gap-3">
-              <span class="text-lg">🛡️</span>
-              <div>
-                <div class="font-semibold text-white" data-i18n="feat1_title">1. Pay-for-Outcome (Sonuca Dayalı İade Kasası)</div>
-                <p class="text-xs text-slate-400 mt-0.5" data-i18n="feat1_desc">
-                  Ödeme 3 aşamada kilitlenir (%20 OPU, %30 5. Gün Blastokist, %50 Gebelik Sonucu). Sonuç negatifse akıllı kontrat hastaya anında otomatik iade yapar.
-                </p>
-              </div>
-            </div>
-
-            <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-start gap-3">
-              <span class="text-lg">🔬</span>
-              <div>
-                <div class="font-semibold text-white" data-i18n="feat2_title">2. Embriyolog Oracle & Gardner (5AA) Kanıtı</div>
-                <p class="text-xs text-slate-400 mt-0.5" data-i18n="feat2_desc">
-                  Toplanan yumurta (OPU), MII olgunluk oranı, ICSI 2PN döllenme ve 5. gün blastokist kalitesi Time-Lapse SHA-256 özetiyle zincire işlenir.
-                </p>
-              </div>
-            </div>
-
-            <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-start gap-3">
-              <span class="text-lg">⚡</span>
-              <div>
-                <div class="font-semibold text-white" data-i18n="feat3_title">3. NEAR Intents & Private AI (TEE)</div>
-                <p class="text-xs text-slate-400 mt-0.5" data-i18n="feat3_desc">
-                  Hasta tahlilleri kimliksizleştirilerek TEE içinde analiz edilir; ödeme ve iadeler USDC, USDT, SOL, BTC veya NEAR ile sıfır köprü zahmetiyle yapılır.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Main Content Container -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-14">
-
-    <!-- SECTION 1: Transparent Embryology Funnel & Shared-Risk Calculator -->
-    <section id="calculator" class="space-y-6">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <span class="text-xs font-mono uppercase tracking-wider text-[#00EC97]">ADIM 1 • BİLİMSEL ŞEFFAFLIK MODÜLÜ</span>
-          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1" data-i18n="calc_heading">
-            Şeffaf Embriyoloji Laboratuvar Hunisi & İade Garantisi Hesaplayıcı
-          </h2>
-          <p class="text-sm text-slate-400 mt-1" data-i18n="calc_sub">
-            Kliniklerin genellikle hastaya açıkça göstermediği biyolojik yumurta-blastokist dönüşüm hunisini ve kişisel iade garantisi oranınızı görün.
-          </p>
-        </div>
-        <div id="teeBadge" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300">
-          🔒 TEE Enclave: <span class="text-[#00EC97]" id="teeHashDisplay">0x94c1...721b3a</span> (PII Masked)
-        </div>
-      </div>
-
-      <div class="grid lg:grid-cols-12 gap-6">
-        <!-- Left Inputs -->
-        <div class="lg:col-span-5 glass-card rounded-2xl p-6 space-y-5">
-          <h3 class="font-bold text-white text-base border-b border-slate-800 pb-3">
-            📋 Klinik & Embriyoloji Parametreleri
-          </h3>
-
-          <!-- Maternal Age -->
-          <div>
-            <div class="flex justify-between text-sm mb-1.5">
-              <label class="text-slate-300 font-medium" data-i18n="lbl_age">Anne Adayı Yaşı</label>
-              <span class="font-mono font-bold text-[#00EC97]"><span id="valAge">33</span> yaş</span>
-            </div>
-            <input id="inpAge" type="range" min="24" max="44" value="33" oninput="recalcAll()" class="w-full cursor-pointer" />
-            <div class="flex justify-between text-[11px] text-slate-500 mt-0.5">
-              <span>24</span><span>30</span><span>35</span><span>40</span><span>44</span>
-            </div>
-          </div>
-
-          <!-- AMH -->
-          <div>
-            <div class="flex justify-between text-sm mb-1.5">
-              <label class="text-slate-300 font-medium" data-i18n="lbl_amh">AMH Değeri (Over Rezervi)</label>
-              <span class="font-mono font-bold text-[#00EC97]"><span id="valAmh">2.1</span> ng/mL</span>
-            </div>
-            <input id="inpAmh" type="range" min="0.3" max="5.5" step="0.1" value="2.1" oninput="recalcAll()" class="w-full cursor-pointer" />
-            <div class="flex justify-between text-[11px] text-slate-500 mt-0.5">
-              <span>0.3 (Düşük DOR)</span><span>1.5 (Normal)</span><span>3.5+ (Yüksek/PCOS)</span>
-            </div>
-          </div>
-
-          <!-- Prior Failed Cycles -->
-          <div>
-            <div class="flex justify-between text-sm mb-1.5">
-              <label class="text-slate-300 font-medium" data-i18n="lbl_prior">Önceki Başarısız IVF Denemesi</label>
-              <span class="font-mono font-bold text-amber-400"><span id="valPrior">1</span> deneme</span>
-            </div>
-            <input id="inpPrior" type="range" min="0" max="5" step="1" value="1" oninput="recalcAll()" class="w-full cursor-pointer" />
-          </div>
-
-          <!-- Sperm Parameter -->
-          <div>
-            <label class="block text-sm text-slate-300 font-medium mb-1.5" data-i18n="lbl_sperm">
-              Sperm & Androloji Faktörü (ICSI / DFI)
-            </label>
-            <select id="inpSperm" onchange="recalcAll()" class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#00EC97]">
-              <option value="normozoospermia">Normozoospermi (Normal Sperm & Düşük DFI &lt;%15)</option>
-              <option value="mild_oligo">Hafif/Orta Oligoastenospermi (Mikroakışkan Çip Önerilir)</option>
-              <option value="severe_oat_high_dfi">Şiddetli OAT / Yüksek Sperm DNA Hasarı (DFI &gt;%25 - IMSI/PICSI)</option>
-            </select>
-          </div>
-
-          <!-- Target / Prior Blastocyst Grade -->
-          <div>
-            <label class="block text-sm text-slate-300 font-medium mb-1.5" data-i18n="lbl_gardner">
-              5. Gün Blastokist Kalitesi (Gardner Sınıflaması)
-            </label>
-            <select id="inpGardner" onchange="recalcAll()" class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#00EC97]">
-              <option value="5AA">5AA — Hatching Blastokist (En Üst Kalite ICM & Trofektoderm)</option>
-              <option value="4AA" selected>4AA — Expanded Blastokist (Mükemmel Morfoloji)</option>
-              <option value="4AB">4AB — Expanded Blastokist (Çok İyi Kalite)</option>
-              <option value="3BB">3BB — Full Blastokist (Standart Transfer Kalitesi)</option>
-              <option value="2BC">2BC — Erken/Düşük dereceli Blastokist</option>
-            </select>
-          </div>
-
-          <!-- PGT-A Toggle -->
-          <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-900/90 border border-slate-800">
-            <div>
-              <div class="text-sm font-semibold text-white">PGT-A (24 Kromozom NGS Genetik Tarama)</div>
-              <div class="text-xs text-slate-400">Öploid (kromozomal normal) embriyo seçimi ile düşük riskini azaltır</div>
-            </div>
-            <input id="inpPgt" type="checkbox" checked onchange="recalcAll()" class="w-5 h-5 accent-[#00EC97] rounded cursor-pointer" />
-          </div>
-        </div>
-
-        <!-- Right Visual Funnel & Financial Comparison -->
-        <div class="lg:col-span-7 space-y-6">
-          <!-- Biological Funnel Card -->
-          <div class="glass-card rounded-2xl p-6 space-y-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <h3 class="font-bold text-white text-base">
-                  🔬 Şeffaf Embriyoloji Laboratuvar Hunisi (Tahmini Biyolojik Akış)
-                </h3>
-                <p class="text-xs text-slate-400">
-                  Embriyolog olarak hastalarımıza her aşamadaki doğal biyolojik eleme oranlarını şeffafça gösteriyoruz:
-                </p>
-              </div>
-              <span class="px-2.5 py-1 rounded-lg bg-[#00EC97]/15 text-[#00EC97] font-mono text-xs font-semibold">
-                Gardner: <span id="badgeGardner">4AA</span>
-              </span>
-            </div>
-
-            <!-- 6-Stage Funnel Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-6 gap-2.5 pt-2">
-              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
-                <div class="text-[11px] text-slate-400">1. OPU Yumurta</div>
-                <div id="fnOpu" class="text-2xl font-extrabold text-white font-mono mt-1">12</div>
-                <div class="text-[10px] text-slate-500">Toplanan</div>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
-                <div class="text-[11px] text-slate-400">2. Olgun MII</div>
-                <div id="fnMii" class="text-2xl font-extrabold text-cyan-400 font-mono mt-1">10</div>
-                <div class="text-[10px] text-slate-500">~%80 Olgun</div>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
-                <div class="text-[11px] text-slate-400">3. ICSI 2PN</div>
-                <div id="fn2pn" class="text-2xl font-extrabold text-teal-400 font-mono mt-1">8</div>
-                <div class="text-[10px] text-slate-500">Döllenen</div>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
-                <div class="text-[11px] text-slate-400">4. 3. Gün</div>
-                <div id="fnDay3" class="text-2xl font-extrabold text-emerald-400 font-mono mt-1">7</div>
-                <div class="text-[10px] text-slate-500">Klivaj</div>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-center">
-                <div class="text-[11px] text-slate-400">5. Blastokist</div>
-                <div id="fnDay5" class="text-2xl font-extrabold text-[#00EC97] font-mono mt-1">4</div>
-                <div class="text-[10px] text-slate-500">5. Gün Kültür</div>
-              </div>
-              <div class="p-3 rounded-xl bg-[#00EC97]/10 border border-[#00EC97]/40 text-center">
-                <div class="text-[11px] text-[#00EC97] font-medium">6. Öploid</div>
-                <div id="fnEuploid" class="text-2xl font-extrabold text-[#00EC97] font-mono mt-1">3</div>
-                <div class="text-[10px] text-emerald-300">Transferlik</div>
-              </div>
-            </div>
-
-            <!-- Probability Bars -->
-            <div class="grid sm:grid-cols-2 gap-4 pt-2">
-              <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
-                <div class="flex justify-between items-center mb-1">
-                  <span class="text-xs text-slate-400">Tek Transfer Klinik Gebelik Olasılığı</span>
-                  <span id="probSingle" class="text-lg font-extrabold text-[#00EC97] font-mono">68%</span>
-                </div>
-                <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
-                  <div id="barSingle" class="h-full bg-gradient-to-r from-teal-400 to-[#00EC97]" style="width: 68%"></div>
-                </div>
-                <p id="gardnerDescText" class="text-[11px] text-slate-400 mt-2">
-                  Expanded Blastocyst (4AA) — Mükemmel ICM & Trofektoderm
-                </p>
-              </div>
-
-              <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
-                <div class="flex justify-between items-center mb-1">
-                  <span class="text-xs text-slate-400">2 Ardışık Transfer Kümülatif Başarı</span>
-                  <span id="probCum" class="text-lg font-extrabold text-cyan-400 font-mono">90%</span>
-                </div>
-                <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
-                  <div id="barCum" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400" style="width: 90%"></div>
-                </div>
-                <p class="text-[11px] text-slate-400 mt-2">
-                  Vitrifikasyon ile dondurulmuş kalan blastokistlerin transferi dahil
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Standard Clinic vs EmbryoGuard Outcome Vault Comparison -->
-          <div class="grid sm:grid-cols-2 gap-4">
-            <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
-              <span class="text-xs font-mono text-rose-400 uppercase">KLASİK MEDİKAL TURİZM MODELİ</span>
-              <h4 class="text-base font-bold text-white">Standart Peşin Ödeme</h4>
-              <ul class="text-xs text-slate-400 space-y-1.5 pt-1">
-                <li>❌ Tedavi öncesi %100 peşin banka/nakit ödeme</li>
-                <li>❌ Laboratuvar verileri (MII, 2PN, Gardner) şeffaf değil</li>
-                <li>❌ Negatif gebelikte <strong class="text-rose-400">$0 İade</strong> (Tüm finansal risk hastada)</li>
-              </ul>
-            </div>
-
-            <div class="p-5 rounded-2xl bg-gradient-to-br from-emerald-950/60 to-slate-900 border border-[#00EC97]/50 near-glow space-y-2">
-              <div class="flex justify-between items-center">
-                <span class="text-xs font-mono text-[#00EC97] uppercase">EMBRYOGUARD NEAR VAULT</span>
-                <span id="badgeRefundPct" class="px-2 py-0.5 rounded bg-[#00EC97] text-slate-950 font-bold text-xs">%55 İADE GARANTİLİ</span>
-              </div>
-              <h4 class="text-base font-bold text-white">Pay-for-Outcome Akıllı Kontrat</h4>
-              <ul class="text-xs text-slate-300 space-y-1.5 pt-1">
-                <li>✅ <strong>%20 OPU + %30 5. Gün Blastokist</strong> aşamalı ödeme</li>
-                <li>✅ Embriyolog imzalı Time-Lapse (EmbryoScope) kanıtı</li>
-                <li>✅ Sonuç negatifse <strong class="text-[#00EC97]" id="txtRefundGuarantee">50%–55% Otomatik Akıllı Kontrat İadesi</strong></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 2: Interactive Embryologist + Private AI Advisory Chat -->
-    <section id="chat" class="space-y-6">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <span class="text-xs font-mono uppercase tracking-wider text-[#00EC97]">ADIM 2 • UZMAN EMBRİYOLOG & PRIVATE AI DANIŞMANLIĞI</span>
-          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">
-            Canlı Embriyolog Danışmanlık & Klinik Yönlendirme Odası
-          </h2>
-          <p class="text-sm text-slate-400 mt-1">
-            Tahlil sonuçlarınızı, embriyo kalitenizi (5AA/4AB), ICSI/PGT-A ihtiyacınızı sorun; uzman embriyolog kriterleriyle en şeffaf klinik yönlendirmesini alın.
-          </p>
-        </div>
-
-        <!-- Mode Switcher: Patient Question vs Embryologist Direct Advisory Note -->
-        <div class="inline-flex rounded-xl bg-slate-900 p-1 border border-slate-800">
-          <button id="modePatientBtn" onclick="setChatRole('patient')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#00EC97] text-slate-950 transition">
-            👤 Hasta Olarak Sor
-          </button>
-          <button id="modeEmbryologistBtn" onclick="setChatRole('embryologist')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition">
-            🔬 Embriyolog Olarak Yanıtla / Klinik Öner
-          </button>
-        </div>
-      </div>
-
-      <div class="grid lg:grid-cols-12 gap-6">
-        <!-- Chat Window -->
-        <div class="lg:col-span-8 glass-card rounded-2xl flex flex-col h-[500px]">
-          <div class="p-4 border-b border-slate-800 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-full bg-[#00EC97]/20 border border-[#00EC97] flex items-center justify-center text-base">
-                👨‍⚕️
-              </div>
-              <div>
-                <div class="text-sm font-bold text-white">Klinik Embriyolog Caner & NEAR Private AI</div>
-                <div class="text-xs text-emerald-400 flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                  Şifreli Oturum Açık • Anlaşmalı Laboratuvar Veritabanı Bağlı
-                </div>
-              </div>
-            </div>
-            <span id="chatActiveProfileBadge" class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 text-slate-300">
-              Profil: 33 Yaş | AMH 2.1 | 4AA
-            </span>
-          </div>
-
-          <!-- Messages Container -->
-          <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4 text-sm">
-            <!-- Initial Welcome Message from Embryologist -->
-          </div>
-
-          <!-- Quick Prompts -->
-          <div class="px-4 py-2 border-t border-slate-800/80 bg-slate-900/50 flex flex-wrap gap-1.5">
-            <button onclick="sendQuickPrompt('AMH değerim düşük, Piezo-ICSI ve DuoStim olan hangi kliniği önerirsiniz?')" class="text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-              💡 Düşük AMH & DuoStim Klinik Önerisi
-            </button>
-            <button onclick="sendQuickPrompt('5AA ve 4AA blastokist kalitesi ile PGT-A başarı oranımı nasıl etkiler?')" class="text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-              🧬 5AA Blastokist & PGT-A Etkisi
-            </button>
-            <button onclick="sendQuickPrompt('Sperm DNA hasarı (DFI) yüksekliğinde mikroakışkan çip ve IMSI farkı nedir?')" class="text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-              🔬 Sperm DFI & Mikroakışkan Çip
-            </button>
-            <button onclick="sendQuickPrompt('Tedavi negatif sonuçlanırsa NEAR kasasından %50-%55 iade nasıl gerçekleşiyor?')" class="text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-              🛡️ NEAR İade Garantisi Nasıl Çalışır?
-            </button>
-          </div>
-
-          <!-- Input Box -->
-          <form onsubmit="handleChatSubmit(event)" class="p-3 border-t border-slate-800 flex gap-2">
-            <input
-              id="chatInput"
-              type="text"
-              placeholder="Embriyoloğa veya Private AI'ya sorunuzu yazın..."
-              class="flex-1 rounded-xl bg-slate-900 border border-slate-700 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#00EC97]"
-            />
-            <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#00EC97] hover:bg-[#00d486] text-slate-950 font-semibold text-sm transition">
-              Gönder
-            </button>
-          </form>
-        </div>
-
-        <!-- Right Panel: Embryologist Transparency Checklist & Direct Referral Card -->
-        <div class="lg:col-span-4 glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
-          <div class="space-y-4">
-            <div class="inline-flex items-center gap-1.5 text-xs font-mono text-[#00EC97] bg-[#00EC97]/10 px-2.5 py-1 rounded-md">
-              ✓ EMBRİYOLOG GÜVENCESİ
-            </div>
-            <h3 class="text-lg font-bold text-white">
-              Hasta İçin 5 Şeffaflık Kriterimiz
-            </h3>
-            <p class="text-xs text-slate-400">
-              Anlaşmalı olduğumuz tüm tüp bebek merkezleri bir embriyolog gözüyle şu 5 laboratuvar kriterine göre denetlenir:
-            </p>
-
-            <div class="space-y-2.5 text-xs">
-              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
-                <div class="font-semibold text-white">1. Kesintisiz Time-Lapse (EmbryoScope+)</div>
-                <div class="text-slate-400 mt-0.5">Embriyolar dışarı çıkarılmadan 7/24 kamera ile izlenir; video özeti NEAR kontratına kaydedilir.</div>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
-                <div class="font-semibold text-white">2. RI Witness / Barkodlu Biyolojik Güvenlik</div>
-                <div class="text-slate-400 mt-0.5">Yumurta, sperm ve embriyo kaplarının karışmasını %100 önleyen RFID çip doğrulaması.</div>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
-                <div class="font-semibold text-white">3. Gerçek 5. Gün Blastokist Dönüşüm Oranı</div>
-                <div class="text-slate-400 mt-0.5">Sadece "gebelik testi" değil, laboratuvarın 2PN'den 5. gün blastokiste ulaşma performansı (&gt;%58).</div>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
-                <div class="font-semibold text-white">4. Vitrifikasyon (Dondurma/Çözme) Sağkalımı</div>
-                <div class="text-slate-400 mt-0.5">Dondurulan blastokistlerin çözme sonrası &gt;%98 canlılık oranı garantisi.</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="p-4 rounded-xl bg-emerald-950/40 border border-[#00EC97]/30 space-y-2">
-            <div class="text-xs font-semibold text-[#00EC97]">Önerilen En Uygun Anlaşmalı Klinik:</div>
-            <div id="recommendedClinicBox" class="text-sm font-bold text-white">
-              🇹🇷 Bosphorus ART & Advanced Embryology Center
-            </div>
-            <a href="#clinics" class="block text-center w-full py-2 rounded-lg bg-[#00EC97] text-slate-950 font-semibold text-xs hover:bg-[#00d486] transition">
-              Anlaşmalı Klinikleri & Paketleri İncele →
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 3: Partner Clinics & Laboratory Transparency Scorecard -->
-    <section id="clinics" class="space-y-6">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <span class="text-xs font-mono uppercase tracking-wider text-[#00EC97]">ADIM 3 • ANLAŞMALI KLİNİKLER & LABORATUVAR KARNESİ</span>
-          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">
-            Embriyolog Onaylı Anlaşmalı IVF Merkezleri
-          </h2>
-          <p class="text-sm text-slate-400 mt-1">
-            Klinik anlaşmaları doğrudan platformumuzun uzman embriyoloğu tarafından denetlenir. İstediğiniz kliniği seçip <strong>NEAR Outcome Assurance Kasası</strong> başlatabilirsiniz.
-          </p>
-        </div>
-        <button onclick="openAddClinicModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-[#00EC97] border border-[#00EC97]/40 transition">
-          + Yeni Anlaşmalı Klinik Ekle (Embriyolog)
+    <!-- Step Progress Bar -->
+    <div class="mb-6">
+      <div class="grid grid-cols-4 gap-2 text-center">
+        <button onclick="goToStep(1)" id="tabStep1" class="py-2 px-1 rounded-xl text-xs font-semibold border transition">
+          1. Ön Bilgiler
+        </button>
+        <button onclick="goToStep(2)" id="tabStep2" class="py-2 px-1 rounded-xl text-xs font-semibold border transition">
+          2. Ön Değer & İade
+        </button>
+        <button onclick="goToStep(3)" id="tabStep3" class="py-2 px-1 rounded-xl text-xs font-semibold border transition">
+          3. Embriyolog Chat
+        </button>
+        <button onclick="goToStep(4)" id="tabStep4" class="py-2 px-1 rounded-xl text-xs font-semibold border transition">
+          4. NEAR Güvencesi
         </button>
       </div>
+    </div>
 
-      <div id="clinicsGrid" class="grid md:grid-cols-2 gap-6">
-        <!-- Rendered dynamically by JS -->
+    <!-- ========================================================= -->
+    <!-- ADIM 1: HASTA DOSTU BASİT BİLGİ FORMU                     -->
+    <!-- ========================================================= -->
+    <section id="step1" class="step-card rounded-3xl p-5 sm:p-8 space-y-6">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-[#00EC97]" data-i18n="s1_tag">ADIM 1 / 4 • KİŞİSEL ÖN BİLGİLER</span>
+        <h1 class="text-xl sm:text-2xl font-extrabold text-white mt-1" data-i18n="s1_title">
+          Sizi Tanıyalım
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1" data-i18n="s1_desc">
+          Karmaşık tıbbi terimler olmadan sadece temel bilgilerinizi seçin. Verileriniz gizli tutulur.
+        </p>
+      </div>
+
+      <div class="space-y-5">
+        <!-- 1. Anne Adayı Yaşı -->
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800">
+          <div class="flex justify-between items-center mb-2">
+            <label class="text-sm font-semibold text-white" data-i18n="lbl_age">1. Kadın Yaşı</label>
+            <span class="px-3 py-1 rounded-lg bg-[#00EC97]/15 text-[#00EC97] font-bold text-sm">
+              <span id="valAge">32</span> <span data-i18n="unit_age">Yaş</span>
+            </span>
+          </div>
+          <input id="inpAge" type="range" min="20" max="45" value="32" oninput="updateCalculation()" class="w-full h-2 cursor-pointer" />
+          <div class="flex justify-between text-[11px] text-slate-500 mt-1">
+            <span>20</span><span>28</span><span>35</span><span>40</span><span>45</span>
+          </div>
+        </div>
+
+        <!-- 2. AMH Değeri -->
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3">
+          <div class="flex justify-between items-center">
+            <label class="text-sm font-semibold text-white" data-i18n="lbl_amh">2. AMH Değeri (Yumurta Rezervi)</label>
+            <span id="amhBadge" class="px-3 py-1 rounded-lg bg-[#00EC97]/15 text-[#00EC97] font-bold text-sm">
+              <span id="valAmh">2.0</span> ng/mL
+            </span>
+          </div>
+
+          <div id="amhSliderWrap">
+            <input id="inpAmh" type="range" min="0.2" max="5.5" step="0.1" value="2.0" oninput="updateCalculation()" class="w-full h-2 cursor-pointer" />
+            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+              <span data-i18n="amh_low">&lt;1.0 (Düşük)</span>
+              <span data-i18n="amh_norm">1.0 – 3.5 (Normal)</span>
+              <span data-i18n="amh_high">&gt;3.5 (Yüksek)</span>
+            </div>
+          </div>
+
+          <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer pt-1">
+            <input id="inpAmhUnknown" type="checkbox" onchange="toggleAmhUnknown()" class="w-4 h-4 accent-[#00EC97] rounded" />
+            <span data-i18n="lbl_amh_unknown">AMH değerimi bilmiyorum / Henüz test yaptırmadım</span>
+          </label>
+        </div>
+
+        <!-- 3. Sperm Sayı ve Hareketlilik Bilgisi (Hasta Dostu) -->
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+          <label class="block text-sm font-semibold text-white" data-i18n="lbl_sperm">
+            3. Sperm Testi (Sayı ve Hareketlilik Durumu)
+          </label>
+          <p class="text-xs text-slate-400" data-i18n="sperm_helper">
+            Tahlil sonucunuzdaki mililitredeki sperm sayısı ve ileri hareketlilik oranına göre seçebilirsiniz:
+          </p>
+          <select id="inpSperm" onchange="updateCalculation()" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-3 text-sm text-white focus:outline-none focus:border-[#00EC97]">
+            <option value="normal">Normal Değerler (Sayı: &gt;15 Milyon/mL • Hareketlilik: &gt;%40)</option>
+            <option value="mild_low">Hafif Düşük (Sayı: 5–15 Milyon/mL • Hareketlilik: %20–%40)</option>
+            <option value="severe_low">Belirgin Düşük (Sayı: &lt;5 Milyon/mL • Hareketlilik: &lt;%20)</option>
+            <option value="azoospermia">Azospermi (Tahlilde sperm hücresi görülmedi)</option>
+            <option value="unknown">Henüz sperm tahlilimiz yok / Bilmiyorum</option>
+          </select>
+        </div>
+
+        <!-- 4. Önceki Tüp Bebek Deneme Sayısı -->
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+          <label class="block text-sm font-semibold text-white" data-i18n="lbl_prior">
+            4. Daha Önce Tüp Bebek Denemeniz Oldu mu?
+          </label>
+          <div class="grid grid-cols-4 gap-2 pt-1">
+            <button type="button" onclick="selectPrior(0)" id="btnPrior0" class="py-2.5 rounded-xl text-xs font-bold border transition">
+              İlk Deneme (0)
+            </button>
+            <button type="button" onclick="selectPrior(1)" id="btnPrior1" class="py-2.5 rounded-xl text-xs font-bold border transition">
+              1 Deneme
+            </button>
+            <button type="button" onclick="selectPrior(2)" id="btnPrior2" class="py-2.5 rounded-xl text-xs font-bold border transition">
+              2 Deneme
+            </button>
+            <button type="button" onclick="selectPrior(3)" id="btnPrior3" class="py-2.5 rounded-xl text-xs font-bold border transition">
+              3+ Deneme
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="goToStep(2)" class="w-full py-4 rounded-2xl bg-[#00EC97] hover:bg-[#00d486] text-slate-950 font-extrabold text-base transition shadow-lg shadow-[#00EC97]/20">
+        Ön Değerlendirmemi Gör →
+      </button>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- ADIM 2: ÖN TAHMİN (NİHAİ OLMAYAN) & DİNAMİK İADE ORANI    -->
+    <!-- ========================================================= -->
+    <section id="step2" class="step-card rounded-3xl p-5 sm:p-8 space-y-6 step-hidden">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-[#00EC97]">ADIM 2 / 4 • ÖN DEĞERLENDİRME & İADE ORANI</span>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-1">
+          Tahmini Ön Değerlendirme Sonucunuz
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+          Girdiğiniz bilgilere göre hesaplanan tahmini başarı göstergesi ve buna bağlı dinamik para iade oranınız:
+        </p>
+      </div>
+
+      <!-- 2 Clean Cards: Preliminary Score & Dynamic Refund Rate -->
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2">
+          <div class="text-xs font-semibold text-slate-400 uppercase">ÖN DEĞERLENDİRME TAHMİNİ</div>
+          <div id="dispPreliminaryPct" class="text-4xl sm:text-5xl font-extrabold text-white">%63</div>
+          <div class="inline-block px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 text-[11px] font-semibold">
+            ⚠️ Ön Tahmindir (Nihai Değildir)
+          </div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-emerald-950/40 border border-[#00EC97]/50 text-center space-y-2">
+          <div class="text-xs font-semibold text-[#00EC97] uppercase">DİNAMİK PARA İADE ORANINIZ</div>
+          <div id="dispDynamicRefundPct" class="text-4xl sm:text-5xl font-extrabold text-[#00EC97]">%55</div>
+          <div class="text-[11px] text-slate-300">
+            Ön değerlendirme oranınıza göre özel hesaplanmıştır
+          </div>
+        </div>
+      </div>
+
+      <!-- Mandatory Important Disclaimer -->
+      <div class="p-4 rounded-2xl bg-amber-950/30 border border-amber-500/40 text-xs sm:text-sm text-amber-200 leading-relaxed space-y-1.5">
+        <div class="font-bold text-amber-300 flex items-center gap-1.5">
+          <span>ℹ️</span>
+          <span>Önemli Bilgilendirme (Nihai Sonuç Değildir)</span>
+        </div>
+        <p id="disclaimerText">
+          Yukarıdaki değer yalnızca girdiğiniz temel verilere dayalı bir <strong>ön tahmindir ve kesin/nihai tıbbi görüş yerine geçmez</strong>. Gerçek başarı beklentiniz, tedavi detaylarınız ve <strong>size en uygun anlaşmalı klinik yönlendirmesi</strong> Uzman Embriyolog ile yapacağınız birebir görüşme sonrasında netleştirilir.
+        </p>
+      </div>
+
+      <!-- Dynamic Refund Explanation -->
+      <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs sm:text-sm text-slate-300 space-y-1">
+        <div class="font-bold text-white">🛡️ Dinamik İade Güvencesi Nedir?</div>
+        <p>
+          Platformumuzda para iade oranı sabit değildir; profilinizin ön değerlendirme oranına göre <strong>%20 ile %65 arasında dinamik olarak</strong> belirlenir. Sizin profiliniz için hesaplanan ön iade oranı <strong class="text-[#00EC97]" id="txtDynamicRefundInline">%55</strong>'tir.
+        </p>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <button onclick="goToStep(1)" class="w-1/3 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm transition">
+          ← Geri
+        </button>
+        <button onclick="goToStep(3)" class="w-2/3 py-3.5 rounded-2xl bg-[#00EC97] hover:bg-[#00d486] text-slate-950 font-extrabold text-sm sm:text-base transition shadow-lg shadow-[#00EC97]/20">
+          Uzman Embriyolog ile Görüş →
+        </button>
       </div>
     </section>
 
-    <!-- SECTION 4: Live NEAR Outcome Assurance Vault & Cross-Chain Intents Simulator -->
-    <section id="vault" class="space-y-6">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <span class="text-xs font-mono uppercase tracking-wider text-[#00EC97]">ADIM 4 • NEAR INTENTS & AKILLI KONTRAT KASASI (CANLI DEMO)</span>
-          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">
-            NEAR Outcome Assurance Vault & Otomatik İade Simülatörü
-          </h2>
-          <p class="text-sm text-slate-400 mt-1">
-            Herhangi bir ağdaki varlıkla (USDC, USDT, SOL, BTC, NEAR) tek tıkla kasayı fonlayın, embriyolog 5. gün blastokist raporunu zincire imzalayın ve gebelik sonucuna göre <strong>otomatik iade (refund)</strong> akışını canlı test edin.
-          </p>
-        </div>
-        <div class="text-xs font-mono px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300">
-          Kontrat: <span class="text-[#00EC97]">embryoguard-vault.near</span>
+    <!-- ========================================================= -->
+    <!-- ADIM 3: SADE EMBRİYOLOG CHAT (TELEGRAM & MAİL İLETİMLİ)   -->
+    <!-- ========================================================= -->
+    <section id="step3" class="step-card rounded-3xl p-5 sm:p-8 space-y-5 step-hidden">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-[#00EC97]">ADIM 3 / 4 • UZMAN EMBRİYOLOG DANIŞMANLIĞI</span>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-1">
+          Uzman Embriyolog ile Görüşün
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+          Durumunuzu netleştirmek ve size en uygun anlaşmalı kliniğe yönlendirilmek için mesajınızı yazın. Yazdıklarınız doğrudan uzman embriyoloğun <strong>Telegram</strong> ve <strong>E-posta</strong> adresine iletilir.
+        </p>
+      </div>
+
+      <!-- Auto-Attached Patient Summary Pill -->
+      <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 flex flex-wrap items-center justify-between gap-2">
+        <span id="chatSummaryPill" class="font-medium">
+          📋 Özet: 32 Yaş • AMH: 2.0 • Ön Tahmin: %63 • İade Oranı: %55
+        </span>
+        <button onclick="goToStep(1)" class="text-[#00EC97] underline text-[11px]">Değiştir</button>
+      </div>
+
+      <!-- Simple Clean Chat Messages Area -->
+      <div id="simpleChatBox" class="h-64 overflow-y-auto rounded-2xl bg-slate-950/90 border border-slate-800 p-4 space-y-3 text-sm">
+        <div class="flex justify-start">
+          <div class="max-w-[88%] rounded-2xl rounded-tl-none bg-slate-800/90 border border-slate-700 px-4 py-3 text-slate-100 text-xs sm:text-sm leading-relaxed">
+            <div class="text-[11px] font-bold text-[#00EC97] mb-1">👨‍⚕️ Uzman Embriyolog Caner</div>
+            Merhaba, ön değerlendirme bilgilerinizi aldım. Kesin değerlendirmenizi yapabilmem ve size en uygun anlaşmalı kliniğimizi yönlendirebilmem için sorunuzu ve iletişim bilginizi aşağıya yazabilirsiniz. Mesajınız anında bana ulaşacaktır.
+          </div>
         </div>
       </div>
 
-      <div class="grid lg:grid-cols-12 gap-6">
-        <!-- Vault Configuration & NEAR Intents Payment -->
-        <div class="lg:col-span-5 glass-card rounded-2xl p-6 space-y-5">
-          <h3 class="font-bold text-white text-base border-b border-slate-800 pb-3">
-            💳 1. NEAR Intents ile Sınır Ötesi Kasa Fonlama
-          </h3>
+      <!-- Patient Contact & Message Form -->
+      <form onsubmit="handlePatientMessageSubmit(event)" class="space-y-3">
+        <div class="grid sm:grid-cols-2 gap-2.5">
+          <input
+            id="patientName"
+            type="text"
+            required
+            placeholder="Adınız / Rumuzunuz"
+            class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#00EC97]"
+          />
+          <input
+            id="patientContact"
+            type="text"
+            required
+            placeholder="Telefon, WhatsApp, Telegram veya E-posta"
+            class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#00EC97]"
+          />
+        </div>
 
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Seçilen Anlaşmalı Klinik</label>
-            <select id="vaultClinicSelect" onchange="updateVaultQuote()" class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-sm text-white"></select>
-          </div>
-
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Ödeme & İade Ağınız (NEAR Intents Cross-Chain)</label>
-            <select id="vaultAssetSelect" onchange="updateVaultQuote()" class="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-sm text-white">
-              <option value="USDC (Arbitrum / Base)">USDC (Arbitrum / Base) — Sıfır Köprü</option>
-              <option value="USDT (Ethereum / Tron)">USDT (Ethereum / Tron)</option>
-              <option value="NEAR (NEAR Native)">NEAR (Native Token)</option>
-              <option value="SOL (Solana)">SOL (Solana Mainnet)</option>
-              <option value="BTC (Chain Signatures MPC)">BTC (Bitcoin Native via Chain Signatures)</option>
-            </select>
-          </div>
-
-          <!-- Live NEAR Intent Quote Box -->
-          <div class="p-4 rounded-xl bg-slate-900/95 border border-slate-800 space-y-2 text-xs font-mono">
-            <div class="flex justify-between">
-              <span class="text-slate-400">Solver Rotası:</span>
-              <span class="text-[#00EC97]" id="qSolver">medtour-solver.intents.near</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-slate-400">Kilitlenecek Tutar:</span>
-              <span class="text-white font-bold" id="qAmount">5,400 USDC ($5,400)</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-slate-400">Başarısız Siklusta Otomatik İade:</span>
-              <span class="text-[#00EC97] font-bold" id="qRefundAmount">$2,970 (%55 Garantili)</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-slate-400">Cross-Chain Solver Ücreti:</span>
-              <span class="text-slate-300" id="qFee">$0.12 (~2.4 sn)</span>
-            </div>
-          </div>
-
-          <button onclick="fundNewVaultCase()" class="w-full py-3 rounded-xl bg-[#00EC97] hover:bg-[#00d486] text-slate-950 font-bold text-sm transition shadow-lg shadow-[#00EC97]/20">
-            🔒 NEAR Intents ile Kasayı Fonla & Kontratı Başlat
+        <div class="flex gap-2">
+          <input
+            id="patientMsgInput"
+            type="text"
+            required
+            placeholder="Embriyoloğa sorunuzu veya mesajınızı yazın..."
+            class="flex-1 rounded-xl bg-slate-900 border border-slate-700 px-4 py-3 text-sm text-white focus:outline-none focus:border-[#00EC97]"
+          />
+          <button type="submit" class="px-5 py-3 rounded-xl bg-[#00EC97] hover:bg-[#00d486] text-slate-950 font-extrabold text-sm transition shrink-0">
+            Gönder
           </button>
+        </div>
+      </form>
 
-          <!-- Embryologist Oracle Lab Sign-Off Box -->
-          <div class="pt-3 border-t border-slate-800 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-mono text-amber-400 uppercase">🔬 EMBRİYOLOG ORACLE YETKİSİ</span>
-              <span class="text-[11px] font-mono text-slate-400">caner-embryologist.near</span>
-            </div>
-            <p class="text-xs text-slate-400">
-              5. Gün Blastokist verilerini zincire imzaladığınızda 2. Aşama (%30) kliniğe açılır ve hasta şeffaf raporu görür:
-            </p>
-            <div class="grid grid-cols-3 gap-2 text-xs">
-              <div>
-                <label class="text-[11px] text-slate-400">OPU Yumurta</label>
-                <input id="oraOpu" type="number" value="12" class="w-full mt-0.5 rounded-lg bg-slate-900 border border-slate-700 px-2.5 py-1.5 text-white font-mono" />
-              </div>
-              <div>
-                <label class="text-[11px] text-slate-400">2PN Döllenen</label>
-                <input id="ora2pn" type="number" value="9" class="w-full mt-0.5 rounded-lg bg-slate-900 border border-slate-700 px-2.5 py-1.5 text-white font-mono" />
-              </div>
-              <div>
-                <label class="text-[11px] text-slate-400">5.Gün Blast</label>
-                <input id="oraBlast" type="number" value="4" class="w-full mt-0.5 rounded-lg bg-slate-900 border border-slate-700 px-2.5 py-1.5 text-white font-mono" />
-              </div>
-            </div>
+      <!-- Direct Forward Buttons (Shown/Updated on Message Send) -->
+      <div id="directForwardBox" class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2.5">
+        <div class="text-xs text-slate-400">
+          Mesajınızı tek tıkla doğrudan Uzman Embriyoloğun Telegram veya E-posta kutusuna da iletebilirsiniz:
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <a id="tgDirectLink" href="#" target="_blank" rel="noopener" class="py-2.5 px-3 rounded-xl bg-[#229ED9]/20 hover:bg-[#229ED9] hover:text-white text-[#38bdf8] border border-[#229ED9]/40 font-bold text-xs text-center transition">
+            ✈️ Telegram ile Gönder
+          </a>
+          <a id="mailDirectLink" href="#" class="py-2.5 px-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500 hover:text-slate-950 text-emerald-300 border border-emerald-500/30 font-bold text-xs text-center transition">
+            ✉️ E-posta ile Gönder
+          </a>
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-1">
+        <button onclick="goToStep(2)" class="w-1/3 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm transition">
+          ← Geri
+        </button>
+        <button onclick="goToStep(4)" class="w-2/3 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-[#00EC97] border border-[#00EC97]/40 font-bold text-sm transition">
+          Güvenceli Ödeme Kasası (Adım 4) →
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- ADIM 4: SADE & ANLAŞILIR NEAR ÖDEME VE İADE KASASI        -->
+    <!-- ========================================================= -->
+    <section id="step4" class="step-card rounded-3xl p-5 sm:p-8 space-y-6 step-hidden">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-[#00EC97]">ADIM 4 / 4 • NEAR AKILLI KONTRAT GÜVENCESİ</span>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-1">
+          Şeffaf Ödeme & Otomatik İade Kasası
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+          Uzman embriyolog ile görüşmeniz sonucunda anlaşmalı kliniğiniz belirlendiğinde, ödemeniz kliniğe peşin verilmez; NEAR akıllı kontrat kasasında 3 adımda korunur:
+        </p>
+      </div>
+
+      <!-- Package & Asset Selector -->
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div class="p-3.5 rounded-2xl bg-slate-900 border border-slate-800">
+          <label class="block text-xs text-slate-400 mb-1">Örnek Paket Tutarı (USD)</label>
+          <input id="vaultAmountInput" type="number" value="5000" min="1000" step="100" oninput="updateSimpleVault()" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-base font-bold text-white" />
+        </div>
+        <div class="p-3.5 rounded-2xl bg-slate-900 border border-slate-800">
+          <label class="block text-xs text-slate-400 mb-1">Ödeme & İade Para Birimi (NEAR Intents)</label>
+          <select id="vaultAssetSelect" onchange="updateSimpleVault()" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-sm font-semibold text-white">
+            <option value="USDC">USDC (Dijital Dolar)</option>
+            <option value="USDT">USDT (Tether)</option>
+            <option value="NEAR">NEAR</option>
+            <option value="SOL">SOL</option>
+            <option value="BTC">BTC</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 3 Simple Steps of Money Protection -->
+      <div class="space-y-3">
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-[#00EC97]">1. AŞAMA (%25)</div>
+            <div class="text-sm font-semibold text-white">Tedavi Başlangıcı & Yumurta Toplama</div>
           </div>
+          <div id="vStep1Usd" class="text-sm font-bold text-slate-200">$1,250</div>
         </div>
 
-        <!-- Right Interactive Milestone Stepper & On-Chain Event Log -->
-        <div class="lg:col-span-7 space-y-5">
-          <div class="glass-card rounded-2xl p-6 space-y-5">
-            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-4">
-              <div>
-                <div class="text-xs font-mono text-slate-400">AKTİF AKILLI KONTRAT DOSYASI</div>
-                <div class="text-lg font-bold text-white flex items-center gap-2">
-                  <span id="activeCaseId">IVF-2026-8841</span>
-                  <span id="activeCaseStageBadge" class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[#00EC97]/20 text-[#00EC97]">
-                    STAGE 1: FUNDED (100% LOCKED)
-                  </span>
-                </div>
-              </div>
-              <div class="text-right font-mono">
-                <div class="text-xs text-slate-400">Kasada Kilitli Bakiye</div>
-                <div id="activeLockedBalance" class="text-lg font-extrabold text-[#00EC97]">$5,400.00 USDC</div>
-              </div>
-            </div>
-
-            <!-- 3-Step Interactive Milestone Actions -->
-            <div class="space-y-3">
-              <!-- Milestone 1 -->
-              <div id="stepCard1" class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <div class="text-xs font-mono text-[#00EC97]">AŞAMA 1 (%20 SERBEST BIRAKILIR)</div>
-                  <div class="font-bold text-white text-sm">OPU (Yumurta Toplama) & İlk Protokol Tamamlandı</div>
-                  <div class="text-xs text-slate-400">Hasta kliniğe ulaştı ve yumurta toplama işlemi gerçekleştirildi.</div>
-                </div>
-                <button onclick="triggerMilestone1()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-[#00EC97] hover:text-slate-950 text-xs font-mono font-semibold text-white border border-slate-700 transition shrink-0">
-                  1. OPU Onayla (%20)
-                </button>
-              </div>
-
-              <!-- Milestone 2 -->
-              <div id="stepCard2" class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <div class="text-xs font-mono text-cyan-400">AŞAMA 2 (%30 SERBEST BIRAKILIR • EMBRİYOLOG ORACLE)</div>
-                  <div class="font-bold text-white text-sm">5. Gün Blastokist Raporu & Time-Lapse Hash İmzası</div>
-                  <div class="text-xs text-slate-400" id="step2ReportPreview">
-                    Embriyolog tarafından OPU, MII, 2PN ve Gardner (5AA/4AA) raporu zincire işlenir.
-                  </div>
-                </div>
-                <button onclick="triggerMilestone2()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-cyan-400 hover:text-slate-950 text-xs font-mono font-semibold text-white border border-slate-700 transition shrink-0">
-                  2. Blastokist Raporu İmzala (%30)
-                </button>
-              </div>
-
-              <!-- Milestone 3 (Outcome Resolution) -->
-              <div id="stepCard3" class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-3">
-                <div>
-                  <div class="text-xs font-mono text-amber-400">AŞAMA 3 (KALAN %50 • OUTCOME ASSURANCE / SONUÇ GARANTİSİ)</div>
-                  <div class="font-bold text-white text-sm">Gebelik Sonucu Doğrulaması (Beta-hCG & Klinik Gebelik)</div>
-                  <div class="text-xs text-slate-400">
-                    Sonuç pozitifse kalan %50 kliniğe aktarılır. Negatifse akıllı kontrat garantili iade tutarını <strong>NEAR Intents</strong> ile hastanın cüzdanına otomatik iade eder!
-                  </div>
-                </div>
-                <div class="flex flex-wrap gap-2.5">
-                  <button onclick="triggerMilestone3(true)" class="flex-1 py-2.5 px-3 rounded-lg bg-emerald-500/20 hover:bg-emerald-500 hover:text-slate-950 text-emerald-300 border border-emerald-500/40 font-mono text-xs font-bold transition">
-                    ✅ Gebelik Pozitif (Kliniğe Aktar)
-                  </button>
-                  <button onclick="triggerMilestone3(false)" class="flex-1 py-2.5 px-3 rounded-lg bg-rose-500/20 hover:bg-rose-500 hover:text-white text-rose-300 border border-rose-500/40 font-mono text-xs font-bold transition">
-                    🛡️ Gebelik Negatif (Hastaya Otomatik İade Tetikle!)
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Live Smart Contract Event Log Console -->
-            <div class="rounded-xl bg-[#05080E] border border-slate-800 p-4 font-mono text-xs space-y-1.5">
-              <div class="flex items-center justify-between text-slate-400 border-b border-slate-800 pb-2 mb-2">
-                <span>NEAR RPC / EVENT_JSON LOGS (embryoguard-vault.near)</span>
-                <span class="text-[#00EC97]">● Connected</span>
-              </div>
-              <div id="contractLogs" class="space-y-1.5 max-h-44 overflow-y-auto text-[11px]"></div>
-            </div>
+        <div class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-cyan-400">2. AŞAMA (%25)</div>
+            <div class="text-sm font-semibold text-white">Embriyo Gelişimi & Transfer Süreci</div>
           </div>
+          <div id="vStep2Usd" class="text-sm font-bold text-slate-200">$1,250</div>
         </div>
+
+        <div class="p-4 rounded-2xl bg-emerald-950/40 border border-[#00EC97]/50 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-[#00EC97]">3. AŞAMA • SONUÇ GÜVENCESİ (DİNAMİK İADE)</div>
+            <div class="text-sm font-semibold text-white">
+              Olumsuz Sonuçta Otomatik İade (<span id="vRefundPctLabel">%55</span>)
+            </div>
+            <div class="text-xs text-slate-400">Hiçbir aracı olmadan doğrudan cüzdanınıza iade edilir</div>
+          </div>
+          <div id="vRefundUsd" class="text-lg font-extrabold text-[#00EC97]">$2,750</div>
+        </div>
+      </div>
+
+      <!-- Interactive 1-Click Test for Patient / Hackathon Judge -->
+      <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-400">CANLI AKILLI KONTRAT SİMÜLASYONU</span>
+          <span id="simStatusBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#00EC97]/15 text-[#00EC97]">
+            Hazır
+          </span>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-2.5">
+          <button onclick="simulateVaultOutcome(true)" class="py-3 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500 hover:text-slate-950 text-emerald-300 border border-emerald-500/40 font-bold text-xs transition">
+            ✅ Gebelik Pozitif (Ödeme Tamamlanır)
+          </button>
+          <button onclick="simulateVaultOutcome(false)" class="py-3 px-3 rounded-xl bg-rose-500/20 hover:bg-rose-500 hover:text-white text-rose-300 border border-rose-500/40 font-bold text-xs transition">
+            🛡️ Gebelik Negatif (Dinamik İadeyi Test Et)
+          </button>
+        </div>
+
+        <div id="simResultText" class="text-xs text-slate-300 font-mono bg-slate-900 p-3 rounded-xl border border-slate-800">
+          Kontrat: embryoguard-vault.near • Dinamik iade korumanız aktif.
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button onclick="goToStep(3)" class="w-1/3 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-sm transition">
+          ← Sohbete Dön
+        </button>
+        <button onclick="goToStep(1)" class="w-2/3 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm transition">
+          Başa Dön (Adım 1)
+        </button>
       </div>
     </section>
 
   </main>
 
-  <!-- Modal: Add Custom Partner Clinic (For Embryologist) -->
-  <div id="addClinicModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="glass-card rounded-2xl max-w-md w-full p-6 space-y-4 border border-[#00EC97]/40">
+  <!-- Modal: Embryologist Direct Notification Settings (Telegram & Email) -->
+  <div id="settingsModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="step-card rounded-3xl max-w-md w-full p-6 space-y-4">
       <div class="flex justify-between items-center">
-        <h3 class="font-bold text-white text-lg">🔬 Yeni Anlaşmalı Klinik Ekle</h3>
-        <button onclick="closeAddClinicModal()" class="text-slate-400 hover:text-white">✕</button>
+        <h3 class="font-bold text-white text-base">⚙️ Embriyolog İletişim & Bildirim Ayarları</h3>
+        <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white">✕</button>
       </div>
-      <form onsubmit="handleAddClinic(event)" class="space-y-3 text-sm">
+      <p class="text-xs text-slate-400">
+        Hastaların Adım 3'te yazdığı mesajların doğrudan size ulaşması için Telegram ve E-posta bilgilerinizi buradan güncelleyebilirsiniz:
+      </p>
+      <form onsubmit="saveSettings(event)" class="space-y-3 text-xs">
         <div>
-          <label class="text-xs text-slate-400">Klinik Adı</label>
-          <input id="newClinicName" required placeholder="Örn: Cyprus EuroIVF & Genetics" class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white" />
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-xs text-slate-400">Şehir / Ülke</label>
-            <input id="newClinicLoc" required placeholder="Lefkoşa, Kıbrıs" class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white" />
-          </div>
-          <div>
-            <label class="text-xs text-slate-400">NEAR Cüzdan Adresi</label>
-            <input id="newClinicNear" required placeholder="cyprus-ivf.near" class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white font-mono" />
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-xs text-slate-400">5. Gün Blastokist Oranı (%)</label>
-            <input id="newClinicBlast" type="number" value="62" required class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white font-mono" />
-          </div>
-          <div>
-            <label class="text-xs text-slate-400">Shared-Risk Kasa Fiyatı ($)</label>
-            <input id="newClinicPrice" type="number" value="5200" required class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white font-mono" />
-          </div>
+          <label class="text-slate-300 font-semibold">E-posta Adresiniz</label>
+          <input id="cfgEmail" type="email" placeholder="ornek@domain.com" class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white" />
         </div>
         <div>
-          <label class="text-xs text-slate-400">Uzman Embriyolog Değerlendirme Notu</label>
-          <textarea id="newClinicNote" rows="2" required placeholder="Laboratuvar donanımı ve hasta uygunluğu hakkında şeffaf notunuz..." class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white"></textarea>
+          <label class="text-slate-300 font-semibold">Telegram Kullanıcı Adınız (@ olmadan)</label>
+          <input id="cfgTelegramUser" type="text" placeholder="criticalsilence" class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white" />
         </div>
-        <button type="submit" class="w-full py-2.5 rounded-xl bg-[#00EC97] text-slate-950 font-bold">
-          Kliniği Platforma Ekle
+        <div>
+          <label class="text-slate-300 font-semibold">Telegram Bot Token (Opsiyonel - Otomatik Anlık Mesaj İçin)</label>
+          <input id="cfgBotToken" type="text" placeholder="123456789:ABCdef..." class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white font-mono" />
+        </div>
+        <div>
+          <label class="text-slate-300 font-semibold">Telegram Chat ID (Opsiyonel)</label>
+          <input id="cfgChatId" type="text" placeholder="987654321" class="w-full mt-1 rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-white font-mono" />
+        </div>
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-[#00EC97] text-slate-950 font-bold text-sm">
+          Kaydet
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="border-t border-slate-800/80 py-8 mt-14 text-center text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div>
-        <strong class="text-slate-300">EmbryoGuard</strong> — Built by a Senior Clinical Embryologist for <strong>NEAR Hackathon 2026</strong>
-      </div>
-      <div class="font-mono text-slate-400">
-        NEAR Intents • Chain Signatures (MPC) • NEAR AI TEE • Rust Smart Contract
-      </div>
-    </div>
+  <!-- Minimal Footer -->
+  <footer class="border-t border-slate-800/60 py-5 text-center text-xs text-slate-500 px-4">
+    EmbryoGuard • Uzman Embriyolog Danışmanlığı & NEAR Güvenceli IVF Kasası
   </footer>
 
-  <!-- Application Logic -->
+  <!-- Wizard & Logic -->
   <script>
     const Engine = window.EmbryoGuardEngine;
+    let currentStep = 1;
+    let priorCycles = 0;
     let currentLang = "tr";
-    let chatRole = "patient";
-    let walletConnected = true;
-    let lastCalculation = null;
+    let latestAssessment = null;
 
-    // Active Smart Contract Case State
-    let activeVault = {
-      caseId: "IVF-2026-8841",
-      clinic: Engine.PARTNER_CLINICS[0],
-      asset: "USDC (Arbitrum / Base)",
-      totalUsd: 5400,
-      lockedUsd: 5400,
-      releasedUsd: 0,
-      refundedUsd: 0,
-      refundPct: 55,
-      stage: "FUNDED"
+    // Default contact config (customizable via ⚙️ modal & persisted in localStorage)
+    let contactConfig = {
+      email: localStorage.getItem("eg_email") || "info@cukka.org",
+      telegramUser: localStorage.getItem("eg_tg_user") || "criticalsilence",
+      botToken: localStorage.getItem("eg_bot_token") || "",
+      chatId: localStorage.getItem("eg_chat_id") || ""
     };
 
-    function recalcAll() {
+    function goToStep(stepNum) {
+      currentStep = stepNum;
+      for (let i = 1; i <= 4; i++) {
+        const sec = document.getElementById("step" + i);
+        const tab = document.getElementById("tabStep" + i);
+        if (i === stepNum) {
+          sec.classList.remove("step-hidden");
+          tab.className = "py-2 px-1 rounded-xl text-xs font-bold border border-[#00EC97] bg-[#00EC97]/15 text-[#00EC97] transition";
+        } else {
+          sec.classList.add("step-hidden");
+          tab.className = "py-2 px-1 rounded-xl text-xs font-semibold border border-slate-800 bg-slate-900/70 text-slate-400 hover:text-white transition";
+        }
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function selectPrior(num) {
+      priorCycles = num;
+      for (let i = 0; i <= 3; i++) {
+        const btn = document.getElementById("btnPrior" + i);
+        if (i === num) {
+          btn.className = "py-2.5 rounded-xl text-xs font-bold border border-[#00EC97] bg-[#00EC97]/15 text-[#00EC97] transition";
+        } else {
+          btn.className = "py-2.5 rounded-xl text-xs font-semibold border border-slate-700 bg-slate-950 text-slate-300 hover:border-slate-500 transition";
+        }
+      }
+      updateCalculation();
+    }
+
+    function toggleAmhUnknown() {
+      const unknown = document.getElementById("inpAmhUnknown").checked;
+      const wrap = document.getElementById("amhSliderWrap");
+      const badge = document.getElementById("amhBadge");
+      if (unknown) {
+        wrap.classList.add("opacity-40", "pointer-events-none");
+        badge.textContent = "Bilinmiyor";
+      } else {
+        wrap.classList.remove("opacity-40", "pointer-events-none");
+        const amh = Number(document.getElementById("inpAmh").value).toFixed(1);
+        badge.innerHTML = `<span id="valAmh">${amh}</span> ng/mL`;
+      }
+      updateCalculation();
+    }
+
+    function updateCalculation() {
       const age = Number(document.getElementById("inpAge").value);
+      const amhKnown = !document.getElementById("inpAmhUnknown").checked;
       const amh = Number(document.getElementById("inpAmh").value);
-      const priorCycles = Number(document.getElementById("inpPrior").value);
-      const spermFactor = document.getElementById("inpSperm").value;
-      const gardnerGrade = document.getElementById("inpGardner").value;
-      const usePgtA = document.getElementById("inpPgt").checked;
+      const spermCategory = document.getElementById("inpSperm").value;
 
       document.getElementById("valAge").textContent = age;
-      document.getElementById("valAmh").textContent = amh.toFixed(1);
-      document.getElementById("valPrior").textContent = priorCycles;
-      document.getElementById("badgeGardner").textContent = gardnerGrade;
+      if (amhKnown && document.getElementById("valAmh")) {
+        document.getElementById("valAmh").textContent = amh.toFixed(1);
+      }
 
-      const res = Engine.calculateEmbryologyOutcome({
+      const res = Engine.calculatePreliminaryAssessment({
         age,
         amh,
+        amhKnown,
         priorCycles,
-        spermFactor,
-        gardnerGrade,
-        usePgtA
+        spermCategory
       });
-      lastCalculation = { input: { age, amh, priorCycles, spermFactor, gardnerGrade, usePgtA }, res };
+      latestAssessment = { age, amh: amhKnown ? amh.toFixed(1) : "Bilinmiyor", priorCycles, spermCategory, res };
 
-      // Update Funnel
-      document.getElementById("fnOpu").textContent = res.funnel.expectedOocytesOPU;
-      document.getElementById("fnMii").textContent = res.funnel.matureMIIOocytes;
-      document.getElementById("fn2pn").textContent = res.funnel.fertilized2PN_ICSI;
-      document.getElementById("fnDay3").textContent = res.funnel.day3CleavageEmbryos;
-      document.getElementById("fnDay5").textContent = res.funnel.day5Blastocysts;
-      document.getElementById("fnEuploid").textContent = res.funnel.estimatedEuploidBlastocysts;
+      // Step 2 UI updates
+      document.getElementById("dispPreliminaryPct").textContent = "%" + res.preliminaryEstimatePct;
+      document.getElementById("dispDynamicRefundPct").textContent = "%" + res.dynamicRefundPct;
+      document.getElementById("txtDynamicRefundInline").textContent = "%" + res.dynamicRefundPct;
 
-      // Update Probabilities
-      document.getElementById("probSingle").textContent = res.probabilities.singleCycleSuccessPct + "%";
-      document.getElementById("barSingle").style.width = res.probabilities.singleCycleSuccessPct + "%";
-      document.getElementById("probCum").textContent = res.probabilities.cumulativeTwoCyclePct + "%";
-      document.getElementById("barCum").style.width = res.probabilities.cumulativeTwoCyclePct + "%";
-      document.getElementById("gardnerDescText").textContent = res.probabilities.gardnerGradeLabel;
+      // Step 3 Chat summary pill
+      document.getElementById("chatSummaryPill").textContent =
+        `📋 Özet: ${age} Yaş • AMH: ${latestAssessment.amh} • Ön Tahmin: %${res.preliminaryEstimatePct} (Nihai Değil) • Dinamik İade: %${res.dynamicRefundPct}`;
 
-      // Update Refund Guarantee
-      document.getElementById("badgeRefundPct").textContent = "%" + res.vaultTerms.refundGuaranteePct + " İADE GARANTİLİ";
-      document.getElementById("txtRefundGuarantee").textContent =
-        "%" + res.vaultTerms.refundGuaranteePct + " Otomatik Akıllı Kontrat İadesi";
-
-      // Update TEE Hash
-      const tee = Engine.createPrivateAiAttestation({ age, amh, gardnerGrade });
-      document.getElementById("teeHashDisplay").textContent =
-        tee.attestationHash.slice(0, 10) + "..." + tee.attestationHash.slice(-6);
-
-      // Update Chat Profile Badge
-      document.getElementById("chatActiveProfileBadge").textContent =
-        `Profil: ${age} Yaş | AMH ${amh.toFixed(1)} | ${gardnerGrade}`;
-
-      // Recommend Best Partner Clinic based on patient profile
-      let recClinic = Engine.PARTNER_CLINICS[0];
-      if (age >= 38 && usePgtA) recClinic = Engine.PARTNER_CLINICS[1];
-      else if (priorCycles >= 2) recClinic = Engine.PARTNER_CLINICS[2];
-      else if (amh < 1.1) recClinic = Engine.PARTNER_CLINICS[0];
-      document.getElementById("recommendedClinicBox").textContent =
-        `${recClinic.flag} ${recClinic.name} (${recClinic.location})`;
-
-      activeVault.refundPct = res.vaultTerms.refundGuaranteePct;
-      updateVaultQuote();
+      updateForwardLinks("");
+      updateSimpleVault();
     }
 
-    function renderClinics() {
-      const grid = document.getElementById("clinicsGrid");
-      const select = document.getElementById("vaultClinicSelect");
-      grid.innerHTML = "";
-      select.innerHTML = "";
-
-      Engine.PARTNER_CLINICS.forEach((c, idx) => {
-        // Populate dropdown
-        const opt = document.createElement("option");
-        opt.value = idx;
-        opt.textContent = `${c.flag} ${c.name} — $${c.sharedRiskVaultUsd} (Kasa Paketi)`;
-        select.appendChild(opt);
-
-        // Populate card
-        const card = document.createElement("div");
-        card.className = "glass-card rounded-2xl p-6 flex flex-col justify-between space-y-4 hover:border-[#00EC97]/50 transition";
-        card.innerHTML = `
-          <div class="space-y-3">
-            <div class="flex items-start justify-between gap-2">
-              <div>
-                <span class="text-xs font-mono text-[#00EC97]">${c.accreditation}</span>
-                <h3 class="text-lg font-bold text-white mt-0.5">${c.flag} ${c.name}</h3>
-                <p class="text-xs text-slate-400">${c.location} • NEAR: <span class="font-mono text-slate-300">${c.nearAccount}</span></p>
-              </div>
-              <span class="px-2.5 py-1 rounded-lg bg-[#00EC97]/15 text-[#00EC97] font-mono text-xs font-bold shrink-0">
-                %${c.refundGuaranteePct} İade Paketi
-              </span>
-            </div>
-
-            <!-- Lab Metrics -->
-            <div class="grid grid-cols-3 gap-2 pt-1">
-              <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-center">
-                <div class="text-[11px] text-slate-400">5.Gün Blastokist</div>
-                <div class="text-base font-bold text-[#00EC97] font-mono">%${c.blastocystConversionRate}</div>
-              </div>
-              <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-center">
-                <div class="text-[11px] text-slate-400">Vitrifikasyon Canlılık</div>
-                <div class="text-base font-bold text-cyan-400 font-mono">%${c.vitrificationSurvivalRate}</div>
-              </div>
-              <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-center">
-                <div class="text-[11px] text-slate-400">EmbryoScope+</div>
-                <div class="text-base font-bold text-emerald-400 font-mono">7/24 Aktif</div>
-              </div>
-            </div>
-
-            <!-- Specialties -->
-            <div class="flex flex-wrap gap-1.5">
-              ${c.specialties.map(s => `<span class="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">${s}</span>`).join("")}
-            </div>
-
-            <!-- Embryologist Note -->
-            <div class="p-3 rounded-xl bg-slate-900/90 border-l-2 border-[#00EC97] text-xs text-slate-300">
-              <strong class="text-[#00EC97]">🔬 Uzman Embriyolog Notu:</strong> ${currentLang === "tr" ? c.embryologistNoteTr : c.embryologistNoteEn}
-            </div>
-          </div>
-
-          <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
-            <div>
-              <div class="text-[11px] text-slate-400">Standart: <span class="line-through">$${c.standardPriceUsd}</span> (%0 İade)</div>
-              <div class="text-base font-extrabold text-white font-mono">
-                NEAR Kasa: <span class="text-[#00EC97]">$${c.sharedRiskVaultUsd}</span>
-              </div>
-            </div>
-            <button onclick="selectClinicForVault(${idx})" class="px-4 py-2 rounded-xl bg-[#00EC97] hover:bg-[#00d486] text-slate-950 font-bold text-xs transition">
-              Bu Klinikle Kasa Oluştur →
-            </button>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
+    function buildSummaryPayload(customMessage, name, contact) {
+      const s = latestAssessment;
+      return [
+        `🧬 EmbryoGuard Yeni Hasta Danışmanlık Talebi`,
+        `👤 İsim: ${name || "-"}`,
+        `📞 İletişim: ${contact || "-"}`,
+        `• Kadın Yaşı: ${s.age}`,
+        `• AMH: ${s.amh}`,
+        `• Sperm Durumu: ${s.res.spermLabelTr}`,
+        `• Önceki Deneme: ${s.priorCycles}`,
+        `• Ön Değerlendirme Tahmini: %${s.res.preliminaryEstimatePct} (Nihai Değil)`,
+        `• Dinamik İade Oranı: %${s.res.dynamicRefundPct}`,
+        `💬 Mesaj: ${customMessage || "Klinik yönlendirmesi ve değerlendirme talep ediyorum."}`
+      ].join("\n");
     }
 
-    function selectClinicForVault(idx) {
-      document.getElementById("vaultClinicSelect").value = idx;
-      updateVaultQuote();
-      document.getElementById("vault").scrollIntoView({ behavior: "smooth" });
+    function updateForwardLinks(customMessage) {
+      const name = document.getElementById("patientName")?.value || "";
+      const contact = document.getElementById("patientContact")?.value || "";
+      const fullText = buildSummaryPayload(customMessage, name, contact);
+
+      const tgUrl = `https://t.me/${contactConfig.telegramUser}?text=${encodeURIComponent(fullText)}`;
+      const mailUrl = `mailto:${contactConfig.email}?subject=${encodeURIComponent("EmbryoGuard IVF Danismanlik Talebi")}&body=${encodeURIComponent(fullText)}`;
+
+      document.getElementById("tgDirectLink").href = tgUrl;
+      document.getElementById("mailDirectLink").href = mailUrl;
     }
 
-    function updateVaultQuote() {
-      const idx = Number(document.getElementById("vaultClinicSelect").value) || 0;
-      const clinic = Engine.PARTNER_CLINICS[idx] || Engine.PARTNER_CLINICS[0];
-      const asset = document.getElementById("vaultAssetSelect").value;
-      const refundPct = lastCalculation ? lastCalculation.res.vaultTerms.refundGuaranteePct : 55;
-
-      const quote = Engine.createNearIntentQuote(clinic.sharedRiskVaultUsd, asset);
-      const refundUsd = Math.round((clinic.sharedRiskVaultUsd * refundPct) / 100);
-
-      document.getElementById("qSolver").textContent = quote.solverAccount;
-      document.getElementById("qAmount").textContent = `${quote.tokenAmount} ($${clinic.sharedRiskVaultUsd.toLocaleString()})`;
-      document.getElementById("qRefundAmount").textContent = `$${refundUsd.toLocaleString()} (%${refundPct} Otomatik İade)`;
-      document.getElementById("qFee").textContent = `$${quote.bridgeFeeUsd} (~${quote.settlementTimeSec} sn)`;
-    }
-
-    // Chat System (Embryologist + Private AI)
-    function initChat() {
-      const box = document.getElementById("chatMessages");
-      box.innerHTML = "";
-      appendChatMessage(
-        "embryologist",
-        "Merhaba! Ben Klinik Embriyolog Caner. Burada paylaştığınız AMH, sperm analizi ve önceki tüp bebek denemeleriniz NEAR Private AI (TEE) ile şifrelenir. Size laboratuvar kalitesi (5. gün blastokist dönüşümü, EmbryoScope+, Piezo-ICSI, PGT-A) açısından en şeffaf anlaşmalı kliniği yönlendirmek ve NEAR İade Garantili Kasa sürecini açıklamak için buradayım. Nasıl yardımcı olabilirim?"
-      );
-    }
-
-    function setChatRole(role) {
-      chatRole = role;
-      const pBtn = document.getElementById("modePatientBtn");
-      const eBtn = document.getElementById("modeEmbryologistBtn");
-      const input = document.getElementById("chatInput");
-      if (role === "patient") {
-        pBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#00EC97] text-slate-950 transition";
-        eBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition";
-        input.placeholder = "Hasta olarak embriyoloğa sorunuzu yazın...";
-      } else {
-        eBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-400 text-slate-950 transition";
-        pBtn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition";
-        input.placeholder = "🔬 Uzman Embriyolog olarak hastaya doğrudan danışmanlık notu / klinik yönlendirmesi yazın...";
-      }
-    }
-
-    function appendChatMessage(sender, text) {
-      const box = document.getElementById("chatMessages");
-      const div = document.createElement("div");
-      if (sender === "patient") {
-        div.className = "flex justify-end";
-        div.innerHTML = `
-          <div class="max-w-[80%] rounded-2xl rounded-tr-none bg-slate-800 border border-slate-700 px-4 py-3 text-slate-100">
-            <div class="text-[10px] font-mono text-slate-400 mb-1">👤 Hasta (patient-ivf.near)</div>
-            <div>${text}</div>
-          </div>
-        `;
-      } else {
-        div.className = "flex justify-start";
-        div.innerHTML = `
-          <div class="max-w-[85%] rounded-2xl rounded-tl-none bg-emerald-950/50 border border-[#00EC97]/40 px-4 py-3 text-slate-100">
-            <div class="text-[10px] font-mono text-[#00EC97] mb-1">🔬 Uzman Embriyolog & NEAR Private AI</div>
-            <div class="leading-relaxed">${text}</div>
-          </div>
-        `;
-      }
-      box.appendChild(div);
-      box.scrollTop = box.scrollHeight;
-    }
-
-    function sendQuickPrompt(promptText) {
-      setChatRole("patient");
-      appendChatMessage("patient", promptText);
-      setTimeout(() => generateEmbryologistReply(promptText), 350);
-    }
-
-    function handleChatSubmit(e) {
+    async function handlePatientMessageSubmit(e) {
       e.preventDefault();
-      const input = document.getElementById("chatInput");
-      const text = input.value.trim();
+      const name = document.getElementById("patientName").value.trim();
+      const contact = document.getElementById("patientContact").value.trim();
+      const msgInput = document.getElementById("patientMsgInput");
+      const text = msgInput.value.trim();
       if (!text) return;
-      input.value = "";
 
-      if (chatRole === "embryologist") {
-        appendChatMessage("embryologist", `<strong>[Canlı Embriyolog Notu]:</strong> ${text}`);
-      } else {
-        appendChatMessage("patient", text);
-        setTimeout(() => generateEmbryologistReply(text), 350);
+      const chatBox = document.getElementById("simpleChatBox");
+
+      // Append patient message
+      const pDiv = document.createElement("div");
+      pDiv.className = "flex justify-end";
+      pDiv.innerHTML = `
+        <div class="max-w-[85%] rounded-2xl rounded-tr-none bg-[#00EC97] text-slate-950 px-4 py-2.5 text-xs sm:text-sm font-medium">
+          <div class="text-[10px] font-bold opacity-75 mb-0.5">${name} (${contact})</div>
+          <div>${text}</div>
+        </div>
+      `;
+      chatBox.appendChild(pDiv);
+      msgInput.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      updateForwardLinks(text);
+
+      // If Telegram Bot Token & Chat ID are configured, send automatically in background
+      let sentViaBot = false;
+      if (contactConfig.botToken && contactConfig.chatId) {
+        try {
+          const payload = buildSummaryPayload(text, name, contact);
+          await fetch(`https://api.telegram.org/bot${contactConfig.botToken}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: contactConfig.chatId, text: payload })
+          });
+          sentViaBot = true;
+        } catch (err) {}
       }
+
+      // Append clean acknowledgment
+      setTimeout(() => {
+        const rDiv = document.createElement("div");
+        rDiv.className = "flex justify-start";
+        rDiv.innerHTML = `
+          <div class="max-w-[88%] rounded-2xl rounded-tl-none bg-slate-800 border border-[#00EC97]/40 px-4 py-3 text-slate-100 text-xs sm:text-sm leading-relaxed">
+            <div class="text-[11px] font-bold text-[#00EC97] mb-1">👨‍⚕️ Uzman Embriyolog Bilgilendirmesi</div>
+            Teşekkürler <strong>${name}</strong>. Ön bilgileriniz (<strong>${latestAssessment.age} yaş, AMH: ${latestAssessment.amh}, Ön tahmin: %${latestAssessment.res.preliminaryEstimatePct}</strong>) ve mesajınız kaydedildi. ${sentViaBot ? "✅ <strong>Telegram üzerinden uzman embriyoloğa anında iletildi.</strong>" : "Aşağıdaki <strong>Telegram ile Gönder</strong> veya <strong>E-posta ile Gönder</strong> butonuna basarak doğrudan bana hemen ulaştırabilirsiniz."} Görüşmemizde nihai başarı oranınızı ve size en uygun anlaşmalı kliniğimizi netleştireceğiz.
+          </div>
+        `;
+        chatBox.appendChild(rDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 300);
     }
 
-    function generateEmbryologistReply(q) {
-      const lower = q.toLowerCase();
-      const { age, amh, gardnerGrade } = lastCalculation.input;
-      const { funnel, probabilities, vaultTerms } = lastCalculation.res;
-
-      let reply = "";
-      if (lower.includes("amh") || lower.includes("duostim") || lower.includes("piezo")) {
-        reply = `Profilinizde <strong>AMH: ${amh} ng/mL</strong> ve <strong>Yaş: ${age}</strong> görünüyor. Bu rezervle OPU'da ortalama <strong>${funnel.expectedOocytesOPU} yumurta (${funnel.matureMIIOocytes} MII olgun)</strong> bekliyoruz. Düşük rezervli veya hassas oosit membranı olan vakalarda <strong>Piezo-ICSI</strong> döllenme hasarını en aza indirir. Anlaşmalı merkezlerimizden <strong>🇹🇷 Bosphorus ART (İstanbul)</strong> ve <strong>🇹🇷 Riviera IVF (Antalya - DuoStim)</strong> bu protokolde %61 blastokist dönüşüm oranıyla en doğru tercihlerdir.`;
-      } else if (lower.includes("5aa") || lower.includes("4aa") || lower.includes("pgt") || lower.includes("blastokist")) {
-        reply = `Embriyolojide <strong>${gardnerGrade}</strong> kalitesi, hem iç hücre kitlesinin (bebeği oluşturacak ICM) hem de trofektoderm (plasentayı oluşturacak hücreler) katmanının çok düzenli olduğunu gösterir. <strong>PGT-A (24 kromozom NGS taraması)</strong> eklendiğinde, kromozomal olarak normal (öploid) embriyo seçildiği için tek transferde klinik gebelik şansınız <strong>%${probabilities.singleCycleSuccessPct}</strong> seviyesine çıkmaktadır.`;
-      } else if (lower.includes("sperm") || lower.includes("dfi") || lower.includes("çip") || lower.includes("imsi")) {
-        reply = `Sperm DNA фрагmantasyonu (DFI) yüksek olduğunda klasik santrifüj işlemi serbest oksijen radikallerini artırabilir. Embriyolog olarak anlaşmalı laboratuvarlarımızda <strong>Mikroakışkan Sperm Çipi (Microfluidics) + IMSI (6000x büyütme)</strong> şartı koşuyoruz. Bu sayede 3. günden 5. gün blastokiste geçişte paternal kaynaklı embriyo duraklamasını (arrest) ciddi oranda azaltıyoruz.`;
-      } else if (lower.includes("iade") || lower.includes("near") || lower.includes("kasa") || lower.includes("garanti")) {
-        reply = `<strong>NEAR Outcome Assurance Vault</strong> tam şeffaflıkla çalışır: Ödemeniz kliniğe peşin gitmez. <strong>%20'si OPU'da</strong>, <strong>%30'u ben 5. gün blastokist raporunuzu ve Time-Lapse video özetinizi zincire imzaladığımda</strong> serbest kalır. Kalan <strong>%50</strong> ise gebelik sonucuna kadar kasada kilitli tutulur. Gebelik negatif olursa akıllı kontrat hiçbir aracıya gerek kalmadan <strong>%${vaultTerms.refundGuaranteePct} tutarı</strong> NEAR Intents ile anında cüzdanınıza iade eder.`;
-      } else {
-        reply = `Embriyolog değerlendirmeme göre (${age} yaş, AMH ${amh}, hedef ${gardnerGrade}): Tahmini <strong>${funnel.day5Blastocysts} adet 5. gün blastokist</strong> elde etme potansiyeliniz var ve tek transfer başarı beklentimiz <strong>%${probabilities.singleCycleSuccessPct}</strong>. Size <strong>%${vaultTerms.refundGuaranteePct} otomatik iade garantili</strong> anlaşmalı klinik paketimizi öneriyorum. Aşağıdaki kasa panelinden işlemi başlatabilirsiniz.`;
-      }
-      appendChatMessage("embryologist", reply);
-    }
-
-    // Smart Contract Vault Interactive Lifecycle
-    function logContractEvent(eventType, details) {
-      const box = document.getElementById("contractLogs");
-      const line = document.createElement("div");
-      const ts = new Date().toLocaleTimeString();
-      line.innerHTML = `<span class="text-slate-500">[${ts}]</span> <span class="text-[#00EC97]">EVENT_JSON:${eventType}</span> <span class="text-slate-300">${details}</span>`;
-      box.prepend(line);
-    }
-
-    function fundNewVaultCase() {
-      const idx = Number(document.getElementById("vaultClinicSelect").value) || 0;
-      const clinic = Engine.PARTNER_CLINICS[idx];
+    function updateSimpleVault() {
+      const amount = Number(document.getElementById("vaultAmountInput").value) || 5000;
       const asset = document.getElementById("vaultAssetSelect").value;
-      const refundPct = lastCalculation ? lastCalculation.res.vaultTerms.refundGuaranteePct : 55;
-      const caseId = "IVF-2026-" + Math.floor(1000 + Math.random() * 9000);
+      const refundPct = latestAssessment ? latestAssessment.res.dynamicRefundPct : 55;
 
-      activeVault = {
-        caseId,
-        clinic,
-        asset,
-        totalUsd: clinic.sharedRiskVaultUsd,
-        lockedUsd: clinic.sharedRiskVaultUsd,
-        releasedUsd: 0,
-        refundedUsd: 0,
-        refundPct,
-        stage: "FUNDED"
-      };
+      const step1 = Math.round(amount * 0.25);
+      const step2 = Math.round(amount * 0.25);
+      const refundUsd = Math.round((amount * refundPct) / 100);
 
-      document.getElementById("activeCaseId").textContent = caseId;
-      document.getElementById("activeCaseStageBadge").textContent = "STAGE 1: FUNDED (100% LOCKED)";
-      document.getElementById("activeCaseStageBadge").className =
-        "text-xs font-mono px-2.5 py-0.5 rounded-full bg-[#00EC97]/20 text-[#00EC97]";
-      document.getElementById("activeLockedBalance").textContent = `$${activeVault.lockedUsd.toLocaleString()} (${asset.split(" ")[0]})`;
-
-      logContractEvent(
-        "case_funded",
-        `case_id="${caseId}" clinic="${clinic.nearAccount}" deposit="$${clinic.sharedRiskVaultUsd}" refund_guarantee="${refundPct}%" via NEAR Intents`
-      );
+      document.getElementById("vStep1Usd").textContent = `$${step1.toLocaleString()} (${asset})`;
+      document.getElementById("vStep2Usd").textContent = `$${step2.toLocaleString()} (${asset})`;
+      document.getElementById("vRefundPctLabel").textContent = `%${refundPct}`;
+      document.getElementById("vRefundUsd").textContent = `$${refundUsd.toLocaleString()} ${asset}`;
     }
 
-    function triggerMilestone1() {
-      if (activeVault.stage !== "FUNDED") {
-        logContractEvent("notice", "Önce yeni bir kasa fonlayın veya sıradaki aşamaya geçin.");
-        return;
-      }
-      const m1 = Math.round(activeVault.totalUsd * 0.20);
-      activeVault.lockedUsd -= m1;
-      activeVault.releasedUsd += m1;
-      activeVault.stage = "OPU_COMPLETED";
+    function simulateVaultOutcome(isPositive) {
+      const amount = Number(document.getElementById("vaultAmountInput").value) || 5000;
+      const asset = document.getElementById("vaultAssetSelect").value;
+      const refundPct = latestAssessment ? latestAssessment.res.dynamicRefundPct : 55;
+      const refundUsd = Math.round((amount * refundPct) / 100);
 
-      document.getElementById("activeCaseStageBadge").textContent = "STAGE 2: OPU COMPLETED (20% RELEASED)";
-      document.getElementById("activeLockedBalance").textContent = `$${activeVault.lockedUsd.toLocaleString()} Kilitli`;
+      const badge = document.getElementById("simStatusBadge");
+      const box = document.getElementById("simResultText");
 
-      logContractEvent(
-        "opu_milestone_released",
-        `case_id="${activeVault.caseId}" released_to_clinic="$${m1}" (${activeVault.clinic.nearAccount})`
-      );
-    }
-
-    function triggerMilestone2() {
-      if (activeVault.stage !== "OPU_COMPLETED") {
-        if (activeVault.stage === "FUNDED") triggerMilestone1();
-        else {
-          logContractEvent("notice", "Blastokist raporu zaten imzalandı.");
-          return;
-        }
-      }
-      const opu = document.getElementById("oraOpu").value;
-      const twoPn = document.getElementById("ora2pn").value;
-      const blast = document.getElementById("oraBlast").value;
-      const grade = document.getElementById("inpGardner").value;
-
-      const m2 = Math.round(activeVault.totalUsd * 0.30);
-      activeVault.lockedUsd -= m2;
-      activeVault.releasedUsd += m2;
-      activeVault.stage = "BLASTOCYST_VERIFIED";
-
-      document.getElementById("activeCaseStageBadge").textContent = `STAGE 3: ${grade} BLASTOCYST SIGNED (50% LOCKED FOR OUTCOME)`;
-      document.getElementById("activeLockedBalance").textContent = `$${activeVault.lockedUsd.toLocaleString()} (Sonuç Korumasında)`;
-      document.getElementById("step2ReportPreview").innerHTML =
-        `✓ <strong class="text-[#00EC97]">On-Chain Rapor:</strong> ${opu} OPU → ${twoPn} 2PN → ${blast} Blastokist (${grade}) • Time-Lapse Hash: <span class="font-mono">0x8f4e...91a2</span>`;
-
-      logContractEvent(
-        "blastocyst_verified",
-        `oracle="caner-embryologist.near" opu=${opu} 2pn=${twoPn} blastocysts=${blast} top_grade="${grade}" released="$${m2}"`
-      );
-    }
-
-    function triggerMilestone3(pregnancyPositive) {
-      if (activeVault.stage === "FUNDED") {
-        triggerMilestone1();
-        triggerMilestone2();
-      } else if (activeVault.stage === "OPU_COMPLETED") {
-        triggerMilestone2();
-      } else if (activeVault.stage === "SETTLED" || activeVault.stage === "REFUNDED") {
-        fundNewVaultCase();
-        triggerMilestone1();
-        triggerMilestone2();
-      }
-
-      const remaining = activeVault.lockedUsd;
-      activeVault.lockedUsd = 0;
-
-      if (pregnancyPositive) {
-        activeVault.releasedUsd += remaining;
-        activeVault.stage = "SETTLED";
-        document.getElementById("activeCaseStageBadge").textContent = "✅ OUTCOME: PREGNANCY CONFIRMED (100% SETTLED)";
-        document.getElementById("activeCaseStageBadge").className =
-          "text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300";
-        document.getElementById("activeLockedBalance").textContent = "$0.00 (Tamamlandı)";
-        logContractEvent(
-          "clinical_outcome_success",
-          `case_id="${activeVault.caseId}" pregnancy=true final_clinic_payout="$${remaining}"`
-        );
+      if (isPositive) {
+        badge.textContent = "✅ Gebelik Onaylandı";
+        badge.className = "text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300";
+        box.textContent = `[NEAR Kontrat Onayı]: Gebelik sonucu pozitif. Kalan kasa bakiyesi anlaşmalı kliniğe aktarıldı.`;
       } else {
-        activeVault.refundedUsd = remaining;
-        activeVault.stage = "REFUNDED";
-        document.getElementById("activeCaseStageBadge").textContent = `🛡️ OUTCOME: AUTO-REFUNDED TO PATIENT ($${remaining})`;
-        document.getElementById("activeCaseStageBadge").className =
-          "text-xs font-mono px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300";
-        document.getElementById("activeLockedBalance").textContent = `$0.00 ($${remaining} Hastaya İade Edildi)`;
-        logContractEvent(
-          "automated_patient_refund",
-          `case_id="${activeVault.caseId}" pregnancy=false refunded_to="patient-ivf.near" amount="$${remaining}" via NEAR Intents (${activeVault.asset})`
-        );
+        badge.textContent = `🛡️ %${refundPct} Otomatik İade Edildi`;
+        badge.className = "text-xs font-bold px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300";
+        box.textContent = `[NEAR Intents Otomatik İade]: Gebelik negatif. Dinamik iade oranınız (%${refundPct}) gereği $${refundUsd.toLocaleString()} ${asset} doğrudan hasta cüzdanına iade edildi.`;
       }
     }
 
-    // Add Partner Clinic Modal
-    function openAddClinicModal() {
-      document.getElementById("addClinicModal").classList.remove("hidden");
+    function openSettingsModal() {
+      document.getElementById("cfgEmail").value = contactConfig.email;
+      document.getElementById("cfgTelegramUser").value = contactConfig.telegramUser;
+      document.getElementById("cfgBotToken").value = contactConfig.botToken;
+      document.getElementById("cfgChatId").value = contactConfig.chatId;
+      document.getElementById("settingsModal").classList.remove("hidden");
     }
-    function closeAddClinicModal() {
-      document.getElementById("addClinicModal").classList.add("hidden");
+
+    function closeSettingsModal() {
+      document.getElementById("settingsModal").classList.add("hidden");
     }
-    function handleAddClinic(e) {
+
+    function saveSettings(e) {
       e.preventDefault();
-      const name = document.getElementById("newClinicName").value.trim();
-      const location = document.getElementById("newClinicLoc").value.trim();
-      const nearAccount = document.getElementById("newClinicNear").value.trim();
-      const blast = Number(document.getElementById("newClinicBlast").value) || 60;
-      const price = Number(document.getElementById("newClinicPrice").value) || 5000;
-      const note = document.getElementById("newClinicNote").value.trim();
+      contactConfig.email = document.getElementById("cfgEmail").value.trim() || "info@cukka.org";
+      contactConfig.telegramUser = document.getElementById("cfgTelegramUser").value.trim().replace("@", "") || "criticalsilence";
+      contactConfig.botToken = document.getElementById("cfgBotToken").value.trim();
+      contactConfig.chatId = document.getElementById("cfgChatId").value.trim();
 
-      Engine.PARTNER_CLINICS.unshift({
-        id: "CUSTOM-" + Date.now(),
-        name,
-        location,
-        flag: "🏥",
-        nearAccount,
-        accreditation: "Embryologist Verified Partner Lab • ISO 15189",
-        embryoscopePlus: true,
-        blastocystConversionRate: blast,
-        vitrificationSurvivalRate: 98.5,
-        pgtaTurnaroundDays: 7,
-        standardPriceUsd: Math.round(price * 0.8),
-        sharedRiskVaultUsd: price,
-        refundGuaranteePct: 50,
-        specialties: ["EmbryoScope+ Time-Lapse", "ICSI", "PGT-A NGS", "Şeffaf Laboratuvar Protokolü"],
-        embryologistNoteTr: note,
-        embryologistNoteEn: note
-      });
+      localStorage.setItem("eg_email", contactConfig.email);
+      localStorage.setItem("eg_tg_user", contactConfig.telegramUser);
+      localStorage.setItem("eg_bot_token", contactConfig.botToken);
+      localStorage.setItem("eg_chat_id", contactConfig.chatId);
 
-      closeAddClinicModal();
-      renderClinics();
-      updateVaultQuote();
+      updateForwardLinks("");
+      closeSettingsModal();
     }
 
-    function toggleWallet() {
-      walletConnected = !walletConnected;
-      const btn = document.getElementById("walletBtn");
-      btn.textContent = walletConnected ? "● patient-ivf.near" : "Connect NEAR Wallet";
-    }
-
-    function toggleLanguage() {
+    function toggleLang() {
       currentLang = currentLang === "tr" ? "en" : "tr";
-      const dict = {
-        tr: {
-          subtitle: "Embriyolog Liderliğinde Şeffaf IVF & Sonuç Garantili (Pay-for-Outcome) Akıllı Kasa",
-          hero_badge: "Uzman Klinik Embriyolog Tarafından Tasarlandı • NEAR Hackathon 2026",
-          hero_title_1: "Tüp Bebek (IVF) Tedavisinde ",
-          hero_title_2: "%100 Laboratuvar Şeffaflığı ve Otomatik İade Garantisi",
-          hero_desc: "Medikal turizmde hastalar en mahrem tahlillerini güvensiz kanallardan paylaşıyor ve 'tedavi tutmazsa tüm birikimim yanar' korkusu yaşıyor. EmbryoGuard; uzman embriyolog danışmanlığını, şeffaf 5. gün blastokist doğrulamasını ve başarısız siklusta aracı olmadan anında %50–%55 geri ödeme yapan NEAR Outcome Assurance Vault kontratını birleştirir."
-        },
-        en: {
-          subtitle: "Embryologist-Led Transparent IVF & Pay-for-Outcome Smart Vault on NEAR",
-          hero_badge: "Built by a Senior Clinical Embryologist • NEAR Hackathon 2026",
-          hero_title_1: "100% Lab Transparency & ",
-          hero_title_2: "Automated Refund Guarantee for Cross-Border IVF",
-          hero_desc: "Fertility patients risk thousands of dollars upfront with opaque clinic success rates. EmbryoGuard combines Certified Embryologist consultation, on-chain Day-5 Gardner Blastocyst attestation, and a NEAR Intents Outcome Vault that automatically refunds 50%–55% if the cycle fails."
-        }
-      };
-      document.querySelectorAll("[data-i18n]").forEach(el => {
-        const key = el.getAttribute("data-i18n");
-        if (dict[currentLang][key]) el.textContent = dict[currentLang][key];
-      });
-      renderClinics();
+      document.getElementById("headerSub").textContent =
+        currentLang === "tr"
+          ? "Uzman Embriyolog Danışmanlığı & İade Güvenceli IVF"
+          : "Clinical Embryologist Advisory & Dynamic Refund IVF Vault";
     }
 
-    // Initialize on load
     window.addEventListener("DOMContentLoaded", () => {
-      renderClinics();
-      recalcAll();
-      initChat();
-      fundNewVaultCase();
+      selectPrior(0);
+      goToStep(1);
     });
   </script>
 </body>
