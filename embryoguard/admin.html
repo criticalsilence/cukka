@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EmbryoGuard — İletişim ve bildirim ayarları</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Source+Serif+4:wght@600&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <span class="brand-title">EmbryoGuard</span>
+        <p class="brand-subtitle">Yönetici bildirim yapılandırması</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <section class="step-panel" style="max-width: 620px; margin: 0 auto;" aria-labelledby="adminHeading">
+      <header class="step-header">
+        <h1 id="adminHeading" class="step-title">İletişim ve bildirim ayarları</h1>
+        <p class="step-desc">
+          Danışmanlık taleplerinin yönlendirileceği e-posta ve Telegram bilgileri bu tarayıcıda yerel olarak saklanır.
+        </p>
+      </header>
+
+      <form class="form-stack" onsubmit="saveAdminSettings(event)">
+        <div class="field">
+          <label for="cfgEmail" class="field-label">E-posta adresi</label>
+          <input id="cfgEmail" type="email" class="input-text" placeholder="info@cukka.org" />
+        </div>
+
+        <div class="field">
+          <label for="cfgTelegramUser" class="field-label">Telegram kullanıcı adı (@ işareti olmadan)</label>
+          <input id="cfgTelegramUser" type="text" class="input-text" placeholder="criticalsilence" />
+        </div>
+
+        <div class="field">
+          <label for="cfgBotToken" class="field-label">Telegram bot anahtarı (isteğe bağlı)</label>
+          <input id="cfgBotToken" type="text" class="input-text mono-num" />
+        </div>
+
+        <div class="field">
+          <label for="cfgChatId" class="field-label">Telegram sohbet kimliği (isteğe bağlı)</label>
+          <input id="cfgChatId" type="text" class="input-text mono-num" />
+        </div>
+
+        <p id="saveNotice" class="field-hint" role="status" aria-live="polite"></p>
+
+        <div class="actions-row">
+          <button type="submit" class="btn-primary">Ayarları kaydet</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("cfgEmail").value = localStorage.getItem("eg_email") || "info@cukka.org";
+      document.getElementById("cfgTelegramUser").value = localStorage.getItem("eg_tg_user") || "criticalsilence";
+      document.getElementById("cfgBotToken").value = localStorage.getItem("eg_bot_token") || "";
+      document.getElementById("cfgChatId").value = localStorage.getItem("eg_chat_id") || "";
+    });
+
+    function saveAdminSettings(e) {
+      e.preventDefault();
+      const email = document.getElementById("cfgEmail").value.trim() || "info@cukka.org";
+      const tgUser = document.getElementById("cfgTelegramUser").value.trim().replace(/^@/, "") || "criticalsilence";
+      const botToken = document.getElementById("cfgBotToken").value.trim();
+      const chatId = document.getElementById("cfgChatId").value.trim();
+
+      localStorage.setItem("eg_email", email);
+      localStorage.setItem("eg_tg_user", tgUser);
+      localStorage.setItem("eg_bot_token", botToken);
+      localStorage.setItem("eg_chat_id", chatId);
+
+      document.getElementById("saveNotice").textContent = "Ayarlar kaydedildi.";
+    }
+  </script>
+</body>
+</html>
